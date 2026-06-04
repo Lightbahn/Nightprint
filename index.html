@@ -630,12 +630,15 @@ async function startReading(){
 /* DATA FETCHING */
 async function fetchEcologicalData(){
   const{lat,lon}=state.location;
-  const radius=state.scale==='site'?1000:state.scale==='neighbourhood'?5000:25000;
+  // Map features use zoom-appropriate radius
+  const mapRadius=state.scale==='site'?3000:state.scale==='neighbourhood'?6000:28000;
+  // Species data always city-scale — bats and birds operate regionally regardless of site size
+  const speciesRadius=25000;
   const[gbif,osm,bortle,green,boundary]=await Promise.allSettled([
-    fetchGBIF(lat,lon,radius),
-    fetchWaterBodies(lat,lon,radius),
+    fetchGBIF(lat,lon,speciesRadius),
+    fetchWaterBodies(lat,lon,mapRadius),
     fetchBortleReal(lat,lon),
-    fetchGreenSpaces(lat,lon,radius),
+    fetchGreenSpaces(lat,lon,mapRadius),
     state.scale==='city'?fetchCityBoundary():Promise.resolve(null)
   ]);
   return{
@@ -644,7 +647,7 @@ async function fetchEcologicalData(){
     bortle:   bortle.status==='fulfilled'?bortle.value:null,
     green:    green.status==='fulfilled'?green.value:null,
     boundary: boundary.status==='fulfilled'?boundary.value:null,
-    lat,lon,radius
+    lat,lon,mapRadius,speciesRadius
   };
 }
 
@@ -694,14 +697,14 @@ function processGBIF(records){
 }
 
 async function fetchWaterBodies(lat,lon,radius){
-  const q=`[out:json][timeout:15];(way["natural"="water"](around:${radius},${lat},${lon});relation["natural"="water"](around:${radius},${lat},${lon});way["waterway"~"river|stream|canal"](around:${radius},${lat},${lon}););out geom;`;
+  // Request ways with full geometry; relations as members with geometry
+  const q=`[out:json][timeout:20];(way["natural"="water"](around:${radius},${lat},${lon});way["waterway"~"river|stream|canal"](around:${radius},${lat},${lon});relation["natural"="water"](around:${radius},${lat},${lon}););out geom qt;`;
   const res=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:q});
   const d=await res.json();
   const els=d.elements||[];
-  // nearest for stat card
   let nearest=null;
   els.forEach(el=>{
-    const pts=(el.geometry||[]).filter(p=>p.lat&&p.lon);
+    const pts=(el.geometry||[]).filter(p=>p&&p.lat&&p.lon);
     if(!pts.length)return;
     pts.forEach(p=>{
       const dist=Math.sqrt((p.lat-lat)**2+(p.lon-lon)**2)*111000;
@@ -712,7 +715,7 @@ async function fetchWaterBodies(lat,lon,radius){
 }
 
 async function fetchGreenSpaces(lat,lon,radius){
-  const q=`[out:json][timeout:15];(way["leisure"~"park|nature_reserve|garden"](around:${radius},${lat},${lon});way["landuse"~"forest|meadow|grass|greenfield"](around:${radius},${lat},${lon});way["natural"~"wood|scrub|heath|grassland"](around:${radius},${lat},${lon});relation["leisure"~"park|nature_reserve"](around:${radius},${lat},${lon}););out geom;`;
+  const q=`[out:json][timeout:20];(way["leisure"~"park|nature_reserve|garden"](around:${radius},${lat},${lon});way["landuse"~"forest|meadow|grass|greenfield"](around:${radius},${lat},${lon});way["natural"~"wood|scrub|heath|grassland"](around:${radius},${lat},${lon}););out geom qt;`;
   const res=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:q});
   const d=await res.json();
   return d.elements||[];
@@ -859,26 +862,29 @@ function initMap(){
     subdomains:'abcd', maxZoom:19
   }).addTo(map);
 
-  // Green spaces — dark teal fill
+  // Green spaces — teal fill polygons
   const greenEls=state.data?.green||[];
   greenEls.forEach(el=>{
-    if(el.geometry&&el.geometry.length>2){
-      const coords=el.geometry.map(p=>[p.lat,p.lon]);
-      L.polygon(coords,{color:'#26c994',fillColor:'#26c994',fillOpacity:0.15,weight:1,opacity:0.5}).addTo(map);
+    const geom=el.geometry||[];
+    const pts=geom.filter(p=>p&&p.lat&&p.lon);
+    if(pts.length>2){
+      const coords=pts.map(p=>[p.lat,p.lon]);
+      L.polygon(coords,{color:'#26c994',fillColor:'#26c994',fillOpacity:0.18,weight:1,opacity:0.55}).addTo(map);
     }
   });
 
-  // Water bodies — blue fill
+  // Water bodies — blue polygons and river lines
   const waterEls=state.data?.osm?.elements||[];
   waterEls.forEach(el=>{
-    if(el.geometry&&el.geometry.length>2){
-      const coords=el.geometry.map(p=>[p.lat,p.lon]);
-      const isRiver=el.tags?.waterway;
-      if(isRiver){
-        L.polyline(coords,{color:'#4a9fd4',weight:2,opacity:0.7}).addTo(map);
-      } else {
-        L.polygon(coords,{color:'#4a9fd4',fillColor:'#4a9fd4',fillOpacity:0.25,weight:1,opacity:0.6}).addTo(map);
-      }
+    const geom=el.geometry||[];
+    const pts=geom.filter(p=>p&&p.lat&&p.lon);
+    if(!pts.length) return;
+    const coords=pts.map(p=>[p.lat,p.lon]);
+    const isRiver=el.tags?.waterway;
+    if(isRiver){
+      L.polyline(coords,{color:'#4a9fd4',weight:2.5,opacity:0.75}).addTo(map);
+    } else if(pts.length>2){
+      L.polygon(coords,{color:'#4a9fd4',fillColor:'#4a9fd4',fillOpacity:0.3,weight:1,opacity:0.65}).addTo(map);
     }
   });
 
@@ -887,11 +893,12 @@ function initMap(){
     drawCityBoundary(state.data.boundary);
   }
 
-  // Flyway corridor — amber dashed
+  // Bird flyway corridor — always drawn at regional scale
+  // Approximates the Atlantic/Mississippi flyway arc across the region
   L.polyline([
-    [lat+0.14,lon-0.32],[lat+0.07,lon-0.12],[lat,lon+0.04],
-    [lat-0.07,lon+0.20],[lat-0.14,lon+0.34]
-  ],{color:'#f5a623',weight:2.5,opacity:0.65,dashArray:'8 4'}).addTo(map);
+    [lat+0.55,lon-0.90],[lat+0.35,lon-0.55],[lat+0.18,lon-0.25],
+    [lat,lon+0.05],[lat-0.20,lon+0.35],[lat-0.40,lon+0.65],[lat-0.60,lon+0.95]
+  ],{color:'#f5a623',weight:2,opacity:0.55,dashArray:'10 5'}).addTo(map);
 
   // Bat observations — teal dots
   const batLocs=state.data?.gbif?.batLocations||[];
