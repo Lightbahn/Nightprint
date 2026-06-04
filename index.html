@@ -711,6 +711,7 @@ async function fetchWaterBodies(lat,lon,radius){
       if(!nearest||dist<nearest.dist)nearest={dist:Math.round(dist),lat:p.lat,lon:p.lon,tags:el.tags};
     });
   });
+  console.log('Water elements fetched:', els.length, els.slice(0,2).map(e=>({type:e.type,tags:e.tags,geomLen:e.geometry?.length})));
   return{nearestWater:nearest,elements:els};
 }
 
@@ -718,7 +719,9 @@ async function fetchGreenSpaces(lat,lon,radius){
   const q=`[out:json][timeout:20];(way["leisure"~"park|nature_reserve|garden"](around:${radius},${lat},${lon});way["landuse"~"forest|meadow|grass|greenfield"](around:${radius},${lat},${lon});way["natural"~"wood|scrub|heath|grassland"](around:${radius},${lat},${lon}););out geom qt;`;
   const res=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:q});
   const d=await res.json();
-  return d.elements||[];
+  const result=d.elements||[];
+  console.log('Green elements fetched:', result.length, result.slice(0,2).map(e=>({type:e.type,tags:e.tags,geomLen:e.geometry?.length})));
+  return result;
 }
 
 async function fetchCityBoundary(){
@@ -862,29 +865,38 @@ function initMap(){
     subdomains:'abcd', maxZoom:19
   }).addTo(map);
 
+  // Helper: extract valid [lat,lon] pairs from an OSM element
+  function osmCoords(el){
+    // Ways have el.geometry = [{lat,lon},...]
+    if(el.geometry&&el.geometry.length){
+      return el.geometry.filter(p=>p&&typeof p.lat==='number'&&typeof p.lon==='number').map(p=>[p.lat,p.lon]);
+    }
+    // Nodes have el.lat, el.lon directly
+    if(typeof el.lat==='number') return [[el.lat,el.lon]];
+    return [];
+  }
+
   // Green spaces — teal fill polygons
   const greenEls=state.data?.green||[];
+  console.log('Green elements to render:', greenEls.length);
   greenEls.forEach(el=>{
-    const geom=el.geometry||[];
-    const pts=geom.filter(p=>p&&p.lat&&p.lon);
-    if(pts.length>2){
-      const coords=pts.map(p=>[p.lat,p.lon]);
-      L.polygon(coords,{color:'#26c994',fillColor:'#26c994',fillOpacity:0.18,weight:1,opacity:0.55}).addTo(map);
+    const coords=osmCoords(el);
+    if(coords.length>2){
+      L.polygon(coords,{color:'#26c994',fillColor:'#26c994',fillOpacity:0.22,weight:1.5,opacity:0.7}).addTo(map);
     }
   });
 
   // Water bodies — blue polygons and river lines
   const waterEls=state.data?.osm?.elements||[];
+  console.log('Water elements to render:', waterEls.length);
   waterEls.forEach(el=>{
-    const geom=el.geometry||[];
-    const pts=geom.filter(p=>p&&p.lat&&p.lon);
-    if(!pts.length) return;
-    const coords=pts.map(p=>[p.lat,p.lon]);
-    const isRiver=el.tags?.waterway;
-    if(isRiver){
-      L.polyline(coords,{color:'#4a9fd4',weight:2.5,opacity:0.75}).addTo(map);
-    } else if(pts.length>2){
-      L.polygon(coords,{color:'#4a9fd4',fillColor:'#4a9fd4',fillOpacity:0.3,weight:1,opacity:0.65}).addTo(map);
+    const coords=osmCoords(el);
+    if(!coords.length) return;
+    const isRiver=el.tags&&(el.tags.waterway==='river'||el.tags.waterway==='stream'||el.tags.waterway==='canal');
+    if(isRiver&&coords.length>=2){
+      L.polyline(coords,{color:'#4a9fd4',weight:3,opacity:0.8}).addTo(map);
+    } else if(coords.length>2){
+      L.polygon(coords,{color:'#4a9fd4',fillColor:'#4a9fd4',fillOpacity:0.35,weight:1.5,opacity:0.75}).addTo(map);
     }
   });
 
