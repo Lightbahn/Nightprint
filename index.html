@@ -854,9 +854,9 @@ function initMap(){
 
   map=L.map('results-map',{zoomControl:true,attributionControl:false}).setView([lat,lon],zoom);
 
-  // Dark monochrome tile — Stadia Alidade Smooth Dark (no filter needed, purpose-built dark)
-  L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',{
-    maxZoom:20, subdomains:'abcd'
+  // Dark monochrome tiles — CartoDB Dark Matter (free, no key required)
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+    subdomains:'abcd', maxZoom:19
   }).addTo(map);
 
   // Green spaces — dark teal fill
