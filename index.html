@@ -630,10 +630,10 @@ async function startReading(){
 /* DATA FETCHING */
 async function fetchEcologicalData(){
   const{lat,lon}=state.location;
-  // Map features use zoom-appropriate radius
-  const mapRadius=state.scale==='site'?3000:state.scale==='neighbourhood'?6000:28000;
-  // Species data always city-scale — bats and birds operate regionally regardless of site size
+  // Species data: always city-scale — bats/birds operate regionally
   const speciesRadius=25000;
+  // Map features: large enough to always capture major rivers, parks, city boundary
+  const mapRadius=state.scale==='city'?30000:15000;
   const[gbif,osm,bortle,green,boundary]=await Promise.allSettled([
     fetchGBIF(lat,lon,speciesRadius),
     fetchWaterBodies(lat,lon,mapRadius),
@@ -697,30 +697,35 @@ function processGBIF(records){
 }
 
 async function fetchWaterBodies(lat,lon,radius){
-  // Request ways with full geometry; relations as members with geometry
-  const q=`[out:json][timeout:20];(way["natural"="water"](around:${radius},${lat},${lon});way["waterway"~"river|stream|canal"](around:${radius},${lat},${lon});relation["natural"="water"](around:${radius},${lat},${lon}););out geom qt;`;
+  // Query water polygons (lakes, ponds) and waterways (rivers, streams) separately
+  // Use bbox instead of around for more reliable geometry return
+  const deg=radius/111000;
+  const bbox=`${(lat-deg).toFixed(4)},${(lon-deg).toFixed(4)},${(lat+deg).toFixed(4)},${(lon+deg).toFixed(4)}`;
+  const q=`[out:json][timeout:25];(way["natural"="water"](${bbox});way["waterway"="river"](${bbox});way["waterway"="stream"](${bbox});way["waterway"="canal"](${bbox});way["landuse"="reservoir"](${bbox}););out geom;`;
   const res=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:q});
   const d=await res.json();
   const els=d.elements||[];
   let nearest=null;
   els.forEach(el=>{
-    const pts=(el.geometry||[]).filter(p=>p&&p.lat&&p.lon);
+    const pts=(el.geometry||[]).filter(p=>p&&typeof p.lat==='number');
     if(!pts.length)return;
     pts.forEach(p=>{
       const dist=Math.sqrt((p.lat-lat)**2+(p.lon-lon)**2)*111000;
       if(!nearest||dist<nearest.dist)nearest={dist:Math.round(dist),lat:p.lat,lon:p.lon,tags:el.tags};
     });
   });
-  console.log('Water elements fetched:', els.length, els.slice(0,2).map(e=>({type:e.type,tags:e.tags,geomLen:e.geometry?.length})));
+  console.log('Water elements fetched:', els.length, els.slice(0,3).map(e=>({type:e.type,tags:e.tags,geomPts:e.geometry?.length})));
   return{nearestWater:nearest,elements:els};
 }
 
 async function fetchGreenSpaces(lat,lon,radius){
-  const q=`[out:json][timeout:20];(way["leisure"~"park|nature_reserve|garden"](around:${radius},${lat},${lon});way["landuse"~"forest|meadow|grass|greenfield"](around:${radius},${lat},${lon});way["natural"~"wood|scrub|heath|grassland"](around:${radius},${lat},${lon}););out geom qt;`;
+  const deg=radius/111000;
+  const bbox=`${(lat-deg).toFixed(4)},${(lon-deg).toFixed(4)},${(lat+deg).toFixed(4)},${(lon+deg).toFixed(4)}`;
+  const q=`[out:json][timeout:25];(way["leisure"="park"](${bbox});way["leisure"="nature_reserve"](${bbox});way["leisure"="garden"](${bbox});way["landuse"="forest"](${bbox});way["landuse"="meadow"](${bbox});way["landuse"="grass"](${bbox});way["natural"="wood"](${bbox});way["natural"="scrub"](${bbox});way["natural"="heath"](${bbox});way["natural"="grassland"](${bbox}););out geom;`;
   const res=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:q});
   const d=await res.json();
   const result=d.elements||[];
-  console.log('Green elements fetched:', result.length, result.slice(0,2).map(e=>({type:e.type,tags:e.tags,geomLen:e.geometry?.length})));
+  console.log('Green elements fetched:', result.length, result.slice(0,3).map(e=>({type:e.type,tags:e.tags,geomPts:e.geometry?.length})));
   return result;
 }
 
@@ -974,7 +979,8 @@ User context: ${JSON.stringify(answers)}
 Write a single paragraph of 4–5 sentences. Be precise and specific to this location. Reference the actual data. Plain language, no jargon. Do not start with "This site" or "This city". Tone: calm, clear, revelatory. Make the invisible visible.`;
 
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    // Call via Vercel proxy — keeps API key secure, fixes CORS
+    const res=await fetch('/api/generate',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})
     });
