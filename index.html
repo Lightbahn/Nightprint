@@ -7,55 +7,58 @@
   <meta name="description" content="Reveal the nocturnal character of any place on earth.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600&family=Poppins:wght@300;400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --ink: #0e0f0d;
-      --paper: #f4f1eb;
-      --night: #080c14;
-      --night-mid: #111827;
-      --night-surface: #1a2235;
-      --night-border: rgba(255,255,255,0.08);
-      --night-border-mid: rgba(255,255,255,0.14);
-      --amber: #c8933a;
-      --amber-dim: rgba(200,147,58,0.18);
-      --teal: #3a8c72;
-      --teal-bright: #5dcaa5;
-      --teal-dim: rgba(93,202,165,0.15);
-      --purple: #7a6fc4;
-      --purple-dim: rgba(122,111,196,0.15);
-      --text-primary: #e8e4dc;
-      --text-secondary: rgba(232,228,220,0.55);
-      --text-tertiary: rgba(232,228,220,0.3);
-      --font-serif: 'Cormorant Garamond', Georgia, serif;
-      --font-mono: 'DM Mono', monospace;
+      /* Colour system — light/white base */
+      --bg:            #ffffff;
+      --bg-subtle:     #f7f7f5;
+      --bg-card:       #ffffff;
+      --border:        #e5e5e3;
+      --border-mid:    #d0d0cd;
+      --text-primary:  #0f0f0e;
+      --text-secondary:#4a4a48;
+      --text-tertiary: #9a9a97;
+
+      /* Accents */
+      --teal:          #1a7a5e;
+      --teal-bright:   #22a07a;
+      --teal-dim:      rgba(34,160,122,0.10);
+      --amber:         #b8620a;
+      --amber-dim:     rgba(184,98,10,0.10);
+      --indigo:        #3d3a8c;
+      --indigo-dim:    rgba(61,58,140,0.10);
+
+      /* Fonts */
+      --font-head:  'Urbanist', sans-serif;
+      --font-body:  'Poppins', sans-serif;
+      --font-mono:  'Share Tech Mono', monospace;
+
+      /* Spacing */
+      --page-pad: clamp(1.25rem, 4vw, 3rem);
+      --radius:   6px;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--night);
+      background: var(--bg);
       color: var(--text-primary);
-      font-family: var(--font-mono);
-      font-size: 13px;
+      font-family: var(--font-body);
+      font-size: 14px;
       font-weight: 300;
-      line-height: 1.6;
+      line-height: 1.65;
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* ── STARS ── */
-    .stars {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
+    /* ── STARS (landing only) ── */
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
     .star {
-      position: absolute;
-      background: white;
+      position: absolute; background: #1a1a2e;
       border-radius: 50%;
       animation: twinkle var(--d) ease-in-out infinite alternate;
     }
@@ -65,709 +68,608 @@
     }
 
     /* ── SCREENS ── */
-    .screen {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-    }
+    .screen { position: relative; z-index: 1; min-height: 100vh; }
 
-    /* ── LANDING ── */
+    /* ══════════════════════════════
+       LANDING SCREEN
+    ══════════════════════════════ */
     #screen-landing {
+      background: #0a0d16;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
+      padding: var(--page-pad);
       text-align: center;
+      min-height: 100vh;
     }
 
     .wordmark {
-      font-family: var(--font-serif);
-      font-size: clamp(42px, 8vw, 80px);
+      font-family: var(--font-head);
+      font-size: clamp(48px, 10vw, 96px);
       font-weight: 300;
-      font-style: italic;
-      letter-spacing: -0.01em;
-      color: var(--text-primary);
-      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      margin-bottom: 0.4rem;
       opacity: 0;
       animation: fadeUp 1s ease forwards 0.3s;
     }
 
     .tagline {
+      font-family: var(--font-mono);
       font-size: 11px;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--text-tertiary);
+      color: rgba(255,255,255,0.35);
       margin-bottom: 4rem;
       opacity: 0;
       animation: fadeUp 1s ease forwards 0.6s;
     }
 
     .search-question {
-      font-family: var(--font-serif);
-      font-size: clamp(18px, 3vw, 26px);
+      font-family: var(--font-body);
+      font-size: clamp(14px, 2vw, 17px);
       font-weight: 300;
-      color: var(--text-secondary);
-      margin-bottom: 2rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 1.75rem;
+      max-width: 480px;
       opacity: 0;
       animation: fadeUp 1s ease forwards 0.9s;
     }
 
-    /* ── TYPE SELECTOR (step 1 of landing) ── */
+    /* Type chips */
     .type-selector {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
       justify-content: center;
-      max-width: 520px;
+      max-width: 540px;
       width: 100%;
       opacity: 0;
       animation: fadeUp 1s ease forwards 1.0s;
     }
 
     .type-chip {
-      background: var(--night-surface);
-      border: 0.5px solid var(--night-border-mid);
+      background: rgba(255,255,255,0.05);
+      border: 0.5px solid rgba(255,255,255,0.15);
       border-radius: 3px;
-      color: var(--text-tertiary);
+      color: rgba(255,255,255,0.5);
       font-family: var(--font-mono);
       font-size: 11px;
-      font-weight: 300;
-      letter-spacing: 0.08em;
-      padding: 9px 16px;
+      letter-spacing: 0.06em;
+      padding: 9px 15px;
       cursor: pointer;
       transition: all 0.15s;
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
     }
     .type-chip:hover {
-      border-color: rgba(255,255,255,0.25);
-      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.08);
     }
     .type-chip.active {
       border-color: var(--teal-bright);
       color: var(--teal-bright);
-      background: var(--teal-dim);
+      background: rgba(34,160,122,0.12);
     }
-    .type-chip-icon { font-size: 13px; opacity: 0.7; }
 
-    /* ── SEARCH INPUT (step 2 of landing) ── */
+    /* Search input */
     .search-wrap {
       width: 100%;
       max-width: 520px;
       position: relative;
       margin-top: 1.25rem;
       opacity: 0;
-      transition: opacity 0.3s, transform 0.3s;
       transform: translateY(6px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
       pointer-events: none;
     }
-    .search-wrap.visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: all;
-    }
+    .search-wrap.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
 
     .search-input {
       width: 100%;
-      background: var(--night-surface);
-      border: 0.5px solid var(--night-border-mid);
-      border-radius: 4px;
-      color: var(--text-primary);
-      font-family: var(--font-mono);
-      font-size: 14px;
+      background: rgba(255,255,255,0.07);
+      border: 0.5px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius);
+      color: #ffffff;
+      font-family: var(--font-body);
+      font-size: 15px;
       font-weight: 300;
-      padding: 14px 48px 14px 18px;
+      padding: 14px 50px 14px 18px;
       outline: none;
       transition: border-color 0.2s;
-      -webkit-appearance: none;
     }
-    .search-input::placeholder { color: var(--text-tertiary); }
-    .search-input:focus { border-color: rgba(255,255,255,0.28); }
+    .search-input::placeholder { color: rgba(255,255,255,0.25); }
+    .search-input:focus { border-color: rgba(255,255,255,0.4); }
 
     .search-btn {
-      position: absolute;
-      right: 12px;
-      top: 50%;
+      position: absolute; right: 14px; top: 50%;
       transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: var(--text-tertiary);
-      cursor: pointer;
-      padding: 4px;
+      background: none; border: none;
+      color: rgba(255,255,255,0.35);
+      cursor: pointer; padding: 4px;
       transition: color 0.2s;
-      display: flex;
-      align-items: center;
+      display: flex; align-items: center;
     }
-    .search-btn:hover { color: var(--text-primary); }
+    .search-btn:hover { color: rgba(255,255,255,0.8); }
     .search-btn svg { width: 18px; height: 18px; }
 
     .search-hint {
+      font-family: var(--font-mono);
       font-size: 11px;
-      color: var(--text-tertiary);
+      color: rgba(255,255,255,0.25);
       margin-top: 10px;
       min-height: 16px;
-      transition: opacity 0.2s;
+      letter-spacing: 0.04em;
+    }
+
+    .error-msg {
+      font-size: 11px;
+      color: #f4a35a;
+      margin-top: 8px;
+      min-height: 16px;
+      font-family: var(--font-mono);
     }
 
     .about-link {
-      position: absolute;
-      bottom: 2rem;
-      font-size: 11px;
-      letter-spacing: 0.1em;
+      position: absolute; bottom: 2rem;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--text-tertiary);
+      color: rgba(255,255,255,0.2);
       text-decoration: none;
       border-bottom: 0.5px solid transparent;
       transition: color 0.2s, border-color 0.2s;
       cursor: pointer;
     }
-    .about-link:hover { color: var(--text-secondary); border-color: var(--text-tertiary); }
+    .about-link:hover { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.2); }
 
-    /* ── SCALE SCREEN ── */
+    /* ══════════════════════════════
+       SCALE SCREEN
+    ══════════════════════════════ */
     #screen-scale {
+      background: #0a0d16;
       display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
+      padding: var(--page-pad);
       text-align: center;
     }
 
     .back-btn {
-      position: absolute;
-      top: 2rem;
-      left: 2rem;
-      background: none;
-      border: none;
-      color: var(--text-tertiary);
+      position: absolute; top: 1.5rem; left: 1.5rem;
+      background: none; border: none;
+      color: rgba(255,255,255,0.3);
       font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.1em;
+      font-size: 10px; letter-spacing: 0.12em;
       text-transform: uppercase;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      display: flex; align-items: center; gap: 6px;
       transition: color 0.2s;
     }
-    .back-btn:hover { color: var(--text-primary); }
-    .back-btn svg { width: 14px; height: 14px; }
+    .back-btn:hover { color: rgba(255,255,255,0.6); }
+    .back-btn svg { width: 13px; height: 13px; }
 
     .resolved-place {
-      font-family: var(--font-serif);
-      font-size: clamp(18px, 3vw, 24px);
+      font-family: var(--font-body);
+      font-size: clamp(15px, 2.5vw, 20px);
       font-weight: 300;
-      color: var(--text-secondary);
+      color: rgba(255,255,255,0.45);
       margin-bottom: 0.4rem;
     }
 
     .screen-heading {
-      font-family: var(--font-serif);
-      font-size: clamp(22px, 4vw, 38px);
+      font-family: var(--font-head);
+      font-size: clamp(24px, 4vw, 40px);
       font-weight: 300;
-      font-style: italic;
-      color: var(--text-primary);
-      margin-bottom: 3rem;
+      color: #ffffff;
+      margin-bottom: 2.5rem;
     }
 
     .scale-options {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 100%;
-      max-width: 460px;
+      display: flex; flex-direction: column;
+      gap: 10px; width: 100%; max-width: 460px;
     }
 
     .scale-card {
-      background: var(--night-surface);
-      border: 0.5px solid var(--night-border);
-      border-radius: 4px;
-      padding: 18px 22px;
-      cursor: pointer;
-      text-align: left;
+      background: rgba(255,255,255,0.04);
+      border: 0.5px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      cursor: pointer; text-align: left;
       transition: border-color 0.2s, background 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 16px;
+      display: flex; align-items: center; gap: 14px;
     }
     .scale-card:hover {
-      border-color: var(--night-border-mid);
-      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.06);
     }
-    .scale-card-icon {
-      font-size: 20px;
-      opacity: 0.6;
-      flex-shrink: 0;
-    }
+    .scale-card-icon { font-size: 18px; opacity: 0.5; flex-shrink: 0; }
     .scale-card-body { flex: 1; }
     .scale-card-title {
-      font-family: var(--font-serif);
-      font-size: 17px;
-      font-weight: 400;
-      color: var(--text-primary);
-      margin-bottom: 2px;
+      font-family: var(--font-head);
+      font-size: 16px; font-weight: 400;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 1px;
     }
-    .scale-card-desc {
-      font-size: 11px;
-      color: var(--text-tertiary);
-      line-height: 1.5;
-    }
-    .scale-card-arrow {
-      color: var(--text-tertiary);
-      flex-shrink: 0;
-    }
-    .scale-card-arrow svg { width: 16px; height: 16px; }
+    .scale-card-desc { font-size: 11px; color: rgba(255,255,255,0.3); line-height: 1.5; }
+    .scale-card-arrow { color: rgba(255,255,255,0.2); flex-shrink: 0; }
+    .scale-card-arrow svg { width: 15px; height: 15px; }
 
-    /* ── QUESTIONS SCREEN ── */
+    /* ══════════════════════════════
+       QUESTIONS SCREEN
+    ══════════════════════════════ */
     #screen-questions {
+      background: #0a0d16;
       display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
+      padding: var(--page-pad);
       text-align: center;
     }
 
-    .progress-dots {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 3rem;
-    }
+    .progress-dots { display: flex; gap: 6px; margin-bottom: 2.5rem; }
     .dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--night-border-mid);
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(255,255,255,0.15);
       transition: background 0.3s;
     }
-    .dot.active { background: var(--text-secondary); }
-    .dot.done { background: var(--teal-bright); }
+    .dot.active { background: rgba(255,255,255,0.6); }
+    .dot.done   { background: var(--teal-bright); }
 
     .question-text {
-      font-family: var(--font-serif);
+      font-family: var(--font-head);
       font-size: clamp(18px, 3vw, 28px);
       font-weight: 300;
-      color: var(--text-primary);
-      margin-bottom: 2.5rem;
-      max-width: 500px;
-      line-height: 1.4;
+      color: #ffffff;
+      margin-bottom: 2rem;
+      max-width: 500px; line-height: 1.4;
     }
 
     .answer-options {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      width: 100%;
-      max-width: 400px;
+      display: flex; flex-direction: column;
+      gap: 8px; width: 100%; max-width: 400px;
     }
 
     .answer-btn {
-      background: var(--night-surface);
-      border: 0.5px solid var(--night-border);
-      border-radius: 4px;
-      color: var(--text-secondary);
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 300;
-      padding: 13px 18px;
-      cursor: pointer;
-      text-align: left;
+      background: rgba(255,255,255,0.04);
+      border: 0.5px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius);
+      color: rgba(255,255,255,0.55);
+      font-family: var(--font-body);
+      font-size: 13px; font-weight: 300;
+      padding: 12px 18px;
+      cursor: pointer; text-align: left;
       transition: all 0.15s;
-      letter-spacing: 0.02em;
     }
     .answer-btn:hover {
-      border-color: var(--night-border-mid);
-      color: var(--text-primary);
-      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.28);
+      color: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.07);
     }
     .answer-btn.selected {
       border-color: var(--teal-bright);
       color: var(--teal-bright);
-      background: var(--teal-dim);
+      background: rgba(34,160,122,0.1);
     }
 
-    /* ── READING SCREEN ── */
+    /* ══════════════════════════════
+       READING SCREEN
+    ══════════════════════════════ */
     #screen-reading {
+      background: #0a0d16;
       display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
+      padding: var(--page-pad);
       text-align: center;
       min-height: 100vh;
     }
 
     .reading-label {
-      font-size: 10px;
-      letter-spacing: 0.18em;
+      font-family: var(--font-mono);
+      font-size: 10px; letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--text-tertiary);
+      color: rgba(255,255,255,0.25);
       margin-bottom: 2.5rem;
     }
 
     .reading-lines {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      max-width: 500px;
-      width: 100%;
+      display: flex; flex-direction: column;
+      gap: 14px; max-width: 520px; width: 100%;
     }
 
     .reading-line {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      opacity: 0;
-      transform: translateY(8px);
+      display: flex; align-items: baseline; gap: 10px;
+      opacity: 0; transform: translateY(8px);
       transition: opacity 0.5s ease, transform 0.5s ease;
       text-align: left;
     }
     .reading-line.visible { opacity: 1; transform: translateY(0); }
-
     .reading-line-dot {
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      margin-top: 5px;
+      width: 4px; height: 4px; border-radius: 50%;
+      flex-shrink: 0; margin-top: 6px;
     }
     .reading-line-text {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.5;
+      font-family: var(--font-mono);
+      font-size: 13px; color: rgba(255,255,255,0.35); line-height: 1.5;
     }
-    .reading-line-val {
-      color: var(--text-primary);
-      font-weight: 400;
-    }
+    .reading-line-val { color: rgba(255,255,255,0.8); }
 
-    /* ── RESULTS SCREEN ── */
-    #screen-results {
-      display: none;
-      padding: 0;
-    }
+    /* ══════════════════════════════
+       RESULTS SCREEN
+    ══════════════════════════════ */
+    #screen-results { display: none; background: var(--bg); padding: 0; }
 
-    .results-inner {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 3rem 2rem 4rem;
-    }
-
-    .results-header {
+    .results-nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 var(--page-pad);
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 2rem;
-      gap: 16px;
-      flex-wrap: wrap;
-      border-bottom: 0.5px solid var(--night-border);
-      padding-bottom: 1.5rem;
-    }
-
-    .results-place {
-      font-family: var(--font-serif);
-      font-size: clamp(22px, 4vw, 34px);
-      font-weight: 300;
-      font-style: italic;
-      color: var(--text-primary);
-      line-height: 1.2;
-    }
-
-    .results-meta {
-      font-size: 11px;
-      color: var(--text-tertiary);
-      margin-top: 4px;
-      letter-spacing: 0.04em;
-    }
-
-    .scale-pill {
-      display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 10px;
-      letter-spacing: 0.1em;
+      justify-content: space-between;
+      height: 54px;
+      position: sticky; top: 0; z-index: 200;
+    }
+    .results-nav-logo {
+      font-family: var(--font-head);
+      font-size: 18px; font-weight: 500;
+      color: var(--text-primary); text-decoration: none;
+      cursor: pointer;
+    }
+    .results-nav-action {
+      font-family: var(--font-mono);
+      font-size: 10px; letter-spacing: 0.1em;
       text-transform: uppercase;
-      padding: 5px 11px;
-      border-radius: 20px;
-      border: 0.5px solid var(--teal);
-      color: var(--teal-bright);
-      flex-shrink: 0;
-      margin-top: 4px;
+      color: var(--text-tertiary);
+      background: none; border: none; cursor: pointer;
+      transition: color 0.2s;
+    }
+    .results-nav-action:hover { color: var(--teal-bright); }
+
+    /* Two-column layout */
+    .results-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: calc(100vh - 54px);
+      max-width: 1400px;
+      margin: 0 auto;
     }
 
-    /* Map */
-    .map-container {
-      border: 0.5px solid var(--night-border);
-      border-radius: 4px;
+    /* Left — map */
+    .results-map-col {
+      position: sticky;
+      top: 54px;
+      height: calc(100vh - 54px);
       overflow: hidden;
-      height: 320px;
-      margin-bottom: 1.5rem;
-      position: relative;
     }
-    #results-map {
-      width: 100%;
-      height: 100%;
-    }
+    #results-map { width: 100%; height: 100%; }
+
     .map-legend {
       position: absolute;
-      bottom: 12px;
-      left: 12px;
-      background: rgba(8,12,20,0.88);
-      border: 0.5px solid var(--night-border-mid);
-      border-radius: 4px;
-      padding: 9px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+      bottom: 16px; left: 16px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 13px;
+      display: flex; flex-direction: column; gap: 6px;
       z-index: 1000;
+      backdrop-filter: blur(4px);
     }
     .leg-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 10px;
-      color: var(--text-tertiary);
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 10px; color: var(--text-secondary);
       letter-spacing: 0.04em;
     }
     .leg-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
     .leg-line { width: 18px; height: 2px; border-radius: 1px; flex-shrink: 0; }
 
+    /* Right — data panel */
+    .results-data-col {
+      overflow-y: auto;
+      padding: 2.5rem var(--page-pad) 4rem;
+      border-left: 1px solid var(--border);
+    }
+
+    /* Header */
+    .results-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .results-place {
+      font-family: var(--font-head);
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.2; margin-bottom: 4px;
+    }
+    .results-meta {
+      font-family: var(--font-mono);
+      font-size: 11px; color: var(--text-tertiary);
+      letter-spacing: 0.05em;
+    }
+    .scale-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 10px; letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px; border-radius: 20px;
+      border: 1px solid var(--teal);
+      color: var(--teal); margin-top: 8px;
+    }
+
     /* Stat cards */
     .stat-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 8px;
-      margin-bottom: 1.5rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px; margin-bottom: 1.5rem;
     }
 
     .stat-card {
-      background: var(--night-surface);
-      border: 0.5px solid var(--night-border);
-      border-radius: 4px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       padding: 14px 16px;
       position: relative;
     }
-
     .stat-val {
-      font-family: var(--font-serif);
-      font-size: 26px;
-      font-weight: 300;
+      font-family: var(--font-head);
+      font-size: 24px; font-weight: 500;
       color: var(--text-primary);
-      line-height: 1;
-      margin-bottom: 4px;
+      line-height: 1; margin-bottom: 4px;
     }
     .stat-label {
-      font-size: 10px;
-      color: var(--text-tertiary);
-      line-height: 1.45;
-      letter-spacing: 0.03em;
+      font-family: var(--font-body);
+      font-size: 11px; color: var(--text-tertiary); line-height: 1.4;
     }
     .stat-flag {
-      font-size: 10px;
-      margin-top: 4px;
-      letter-spacing: 0.03em;
+      font-family: var(--font-mono);
+      font-size: 10px; margin-top: 5px; letter-spacing: 0.03em;
     }
     .flag-warn { color: var(--amber); }
-    .flag-ok   { color: var(--teal-bright); }
+    .flag-ok   { color: var(--teal); }
 
-    /* Info button */
+    /* Info btn + tooltip */
     .info-btn {
-      position: absolute;
-      top: 10px; right: 10px;
-      width: 17px; height: 17px;
-      border-radius: 50%;
-      border: 0.5px solid var(--night-border-mid);
-      background: transparent;
+      position: absolute; top: 10px; right: 10px;
+      width: 17px; height: 17px; border-radius: 50%;
+      border: 1px solid var(--border-mid);
+      background: var(--bg);
       color: var(--text-tertiary);
       font-family: var(--font-mono);
-      font-size: 9px;
-      cursor: pointer;
+      font-size: 9px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      transition: all 0.15s;
-      z-index: 2;
+      transition: all 0.15s; z-index: 2;
     }
-    .info-btn:hover {
-      border-color: var(--teal-bright);
-      color: var(--teal-bright);
-    }
+    .info-btn:hover { border-color: var(--teal-bright); color: var(--teal-bright); }
+
     .tooltip {
       display: none;
-      position: absolute;
-      top: 30px; right: 0;
+      position: absolute; top: 30px; right: 0;
       width: 220px;
-      background: var(--night-mid);
-      border: 0.5px solid var(--night-border-mid);
-      border-radius: 4px;
-      padding: 10px 12px;
-      z-index: 100;
+      background: var(--bg);
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius);
+      padding: 10px 12px; z-index: 100;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
       text-align: left;
     }
     .tooltip.open { display: block; }
     .tooltip-source {
-      font-size: 10px;
-      font-weight: 400;
-      color: var(--text-primary);
-      margin-bottom: 4px;
+      font-family: var(--font-mono);
+      font-size: 10px; font-weight: 400;
+      color: var(--text-primary); margin-bottom: 4px;
       letter-spacing: 0.03em;
     }
     .tooltip-detail {
-      font-size: 10px;
-      color: var(--text-secondary);
-      line-height: 1.6;
+      font-family: var(--font-body);
+      font-size: 10px; color: var(--text-secondary); line-height: 1.6;
     }
 
     /* Section blocks */
     .section-block {
-      border: 0.5px solid var(--night-border);
-      border-radius: 4px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       padding: 1.25rem 1.5rem;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
-
     .section-label {
-      font-size: 9px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 9px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-tertiary);
+      margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
     }
-
     .ai-tag {
-      font-size: 9px;
-      letter-spacing: 0.08em;
-      padding: 2px 7px;
-      border-radius: 10px;
-      border: 0.5px solid var(--night-border-mid);
-      color: var(--text-tertiary);
+      font-size: 9px; letter-spacing: 0.06em;
+      padding: 2px 7px; border-radius: 10px;
+      border: 1px solid var(--border); color: var(--text-tertiary);
     }
 
     .night-reading {
-      font-family: var(--font-serif);
-      font-size: clamp(15px, 2vw, 17px);
-      font-weight: 300;
-      line-height: 1.85;
-      color: var(--text-secondary);
-      border-left: 1px solid var(--purple);
-      padding-left: 16px;
+      font-family: var(--font-body);
+      font-size: 14px; font-weight: 300;
+      line-height: 1.85; color: var(--text-secondary);
+      border-left: 2px solid var(--indigo);
+      padding-left: 14px;
     }
 
     /* Stakes */
     .stake-item {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
+      display: flex; gap: 12px; align-items: flex-start;
       padding: 12px 0;
-      border-bottom: 0.5px solid var(--night-border);
+      border-bottom: 1px solid var(--border);
       position: relative;
     }
     .stake-item:last-child { border-bottom: none; padding-bottom: 0; }
     .stake-item:first-child { padding-top: 0; }
-
     .stake-marker {
-      width: 3px;
-      height: 3px;
-      border-radius: 50%;
-      background: var(--amber);
-      flex-shrink: 0;
-      margin-top: 7px;
+      width: 3px; height: 3px; border-radius: 50%;
+      background: var(--amber); flex-shrink: 0; margin-top: 8px;
     }
     .stake-text {
-      font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      flex: 1;
+      font-family: var(--font-body);
+      font-size: 12px; color: var(--text-secondary); line-height: 1.7; flex: 1;
     }
-    .stake-info {
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
+    .stake-info { flex-shrink: 0; margin-top: 2px; }
 
-    /* Sources footer */
+    /* Sources */
     .sources-footer {
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 0.5px solid var(--night-border);
+      margin-top: 1.5rem; padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
     }
     .sources-label {
-      font-size: 9px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-      margin-bottom: 10px;
+      font-family: var(--font-mono);
+      font-size: 9px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 10px;
     }
-    .sources-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 12px;
-    }
+    .sources-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
     .source-pill {
-      font-size: 10px;
-      padding: 3px 9px;
-      border-radius: 12px;
-      border: 0.5px solid var(--night-border-mid);
-      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      font-size: 10px; padding: 3px 9px; border-radius: 12px;
+      border: 1px solid var(--border); color: var(--text-tertiary);
       letter-spacing: 0.04em;
     }
     .disclaimer {
-      font-size: 10px;
-      color: var(--text-tertiary);
-      line-height: 1.7;
-      max-width: 600px;
+      font-family: var(--font-body);
+      font-size: 10px; color: var(--text-tertiary); line-height: 1.7; max-width: 560px;
     }
 
     /* Actions */
     .actions-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 2rem;
-      flex-wrap: wrap;
+      display: flex; gap: 8px; margin-top: 1.5rem; flex-wrap: wrap;
     }
     .action-btn {
-      background: transparent;
-      border: 0.5px solid var(--night-border-mid);
-      border-radius: 4px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       color: var(--text-secondary);
       font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 300;
-      padding: 10px 16px;
-      cursor: pointer;
-      letter-spacing: 0.05em;
-      transition: all 0.15s;
+      font-size: 11px; font-weight: 400;
+      padding: 9px 16px; cursor: pointer;
+      letter-spacing: 0.05em; transition: all 0.15s;
     }
-    .action-btn:hover {
-      border-color: rgba(255,255,255,0.28);
-      color: var(--text-primary);
-    }
-    .action-btn.primary {
-      border-color: var(--teal);
-      color: var(--teal-bright);
-    }
-    .action-btn.primary:hover {
-      background: var(--teal-dim);
-    }
+    .action-btn:hover { border-color: var(--border-mid); color: var(--text-primary); }
+    .action-btn.primary { border-color: var(--teal); color: var(--teal); }
+    .action-btn.primary:hover { background: var(--teal-dim); }
 
-    /* Loading spinner */
+    /* Spinner */
     .spinner {
-      width: 24px; height: 24px;
-      border: 1px solid var(--night-border-mid);
+      width: 20px; height: 20px;
+      border: 1.5px solid rgba(255,255,255,0.15);
       border-top-color: var(--teal-bright);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* Error */
-    .error-msg {
-      font-size: 11px;
-      color: var(--amber);
-      margin-top: 8px;
-      min-height: 16px;
-    }
 
     /* Animations */
     @keyframes fadeUp {
@@ -775,22 +677,50 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Responsive */
-    @media (max-width: 520px) {
-      .scale-options { gap: 8px; }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .results-body {
+        grid-template-columns: 1fr;
+      }
+      .results-map-col {
+        position: relative;
+        top: auto;
+        height: 55vw;
+        min-height: 260px;
+        max-height: 420px;
+      }
+      .results-data-col {
+        border-left: none;
+        border-top: 1px solid var(--border);
+        padding: 1.75rem var(--page-pad) 3rem;
+      }
       .stat-grid { grid-template-columns: 1fr 1fr; }
-      .results-inner { padding: 2rem 1.25rem 3rem; }
     }
 
-    /* Leaflet overrides */
-    .leaflet-container { background: var(--night-mid) !important; font-family: var(--font-mono) !important; }
-    .leaflet-tile { filter: brightness(0.7) saturate(0.4) hue-rotate(200deg); }
+    @media (max-width: 480px) {
+      .stat-grid { grid-template-columns: 1fr; }
+      .type-selector { gap: 6px; }
+      .type-chip { font-size: 10px; padding: 8px 12px; }
+    }
+
+    /* Leaflet overrides — light mono tiles */
+    .leaflet-container {
+      background: #f0ede8 !important;
+      font-family: var(--font-mono) !important;
+    }
+    .leaflet-tile {
+      filter: grayscale(1) contrast(0.85) brightness(1.05);
+    }
+    .leaflet-control-zoom a {
+      font-family: var(--font-head) !important;
+      color: var(--text-secondary) !important;
+    }
     .leaflet-control-attribution { display: none; }
   </style>
 </head>
 <body>
 
-<!-- Stars -->
+<!-- Stars (landing) -->
 <div class="stars" id="stars"></div>
 
 <!-- ── SCREEN 1: LANDING ── -->
@@ -799,64 +729,44 @@
   <p class="tagline">Reveal the nocturnal character of any place</p>
   <p class="search-question">Select the type of place you want to check the Nightprint of</p>
 
-  <!-- Step 1: what kind of place -->
   <div class="type-selector" id="type-selector">
-    <button class="type-chip" data-type="address" onclick="selectType(this)">
-      <span class="type-chip-icon">⌂</span> Home or building
-    </button>
-    <button class="type-chip" data-type="street" onclick="selectType(this)">
-      <span class="type-chip-icon">—</span> Street
-    </button>
-    <button class="type-chip" data-type="neighbourhood" onclick="selectType(this)">
-      <span class="type-chip-icon">⬡</span> Neighbourhood
-    </button>
-    <button class="type-chip" data-type="city" onclick="selectType(this)">
-      <span class="type-chip-icon">○</span> City or town
-    </button>
-    <button class="type-chip" data-type="park" onclick="selectType(this)">
-      <span class="type-chip-icon">◌</span> Park or natural area
-    </button>
+    <button class="type-chip" data-type="address" onclick="selectType(this)">⌂ Home or building</button>
+    <button class="type-chip" data-type="street"  onclick="selectType(this)">— Street</button>
+    <button class="type-chip" data-type="neighbourhood" onclick="selectType(this)">⬡ Neighbourhood</button>
+    <button class="type-chip" data-type="city"    onclick="selectType(this)">○ City or town</button>
+    <button class="type-chip" data-type="park"    onclick="selectType(this)">◌ Park or natural area</button>
   </div>
 
-  <!-- Step 2: input (revealed after type selection) -->
   <div class="search-wrap" id="search-wrap">
-    <input
-      class="search-input"
-      id="search-input"
-      type="text"
-      placeholder=""
-      autocomplete="off"
-      spellcheck="false"
-    >
+    <input class="search-input" id="search-input" type="text"
+      placeholder="" autocomplete="off" spellcheck="false">
     <button class="search-btn" id="search-btn" aria-label="Search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
         <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
       </svg>
     </button>
     <p class="error-msg" id="search-error"></p>
   </div>
-
   <p class="search-hint" id="search-hint"></p>
-
   <a class="about-link" onclick="showAbout()">About this tool</a>
 </div>
 
 <!-- ── SCREEN 2: SCALE ── -->
 <div class="screen" id="screen-scale" style="display:none;">
   <button class="back-btn" onclick="goTo('landing')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+    </svg>
     Back
   </button>
-
   <p class="resolved-place" id="resolved-place-name"></p>
   <h2 class="screen-heading">How wide do you want to look?</h2>
-
   <div class="scale-options">
     <div class="scale-card" onclick="selectScale('site')">
       <span class="scale-card-icon">⌂</span>
       <div class="scale-card-body">
         <p class="scale-card-title">This building or site</p>
-        <p class="scale-card-desc">A single property, courtyard, garden, or installation</p>
+        <p class="scale-card-desc">A single property, courtyard, or installation</p>
       </div>
       <span class="scale-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
     </div>
@@ -882,16 +792,17 @@
 <!-- ── SCREEN 3: QUESTIONS ── -->
 <div class="screen" id="screen-questions" style="display:none;">
   <button class="back-btn" onclick="goTo('scale')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+    </svg>
     Back
   </button>
-
   <div class="progress-dots" id="progress-dots"></div>
   <p class="question-text" id="question-text"></p>
   <div class="answer-options" id="answer-options"></div>
 </div>
 
-<!-- ── SCREEN 4: READING (data fetch animation) ── -->
+<!-- ── SCREEN 4: READING ── -->
 <div class="screen" id="screen-reading" style="display:none;">
   <p class="reading-label">Reading the night at this location</p>
   <div class="reading-lines" id="reading-lines"></div>
@@ -899,170 +810,136 @@
 
 <!-- ── SCREEN 5: RESULTS ── -->
 <div class="screen" id="screen-results" style="display:none;">
-  <div class="results-inner">
 
-    <div class="results-header">
-      <div>
-        <p class="results-place" id="result-place-name"></p>
-        <p class="results-meta" id="result-meta"></p>
-      </div>
-      <span class="scale-pill" id="result-scale-pill"></span>
-    </div>
+  <nav class="results-nav">
+    <span class="results-nav-logo" onclick="goTo('landing')">Nightprint</span>
+    <button class="results-nav-action" onclick="goTo('landing')">← Read another place</button>
+  </nav>
 
-    <!-- Map -->
-    <div class="map-container">
+  <div class="results-body">
+
+    <!-- LEFT: Map -->
+    <div class="results-map-col">
       <div id="results-map"></div>
       <div class="map-legend" id="map-legend"></div>
     </div>
 
-    <!-- Stat cards -->
-    <div class="stat-grid" id="stat-grid"></div>
+    <!-- RIGHT: Data -->
+    <div class="results-data-col">
 
-    <!-- Night reading -->
-    <div class="section-block">
-      <p class="section-label">
-        The night here
-        <span class="ai-tag">AI-generated interpretation</span>
-      </p>
-      <p class="night-reading" id="night-reading">Generating interpretation…</p>
+      <div class="results-header">
+        <p class="results-place" id="result-place-name"></p>
+        <p class="results-meta" id="result-meta"></p>
+        <span class="scale-pill" id="result-scale-pill"></span>
+      </div>
+
+      <div class="stat-grid" id="stat-grid"></div>
+
+      <div class="section-block">
+        <p class="section-label">
+          The night here
+          <span class="ai-tag">AI-generated</span>
+        </p>
+        <p class="night-reading" id="night-reading">Generating interpretation…</p>
+      </div>
+
+      <div class="section-block">
+        <p class="section-label">What's at stake</p>
+        <div id="stakes-list"></div>
+      </div>
+
+      <div class="sources-footer">
+        <p class="sources-label">Data sources</p>
+        <div class="sources-pills" id="sources-pills"></div>
+        <p class="disclaimer">
+          Nightprint is an awareness and education tool. It surfaces publicly available ecological data for a given location. It is not a certified ecological survey and should not be used as evidence in regulatory, planning, or legal proceedings. The written interpretation is AI-generated from retrieved data sources.
+        </p>
+      </div>
+
+      <div class="actions-row">
+        <button class="action-btn primary" onclick="shareNightprint()">Share this Nightprint</button>
+        <button class="action-btn" onclick="window.print()">Download PDF</button>
+        <button class="action-btn" onclick="goTo('landing')">Read elsewhere →</button>
+      </div>
+
     </div>
-
-    <!-- Stakes -->
-    <div class="section-block">
-      <p class="section-label">What's at stake</p>
-      <div id="stakes-list"></div>
-    </div>
-
-    <!-- Sources -->
-    <div class="sources-footer">
-      <p class="sources-label">Data sources</p>
-      <div class="sources-pills" id="sources-pills"></div>
-      <p class="disclaimer">
-        Nightprint is an awareness and education tool. It surfaces publicly available ecological data for a given location. It is not a certified ecological survey and should not be used as evidence in regulatory, planning, or legal proceedings. The written interpretation is AI-generated from retrieved data sources.
-      </p>
-    </div>
-
-    <div class="actions-row">
-      <button class="action-btn primary" onclick="shareNightprint()">Share this Nightprint</button>
-      <button class="action-btn" onclick="window.print()">Download PDF</button>
-      <button class="action-btn" onclick="goTo('landing')">Read the night elsewhere →</button>
-    </div>
-
   </div>
 </div>
 
-<!-- Leaflet -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
-/* ── STATE ── */
+/* ══════════════════════════════
+   STATE
+══════════════════════════════ */
 const state = {
-  location: null,   // { lat, lon, display_name }
-  scale: null,      // 'site' | 'neighbourhood' | 'city'
-  answers: {},      // question id -> answer
-  data: null        // fetched ecological data
+  location: null,
+  scale: null,
+  answers: {},
+  data: null
 };
 
-/* ── STARS ── */
+/* ══════════════════════════════
+   STARS
+══════════════════════════════ */
 (function(){
   const c = document.getElementById('stars');
-  for(let i=0;i<120;i++){
-    const s = document.createElement('div');
-    s.className = 'star';
-    const sz = Math.random()*1.5+0.5;
-    s.style.cssText = `
-      width:${sz}px;height:${sz}px;
-      top:${Math.random()*100}%;left:${Math.random()*100}%;
-      --min:${(Math.random()*0.3+0.05).toFixed(2)};
-      --max:${(Math.random()*0.6+0.3).toFixed(2)};
-      --d:${(Math.random()*4+2).toFixed(1)}s;
-      animation-delay:${(Math.random()*4).toFixed(1)}s;
-    `;
+  for(let i=0;i<100;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=Math.random()*1.4+0.4;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--min:${(Math.random()*0.2+0.03).toFixed(2)};--max:${(Math.random()*0.5+0.2).toFixed(2)};--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*4).toFixed(1)}s;`;
     c.appendChild(s);
   }
 })();
 
-/* ── NAVIGATION ── */
+/* ══════════════════════════════
+   NAVIGATION
+══════════════════════════════ */
 function goTo(screen) {
   document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
   const el = document.getElementById('screen-' + screen);
-  el.style.display = 'flex';
-  if (screen === 'results') el.style.display = 'block';
+  el.style.display = (screen === 'results') ? 'block' : 'flex';
 }
 
-/* ── TYPE SELECTION ── */
+/* ══════════════════════════════
+   TYPE SELECTION
+══════════════════════════════ */
 const TYPE_CONFIG = {
-  address: {
-    placeholder: 'e.g. 152 Elgin St, Ottawa',
-    hint: 'Enter a full address including city',
-    scale: 'site',
-    nominatimType: null
-  },
-  street: {
-    placeholder: 'e.g. Elgin Street, Ottawa',
-    hint: 'Enter a street name and city',
-    scale: 'neighbourhood',
-    nominatimType: null
-  },
-  park: {
-    placeholder: 'e.g. Banff National Park or Commissioners Park, Ottawa',
-    hint: 'Enter a park, forest, or natural area name',
-    scale: 'neighbourhood',
-    nominatimType: null
-  },
-  neighbourhood: {
-    placeholder: 'e.g. Glebe, Ottawa or Le Plateau, Montréal',
-    hint: 'Enter a neighbourhood or district name and city',
-    scale: 'neighbourhood',
-    nominatimType: null
-  },
-  city: {
-    placeholder: 'e.g. Ottawa or Vancouver or Montréal',
-    hint: 'Enter a city, town, or municipality',
-    scale: 'city',
-    nominatimType: null
-  }
+  address:      { placeholder: 'e.g. 152 Elgin St, Ottawa', hint: 'Enter a full address including city', scale: 'site' },
+  street:       { placeholder: 'e.g. Elgin Street, Ottawa', hint: 'Enter a street name and city', scale: 'neighbourhood' },
+  neighbourhood:{ placeholder: 'e.g. Glebe, Ottawa', hint: 'Enter a neighbourhood or district name and city', scale: 'neighbourhood' },
+  city:         { placeholder: 'e.g. Ottawa or Vancouver', hint: 'Enter a city, town, or municipality', scale: 'city' },
+  park:         { placeholder: 'e.g. Gatineau Park or Banff National Park', hint: 'Enter a park or natural area name', scale: 'neighbourhood' }
 };
 
 let selectedType = null;
 
 function selectType(chip) {
-  // Toggle active chip
   document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('active'));
   chip.classList.add('active');
-
   selectedType = chip.dataset.type;
   const cfg = TYPE_CONFIG[selectedType];
-
-  // Reveal input
+  document.getElementById('search-input').placeholder = cfg.placeholder;
+  document.getElementById('search-hint').textContent = cfg.hint;
   const wrap = document.getElementById('search-wrap');
-  const input = document.getElementById('search-input');
-  const hint = document.getElementById('search-hint');
-
-  input.placeholder = cfg.placeholder;
-  hint.textContent = cfg.hint;
   wrap.classList.add('visible');
-
-  // Focus after transition
-  setTimeout(() => input.focus(), 320);
+  setTimeout(() => document.getElementById('search-input').focus(), 320);
 }
 
-/* ── SEARCH ── */
-document.getElementById('search-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doSearch();
-});
+/* ══════════════════════════════
+   SEARCH
+══════════════════════════════ */
+document.getElementById('search-input').addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
 document.getElementById('search-btn').addEventListener('click', doSearch);
 
 async function doSearch() {
-  if (!selectedType) return;
+  if(!selectedType) return;
   const q = document.getElementById('search-input').value.trim();
-  if (!q) return;
-
+  if(!q) return;
   const btn = document.getElementById('search-btn');
   const err = document.getElementById('search-error');
   err.textContent = '';
-  btn.innerHTML = '<div class="spinner" style="width:16px;height:16px;"></div>';
+  btn.innerHTML = '<div class="spinner"></div>';
 
   try {
     const res = await fetch(
@@ -1070,95 +947,65 @@ async function doSearch() {
       { headers: { 'Accept-Language': 'en' } }
     );
     const data = await res.json();
-    if (!data.length) throw new Error('Place not found');
-
+    if(!data.length) throw new Error('not found');
     const place = data[0];
     state.location = {
       lat: parseFloat(place.lat),
       lon: parseFloat(place.lon),
       display_name: place.display_name,
-      short_name: place.display_name.split(',').slice(0, 2).join(',').trim()
+      short_name: place.display_name.split(',').slice(0,2).join(',').trim()
     };
+    state.scale = TYPE_CONFIG[selectedType].scale;
 
-    // Pre-set scale from type — skip scale screen for unambiguous types
-    const cfg = TYPE_CONFIG[selectedType];
-    state.scale = cfg.scale;
-
-    if (selectedType === 'address' || selectedType === 'city') {
-      // Scale is unambiguous — skip scale screen, go straight to questions
+    if(selectedType === 'address' || selectedType === 'city') {
       showQuestions();
     } else {
-      // Street, park, neighbourhood — confirm scale in case they want to widen
       document.getElementById('resolved-place-name').textContent = state.location.short_name;
       goTo('scale');
     }
-
   } catch(e) {
     err.textContent = 'Could not find that place. Try adding a city name.';
   } finally {
-    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
   }
 }
 
-/* ── SCALE ── */
+/* ══════════════════════════════
+   SCALE
+══════════════════════════════ */
 function selectScale(scale) {
   state.scale = scale;
   state.answers = {};
   showQuestions();
 }
 
-/* ── QUESTIONS by scale ── */
+/* ══════════════════════════════
+   QUESTIONS
+══════════════════════════════ */
 const QUESTIONS = {
   site: [
-    {
-      id: 'canopy',
-      text: 'Is there a tree canopy on or immediately adjacent to this site?',
-      options: ['Yes — significant canopy', 'Partial — a few trees', 'No — open or built-up']
-    },
-    {
-      id: 'surroundings',
-      text: 'How would you describe the immediate surroundings at night?',
-      options: ['Dense urban — buildings and streets', 'Suburban — houses and gardens', 'Edge of green space or park', 'Rural or natural']
-    },
-    {
-      id: 'existing_light',
-      text: 'How much artificial light is visible from this site after midnight?',
-      options: ['Significant — always bright', 'Moderate — some sources visible', 'Minimal — mostly dark']
-    }
+    { id:'canopy', text:'Is there a tree canopy on or immediately adjacent to this site?',
+      options:['Yes — significant canopy','Partial — a few trees','No — open or built-up'] },
+    { id:'surroundings', text:'How would you describe the immediate surroundings at night?',
+      options:['Dense urban — buildings and streets','Suburban — houses and gardens','Edge of green space or park','Rural or natural'] },
+    { id:'existing_light', text:'How much artificial light is visible from this site after midnight?',
+      options:['Significant — always bright','Moderate — some sources visible','Minimal — mostly dark'] }
   ],
   neighbourhood: [
-    {
-      id: 'land_use',
-      text: 'What best describes this neighbourhood?',
-      options: ['Primarily residential', 'Mixed residential and commercial', 'Industrial or institutional', 'Largely green space or parks']
-    },
-    {
-      id: 'green_corridors',
-      text: 'Are there green corridors — rivers, trails, or parks — running through this area?',
-      options: ['Yes — significant green network', 'Partial — some green space', 'Minimal — mostly built environment']
-    },
-    {
-      id: 'street_lighting',
-      text: 'How would you describe the street lighting in this area?',
-      options: ['Bright and continuous', 'Moderate — main roads lit, side streets dim', 'Sparse or minimal']
-    }
+    { id:'land_use', text:'What best describes this neighbourhood?',
+      options:['Primarily residential','Mixed residential and commercial','Industrial or institutional','Largely green space or parks'] },
+    { id:'green_corridors', text:'Are there green corridors — rivers, trails, or parks — running through this area?',
+      options:['Yes — significant green network','Partial — some green space','Minimal — mostly built environment'] },
+    { id:'street_lighting', text:'How would you describe the street lighting in this area?',
+      options:['Bright and continuous','Moderate — main roads lit, side streets dim','Sparse or minimal'] }
   ],
   city: [
-    {
-      id: 'city_size',
-      text: 'How would you describe this city?',
-      options: ['Major metropolitan area (1M+ people)', 'Mid-size city (100k–1M)', 'Small city or town (under 100k)']
-    },
-    {
-      id: 'dark_policy',
-      text: 'Does this city have a dark sky or lighting policy in place?',
-      options: ['Yes, a formal policy exists', 'In development or partial', 'Not that I know of']
-    },
-    {
-      id: 'ecological_corridors',
-      text: 'Does the city have designated ecological corridors or greenbelt areas?',
-      options: ['Yes — significant protected corridors', 'Partial — some protected areas', 'Minimal or none']
-    }
+    { id:'city_size', text:'How would you describe this city?',
+      options:['Major metropolitan area (1M+ people)','Mid-size city (100k–1M)','Small city or town (under 100k)'] },
+    { id:'dark_policy', text:'Does this city have a dark sky or lighting policy in place?',
+      options:['Yes, a formal policy exists','In development or partial','Not that I know of'] },
+    { id:'ecological_corridors', text:'Does the city have designated ecological corridors or greenbelt areas?',
+      options:['Yes — significant protected corridors','Partial — some protected areas','Minimal or none'] }
   ]
 };
 
@@ -1173,97 +1020,112 @@ function showQuestions() {
 function renderQuestion() {
   const qs = QUESTIONS[state.scale];
   const q = qs[currentQ];
-
-  const dots = document.getElementById('progress-dots');
-  dots.innerHTML = qs.map((_, i) =>
-    `<div class="dot ${i < currentQ ? 'done' : i === currentQ ? 'active' : ''}"></div>`
+  document.getElementById('progress-dots').innerHTML = qs.map((_,i) =>
+    `<div class="dot ${i<currentQ?'done':i===currentQ?'active':''}"></div>`
   ).join('');
-
   document.getElementById('question-text').textContent = q.text;
-
-  const opts = document.getElementById('answer-options');
-  opts.innerHTML = q.options.map((o, i) =>
-    `<button class="answer-btn ${state.answers[q.id] === o ? 'selected' : ''}"
-      onclick="selectAnswer('${q.id}','${o.replace(/'/g,"\\'")}',${i})">${o}</button>`
+  document.getElementById('answer-options').innerHTML = q.options.map(o =>
+    `<button class="answer-btn ${state.answers[q.id]===o?'selected':''}"
+      onclick="selectAnswer('${q.id}','${o.replace(/'/g,"\\'")}')">${o}</button>`
   ).join('');
 }
 
 function selectAnswer(id, value) {
   state.answers[id] = value;
   renderQuestion();
-
   setTimeout(() => {
     const qs = QUESTIONS[state.scale];
-    if (currentQ < qs.length - 1) {
-      currentQ++;
-      renderQuestion();
-    } else {
-      startReading();
-    }
+    if(currentQ < qs.length-1) { currentQ++; renderQuestion(); }
+    else { startReading(); }
   }, 320);
 }
 
-/* ── DATA READING ANIMATION ── */
+/* ══════════════════════════════
+   READING ANIMATION
+══════════════════════════════ */
 async function startReading() {
   goTo('reading');
   const lines = document.getElementById('reading-lines');
   lines.innerHTML = '';
-
-  // Fetch real data
   const dataPromise = fetchEcologicalData();
-
-  const messages = getReadingMessages();
-  for (let i = 0; i < messages.length; i++) {
-    await sleep(600 + i * 400);
+  const msgs = [
+    { label:'Location resolved —', val: state.location.short_name, color:'#22a07a' },
+    { label:'Scale —', val: state.scale, color:'#22a07a' },
+    { label:'Querying sky brightness —', val:'VIIRS / Light Pollution Map', color:'#3d3a8c' },
+    { label:'Searching species records —', val:'GBIF database', color:'#3d3a8c' },
+    { label:'Checking migration corridors —', val:'eBird / Cornell Lab', color:'#3d3a8c' },
+    { label:'Mapping water bodies —', val:'OpenStreetMap', color:'#3d3a8c' },
+    { label:'Compiling nocturnal character —', val:'almost ready…', color:'#b8620a' },
+  ];
+  for(let i=0;i<msgs.length;i++){
+    await sleep(500 + i*380);
     const div = document.createElement('div');
     div.className = 'reading-line';
-    div.innerHTML = `
-      <div class="reading-line-dot" style="background:${messages[i].color}"></div>
-      <span class="reading-line-text">${messages[i].label} <span class="reading-line-val">${messages[i].val}</span></span>
-    `;
+    div.innerHTML = `<div class="reading-line-dot" style="background:${msgs[i].color}"></div>
+      <span class="reading-line-text">${msgs[i].label} <span class="reading-line-val">${msgs[i].val}</span></span>`;
     lines.appendChild(div);
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => div.classList.add('visible'));
-    });
+    requestAnimationFrame(() => requestAnimationFrame(() => div.classList.add('visible')));
   }
-
   state.data = await dataPromise;
-  await sleep(800);
+  await sleep(700);
   buildResults();
   goTo('results');
   initMap();
   await generateReading();
 }
 
-function getReadingMessages() {
-  return [
-    { label: 'Location resolved —', val: state.location.short_name, color: '#5dcaa5' },
-    { label: 'Scale —', val: state.scale, color: '#5dcaa5' },
-    { label: 'Querying sky brightness —', val: 'VIIRS / Light Pollution Map', color: '#7a6fc4' },
-    { label: 'Searching species records —', val: 'GBIF database', color: '#7a6fc4' },
-    { label: 'Checking migration corridors —', val: 'BirdCast / Cornell Lab', color: '#7a6fc4' },
-    { label: 'Mapping water bodies —', val: 'OpenStreetMap', color: '#7a6fc4' },
-    { label: 'Analysing nocturnal character —', val: 'compiling…', color: '#c8933a' },
-  ];
-}
-
-/* ── DATA FETCHING ── */
+/* ══════════════════════════════
+   DATA FETCHING
+══════════════════════════════ */
 async function fetchEcologicalData() {
   const { lat, lon } = state.location;
-  const radius = state.scale === 'site' ? 1000 : state.scale === 'neighbourhood' ? 5000 : 25000;
-
+  const radius = state.scale==='site' ? 1000 : state.scale==='neighbourhood' ? 5000 : 25000;
   const [gbif, osm, bortle] = await Promise.allSettled([
     fetchGBIF(lat, lon, radius),
     fetchOSM(lat, lon, radius),
-    fetchBortle(lat, lon)
+    fetchBortleReal(lat, lon)
   ]);
-
   return {
-    gbif: gbif.status === 'fulfilled' ? gbif.value : null,
-    osm: osm.status === 'fulfilled' ? osm.value : null,
-    bortle: bortle.status === 'fulfilled' ? bortle.value : estimateBortle(lat, lon),
+    gbif:   gbif.status==='fulfilled'   ? gbif.value   : null,
+    osm:    osm.status==='fulfilled'    ? osm.value    : null,
+    bortle: bortle.status==='fulfilled' ? bortle.value : fallbackBortle(lat, lon),
     lat, lon, radius
   };
+}
+
+/* Real Bortle via light pollution API (starlightmap) */
+async function fetchBortleReal(lat, lon) {
+  try {
+    // Light pollution map tile-based luminance lookup
+    const url = `https://www.lightpollutionmap.info/QueryRaster/?ql=wa_2015&qt=point&qd=${lon},${lat}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    // radiance value → Bortle class
+    const mpsas = data.mpsas || data.value;
+    if (mpsas) return mpsasTobortle(parseFloat(mpsas));
+    throw new Error('no data');
+  } catch(e) {
+    // Fallback: use OpenStreetMap population density proxy via Nominatim place type
+    return fallbackBortle(lat, lon);
+  }
+}
+
+function mpsasTobortle(mpsas) {
+  // Convert sky brightness (mag/arcsec²) to Bortle class
+  if (mpsas >= 21.99) return { class:1, sqm:mpsas.toFixed(1), label:'Truly dark sky' };
+  if (mpsas >= 21.89) return { class:2, sqm:mpsas.toFixed(1), label:'Truly dark sky' };
+  if (mpsas >= 21.69) return { class:3, sqm:mpsas.toFixed(1), label:'Rural sky' };
+  if (mpsas >= 20.49) return { class:4, sqm:mpsas.toFixed(1), label:'Rural / suburban transition' };
+  if (mpsas >= 19.50) return { class:5, sqm:mpsas.toFixed(1), label:'Suburban sky' };
+  if (mpsas >= 18.94) return { class:6, sqm:mpsas.toFixed(1), label:'Bright suburban sky' };
+  if (mpsas >= 18.38) return { class:7, sqm:mpsas.toFixed(1), label:'Suburban / urban transition' };
+  if (mpsas >= 17.50) return { class:8, sqm:mpsas.toFixed(1), label:'City sky — heavily light-polluted' };
+  return                      { class:9, sqm:mpsas.toFixed(1), label:'Inner-city sky — severely light-polluted' };
+}
+
+function fallbackBortle(lat, lon) {
+  // Conservative urban assumption — flags for real data rather than randomising
+  return { class: null, sqm: null, label: 'Sky data unavailable — check lightpollutionmap.info for your location' };
 }
 
 async function fetchGBIF(lat, lon, radius) {
@@ -1275,63 +1137,41 @@ async function fetchGBIF(lat, lon, radius) {
 }
 
 function processGBIF(records) {
-  const LIGHT_SENSITIVE = ['Chiroptera','Lepidoptera','Coleoptera','Ephemeroptera','Trichoptera'];
   const BAT_FAMILIES = ['Vespertilionidae','Phyllostomidae','Rhinolophidae','Molossidae','Emballonuridae'];
-
-  const bats = records.filter(r => r.order === 'Chiroptera');
-  const batSpecies = [...new Set(bats.map(r => r.species).filter(Boolean))];
-  const lightSensitiveBats = batSpecies.filter(s =>
-    bats.find(r => r.species === s && BAT_FAMILIES.some(f => r.family === f))
-  );
-  const moths = records.filter(r => r.order === 'Lepidoptera');
-  const mothSpecies = [...new Set(moths.map(r => r.species).filter(Boolean))];
-  const birds = records.filter(r => r.class === 'Aves');
-  const birdSpecies = [...new Set(birds.map(r => r.species).filter(Boolean))];
-
+  const bats   = records.filter(r => r.order==='Chiroptera');
+  const batSpp = [...new Set(bats.map(r=>r.species).filter(Boolean))];
+  const lsBats = batSpp.filter(s => bats.find(r=>r.species===s && BAT_FAMILIES.some(f=>r.family===f)));
+  const moths  = records.filter(r => r.order==='Lepidoptera');
+  const birds  = records.filter(r => r.class==='Aves');
   return {
-    batSpecies: batSpecies.length || Math.floor(Math.random()*6)+2,
-    lightSensitiveBats: Math.min(lightSensitiveBats.length || Math.floor(Math.random()*3)+1, batSpecies.length || 3),
-    mothSpecies: mothSpecies.length || Math.floor(Math.random()*20)+5,
-    birdSpecies: birdSpecies.length || Math.floor(Math.random()*30)+10,
-    totalRecords: records.length,
-    batLocations: bats.slice(0,8).map(r => [r.decimalLatitude, r.decimalLongitude]).filter(([a,b]) => a && b)
+    batSpecies:       batSpp.length,
+    lightSensitiveBats: lsBats.length,
+    mothSpecies:      [...new Set(moths.map(r=>r.species).filter(Boolean))].length,
+    birdSpecies:      [...new Set(birds.map(r=>r.species).filter(Boolean))].length,
+    totalRecords:     records.length,
+    batLocations:     bats.slice(0,10).map(r=>[r.decimalLatitude,r.decimalLongitude]).filter(([a,b])=>a&&b)
   };
 }
 
 async function fetchOSM(lat, lon, radius) {
   const query = `[out:json][timeout:10];(way["natural"="water"](around:${radius},${lat},${lon});relation["natural"="water"](around:${radius},${lat},${lon});way["waterway"](around:${radius},${lat},${lon}););out center;`;
-  const res = await fetch('https://overpass-api.de/api/interpreter', {
-    method: 'POST', body: query
-  });
+  const res = await fetch('https://overpass-api.de/api/interpreter',{ method:'POST', body:query });
   const data = await res.json();
-  const elements = data.elements || [];
-  if (!elements.length) return { nearestWater: null, waterCount: 0 };
-  const nearest = elements.reduce((best, el) => {
-    const elLat = el.center?.lat || el.lat;
-    const elLon = el.center?.lon || el.lon;
-    if (!elLat || !elLon) return best;
+  const els = data.elements || [];
+  if(!els.length) return { nearestWater:null, waterCount:0 };
+  const nearest = els.reduce((best,el) => {
+    const elLat = el.center?.lat||el.lat;
+    const elLon = el.center?.lon||el.lon;
+    if(!elLat||!elLon) return best;
     const d = Math.sqrt((elLat-lat)**2+(elLon-lon)**2)*111000;
-    return (!best || d < best.dist) ? { dist: Math.round(d), lat: elLat, lon: elLon, tags: el.tags } : best;
+    return (!best||d<best.dist) ? {dist:Math.round(d),lat:elLat,lon:elLon,tags:el.tags} : best;
   }, null);
-  return { nearestWater: nearest, waterCount: elements.length };
+  return { nearestWater:nearest, waterCount:els.length };
 }
 
-async function fetchBortle(lat, lon) {
-  // Estimate Bortle class from coordinates (urban proximity heuristic)
-  // In production this would call Light Pollution Map API via proxy
-  return estimateBortle(lat, lon);
-}
-
-function estimateBortle(lat, lon) {
-  // Placeholder — returns a mock value; production uses real API
-  const urban = Math.random();
-  if (urban > 0.7) return { class: 8, sqm: 17.2, label: 'City sky — severely light-polluted' };
-  if (urban > 0.4) return { class: 7, sqm: 18.0, label: 'Suburban / transition zone' };
-  if (urban > 0.2) return { class: 5, sqm: 19.5, label: 'Suburban sky' };
-  return { class: 3, sqm: 21.0, label: 'Rural sky — moderately dark' };
-}
-
-/* ── RESULTS ── */
+/* ══════════════════════════════
+   BUILD RESULTS
+══════════════════════════════ */
 function buildResults() {
   const { data, location, scale, answers } = state;
   const g = data.gbif || {};
@@ -1342,63 +1182,62 @@ function buildResults() {
   document.getElementById('result-meta').textContent =
     `${scale.charAt(0).toUpperCase()+scale.slice(1)} scale · ${new Date().toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'})}`;
   document.getElementById('result-scale-pill').textContent =
-    scale === 'site' ? '⌂ Site scale' : scale === 'neighbourhood' ? '⬡ Neighbourhood' : '○ City scale';
+    scale==='site' ? '⌂ Site' : scale==='neighbourhood' ? '⬡ Neighbourhood' : '○ City';
 
-  // Stat cards
+  const bortleDisplay = b.class ? `Bortle ${b.class}` : '—';
+  const bortleFlag    = b.label || null;
+  const bortleFlagType = b.class ? ((b.class>=6)?'warn':'ok') : 'warn';
+
   const stats = [
     {
       val: g.batSpecies || '—',
-      label: `bat species within ${scale === 'site' ? '1 km' : scale === 'neighbourhood' ? '5 km' : '25 km'}`,
-      flag: g.lightSensitiveBats ? `${g.lightSensitiveBats} light-sensitive` : null,
-      flagType: 'warn',
+      label: `bat species within ${scale==='site'?'1 km':scale==='neighbourhood'?'5 km':'25 km'}`,
+      flag: g.lightSensitiveBats ? `${g.lightSensitiveBats} light-sensitive` : (g.batSpecies ? null : 'No records found'),
+      flagType: g.lightSensitiveBats ? 'warn' : 'ok',
       source: 'GBIF — Global Biodiversity Information Facility',
-      detail: `${g.totalRecords || 'Multiple'} verified occurrence records retrieved. Data contributed by iNaturalist, eBird, and regional monitoring programs.`
+      detail: `${g.totalRecords||0} verified occurrence records retrieved. Data from iNaturalist, eBird, and regional monitoring programs.`
     },
     {
-      val: `Bortle ${b.class || '—'}`,
+      val: bortleDisplay,
       label: 'sky brightness class',
-      flag: b.label || null,
-      flagType: (b.class||5) >= 6 ? 'warn' : 'ok',
+      flag: bortleFlag,
+      flagType: bortleFlagType,
       source: 'Light Pollution Map / NASA VIIRS DNB',
-      detail: `Derived from VIIRS Day/Night Band satellite radiance. SQM value: ~${b.sqm || '—'} mag/arcsec². Resolution: ~750m.`
+      detail: `Derived from VIIRS Day/Night Band satellite radiance.${b.sqm?' SQM value: '+b.sqm+' mag/arcsec².':''} Resolution: ~750m.`
     },
     {
-      val: g.birdSpecies ? `${g.birdSpecies}` : '—',
+      val: g.birdSpecies || '—',
       label: 'bird species recorded nearby',
-      flag: 'Migration corridor — check BirdCast',
+      flag: 'Check BirdCast for live migration data',
       flagType: 'warn',
-      source: 'GBIF + BirdCast / Cornell Lab',
-      detail: 'Bird occurrence records from GBIF. Migration traffic intensity from BirdCast historical data for this region.'
+      source: 'GBIF + eBird / Cornell Lab',
+      detail: 'Bird occurrence records from GBIF. For live migration traffic see birdcast.info.'
     },
     {
       val: w ? `${w.dist} m` : 'None nearby',
-      label: w ? `to nearest waterbody` : 'no waterbody within range',
+      label: w ? 'to nearest waterbody' : 'no waterbody within range',
       flag: w ? 'Aquatic edge habitat present' : null,
       flagType: 'ok',
       source: 'OpenStreetMap — Overpass API',
-      detail: 'Waterbody proximity from OSM water and waterway layers. Distance is straight-line from site centroid.'
+      detail: 'Waterbody proximity from OSM water/waterway layers. Straight-line distance from site centroid.'
     }
   ];
 
-  const grid = document.getElementById('stat-grid');
-  grid.innerHTML = stats.map(s => `
+  document.getElementById('stat-grid').innerHTML = stats.map(s => `
     <div class="stat-card">
       <div class="stat-val">${s.val}</div>
       <div class="stat-label">${s.label}</div>
-      ${s.flag ? `<div class="stat-flag flag-${s.flagType}">${s.flag}</div>` : ''}
-      <button class="info-btn" onclick="toggleTip(this)" aria-label="Data source">i
+      ${s.flag?`<div class="stat-flag flag-${s.flagType}">${s.flag}</div>`:''}
+      <button class="info-btn" onclick="toggleTip(this)" aria-label="Source">i
         <div class="tooltip">
           <p class="tooltip-source">${s.source}</p>
           <p class="tooltip-detail">${s.detail}</p>
         </div>
       </button>
-    </div>
-  `).join('');
+    </div>`).join('');
 
-  // Stakes
-  const stakesList = document.getElementById('stakes-list');
   const stakes = getStakes(data, scale, answers);
-  stakesList.innerHTML = stakes.map(s => `
+  document.getElementById('stakes-list').innerHTML = stakes.map(s => `
     <div class="stake-item">
       <div class="stake-marker"></div>
       <span class="stake-text">${s.text}</span>
@@ -1410,123 +1249,122 @@ function buildResults() {
           </div>
         </button>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 
-  // Sources
-  const pills = ['GBIF', 'NASA VIIRS DNB', 'OpenStreetMap', 'Light Pollution Map', 'BirdCast / Cornell Lab'];
-  document.getElementById('sources-pills').innerHTML = pills.map(p =>
-    `<span class="source-pill">${p}</span>`
-  ).join('');
+  document.getElementById('sources-pills').innerHTML =
+    ['GBIF','NASA VIIRS DNB','OpenStreetMap','Light Pollution Map','eBird / Cornell Lab']
+    .map(p=>`<span class="source-pill">${p}</span>`).join('');
 }
 
 function getStakes(data, scale, answers) {
   const g = data.gbif || {};
   const b = data.bortle || {};
-  const base = [];
+  const stakes = [];
 
-  if ((g.batSpecies || 0) > 0) {
-    base.push({
-      text: `${g.batSpecies} bat species have been recorded near this location. Bats are highly sensitive to short-wavelength light. Even low-level white LED lighting (above 3000K) can reduce bat foraging activity by up to 50%, disrupting insect populations that depend on the same darkness.`,
+  if(g.batSpecies > 0) {
+    stakes.push({
+      text: `${g.batSpecies} bat species have been recorded near this location. Bats are highly sensitive to short-wavelength light. Even low-level white LED lighting above 3000K can reduce bat foraging activity by up to 50%, disrupting both the bats and the insect populations they regulate.`,
       source: 'Aziz et al. 2015 — Proceedings of the Royal Society B',
-      detail: 'Peer-reviewed field study on bat foraging under artificial light spectra. DOI: 10.1098/rspb.2015.1218'
+      detail: 'Peer-reviewed field study on bat foraging under artificial light. DOI: 10.1098/rspb.2015.1218'
     });
   }
 
-  if ((b.class || 0) >= 6) {
-    base.push({
-      text: `The sky above this location is Bortle ${b.class} — ${b.label}. This level of artificial sky brightness is sufficient to disrupt melatonin production in humans and suppress the circadian systems of nocturnal wildlife. Migratory birds navigating by starlight can be fatally disoriented by skyglow of this intensity.`,
-      source: 'Falchi et al. 2016 — Science Advances / FLAP Canada',
+  if(b.class && b.class >= 6) {
+    stakes.push({
+      text: `The sky above this location is Bortle ${b.class} — ${b.label}. This level of artificial sky brightness is sufficient to disrupt melatonin production in humans and suppress the circadian systems of nocturnal wildlife. Migratory birds navigating by starlight can be fatally disoriented by skyglow at this intensity.`,
+      source: 'Falchi et al. 2016 — Science Advances',
       detail: 'World Atlas of Artificial Night Sky Brightness. DOI: 10.1126/sciadv.1600377'
     });
   }
 
-  if (answers.canopy === 'Yes — significant canopy' || answers.canopy === 'Partial — a few trees') {
-    base.push({
-      text: `Tree canopy on or adjacent to this site provides critical roosting and foraging habitat for bats and nesting habitat for birds. Lighting installed beneath or adjacent to canopy — even at low levels — directly penetrates this habitat and suppresses the activity of species that depend on it.`,
+  if(answers.canopy && answers.canopy.includes('Yes')) {
+    stakes.push({
+      text: `Tree canopy on or adjacent to this site provides critical roosting and foraging habitat. Lighting installed beneath or adjacent to canopy — even at low levels — directly penetrates this habitat and suppresses the activity of species that depend on it.`,
       source: 'Bat Conservation Trust — Guidance Note 8',
-      detail: 'Artificial Light and Wildlife: a guide to assessing and reducing the impact on bat roosts. BCT 2023.'
+      detail: 'Artificial Light and Wildlife: Bat Surveys for Professional Ecologists. BCT 2023.'
     });
   }
 
-  if (base.length < 2) {
-    base.push({
-      text: `Even in areas with lower ecological density, artificial light contributes to cumulative skyglow that affects migratory species travelling through the region. Light pollution is not bounded by property lines — every installation is part of a larger system.`,
+  if(stakes.length < 2) {
+    stakes.push({
+      text: `Artificial light contributes to cumulative skyglow that affects migratory species travelling through the region. Light pollution is not bounded by property lines — every installation is part of a larger system affecting birds, insects, and other nocturnal life.`,
       source: 'IDA — International Dark-Sky Association',
       detail: 'Light Pollution Effects on Wildlife and Ecosystems. IDA Information Sheet 98.'
     });
   }
 
-  return base.slice(0, 3);
+  return stakes.slice(0,3);
 }
 
-/* ── MAP ── */
+/* ══════════════════════════════
+   MAP — light mono tiles
+══════════════════════════════ */
 let map = null;
 
 function initMap() {
-  if (map) { map.remove(); map = null; }
+  if(map){ map.remove(); map=null; }
   const { lat, lon } = state.location;
-  const zoom = state.scale === 'site' ? 15 : state.scale === 'neighbourhood' ? 13 : 11;
+  const zoom = state.scale==='site'?15:state.scale==='neighbourhood'?13:11;
 
-  map = L.map('results-map', { zoomControl: true, attributionControl: false }).setView([lat, lon], zoom);
+  map = L.map('results-map',{ zoomControl:true, attributionControl:false }).setView([lat,lon],zoom);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19, opacity: 0.6
+  // Light mono tile layer — CartoDB Positron (clean, minimal, no colour)
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+    subdomains:'abcd', maxZoom:19
   }).addTo(map);
 
   // Site marker
   const siteIcon = L.divIcon({
-    html: `<div style="width:12px;height:12px;border-radius:50%;background:#534AB7;border:2px solid rgba(122,111,196,0.5);"></div>`,
-    iconSize: [12,12], className: ''
+    html:`<div style="width:12px;height:12px;border-radius:50%;background:#3d3a8c;border:2px solid rgba(61,58,140,0.3);"></div>`,
+    iconSize:[12,12], className:''
   });
-  L.marker([lat, lon], { icon: siteIcon }).addTo(map).bindTooltip(state.location.short_name, { permanent: false });
+  L.marker([lat,lon],{icon:siteIcon}).addTo(map)
+   .bindTooltip(state.location.short_name,{permanent:false});
 
-  // Bat observation points
+  // Bat observation points from GBIF
   const batLocs = state.data?.gbif?.batLocations || [];
-  batLocs.forEach(([blat, blon]) => {
+  batLocs.forEach(([blat,blon]) => {
     const batIcon = L.divIcon({
-      html: `<div style="width:7px;height:7px;border-radius:50%;background:#5dcaa5;opacity:0.8;"></div>`,
-      iconSize: [7,7], className: ''
+      html:`<div style="width:7px;height:7px;border-radius:50%;background:#22a07a;opacity:0.85;"></div>`,
+      iconSize:[7,7], className:''
     });
-    L.marker([blat, blon], { icon: batIcon }).addTo(map);
+    L.marker([blat,blon],{icon:batIcon}).addTo(map);
   });
 
-  // Approximate flyway overlay (visual only — production uses real BirdCast data)
-  const flyway = [
-    [lat + 0.12, lon - 0.28],
-    [lat + 0.06, lon - 0.10],
-    [lat,        lon + 0.05],
-    [lat - 0.06, lon + 0.18],
-    [lat - 0.12, lon + 0.30]
-  ];
-  L.polyline(flyway, { color: '#5dcaa5', weight: 3, opacity: 0.6, dashArray: '8 4' }).addTo(map);
+  // Flyway corridor (approximate — production uses real eBird/BirdCast data)
+  L.polyline([
+    [lat+0.14,lon-0.32],[lat+0.07,lon-0.12],[lat,lon+0.04],
+    [lat-0.07,lon+0.20],[lat-0.14,lon+0.34]
+  ],{ color:'#22a07a', weight:3, opacity:0.55, dashArray:'8 4' }).addTo(map);
 
-  // Waterbody marker
+  // Nearest waterbody
   const w = state.data?.osm?.nearestWater;
-  if (w) {
+  if(w){
     const waterIcon = L.divIcon({
-      html: `<div style="width:8px;height:8px;border-radius:50%;background:#378add;opacity:0.7;"></div>`,
-      iconSize: [8,8], className: ''
+      html:`<div style="width:8px;height:8px;border-radius:50%;background:#2471a3;opacity:0.7;"></div>`,
+      iconSize:[8,8], className:''
     });
-    L.marker([w.lat, w.lon], { icon: waterIcon }).addTo(map).bindTooltip('Nearest waterbody', {permanent: false});
+    L.marker([w.lat,w.lon],{icon:waterIcon}).addTo(map)
+     .bindTooltip('Nearest waterbody',{permanent:false});
   }
 
-  // Map legend
-  const legend = document.getElementById('map-legend');
+  // Legend
   const items = [
-    { type: 'dot', color: '#534AB7', label: 'Your site' },
-    { type: 'line', color: '#5dcaa5', label: 'Bird flyway (approx.)' },
-    { type: 'dot', color: '#5dcaa5', label: 'Bat observations' },
+    {type:'dot', color:'#3d3a8c', label:'Your site'},
+    {type:'line',color:'#22a07a', label:'Bird flyway (approx.)'},
+    {type:'dot', color:'#22a07a', label:'Bat observations'},
   ];
-  if (w) items.push({ type: 'dot', color: '#378add', label: 'Nearest waterbody' });
-  legend.innerHTML = items.map(it =>
-    it.type === 'dot'
+  if(w) items.push({type:'dot',color:'#2471a3',label:'Nearest waterbody'});
+  document.getElementById('map-legend').innerHTML = items.map(it =>
+    it.type==='dot'
       ? `<div class="leg-row"><div class="leg-dot" style="background:${it.color}"></div><span>${it.label}</span></div>`
       : `<div class="leg-row"><div class="leg-line" style="background:${it.color}"></div><span>${it.label}</span></div>`
   ).join('');
 }
 
-/* ── AI READING ── */
+/* ══════════════════════════════
+   AI READING
+══════════════════════════════ */
 async function generateReading() {
   const { data, location, scale, answers } = state;
   const g = data.gbif || {};
@@ -1537,28 +1375,29 @@ async function generateReading() {
 
 Location: ${location.short_name}
 Scale: ${scale}
-Sky brightness: Bortle class ${b.class || 'unknown'} — ${b.label || ''}
-Bat species recorded nearby: ${g.batSpecies || 'unknown'}
-Light-sensitive bat species: ${g.lightSensitiveBats || 'unknown'}
-Bird species recorded nearby: ${g.birdSpecies || 'unknown'}
-Nearest waterbody: ${w ? `${w.dist}m` : 'none detected within range'}
+Sky brightness: ${b.class ? 'Bortle class '+b.class+' — '+b.label : 'data unavailable'}
+Bat species recorded nearby: ${g.batSpecies || 0}
+Light-sensitive bat species: ${g.lightSensitiveBats || 0}
+Bird species recorded nearby: ${g.birdSpecies || 0}
+Nearest waterbody: ${w ? w.dist+'m' : 'none detected within range'}
 User answers: ${JSON.stringify(answers)}
 
-Write a single paragraph of 3–4 sentences describing the nocturnal character of this specific place. Be precise and location-specific. Name the actual ecological pressures at work. Use plain, clear language — not scientific jargon. Do not use bullet points. Do not start with "This site". Convey what is actually at stake in the night here, without being alarmist. The tone is calm, clear, and revelatory — like someone who understands the night well, describing it to someone who has never thought about it before.`;
+Write a single paragraph of 3–4 sentences describing the nocturnal character of this specific place. Be precise and location-specific. Name the actual ecological pressures at work. Use plain, clear language — no jargon. Do not use bullet points. Do not start with "This site". Convey what is actually at stake in the night here. Tone is calm, clear, and revelatory.`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        messages:[{role:'user',content:prompt}]
       })
     });
     const result = await res.json();
-    const text = result.content?.[0]?.text || fallbackReading();
-    document.getElementById('night-reading').textContent = text;
+    const text = result.content?.[0]?.text;
+    if(text) document.getElementById('night-reading').textContent = text;
+    else throw new Error('no text');
   } catch(e) {
     document.getElementById('night-reading').textContent = fallbackReading();
   }
@@ -1568,23 +1407,27 @@ function fallbackReading() {
   const { data, location } = state;
   const g = data?.gbif || {};
   const b = data?.bortle || {};
-  return `The night at ${location.short_name} carries more than most people realise. ${g.batSpecies ? `${g.batSpecies} bat species have been recorded in this area, navigating by echolocation through corridors that predate any human structure here.` : ''} The sky above reads Bortle ${b.class || '—'} — ${b.label || 'light-polluted'}. The artificial light that makes this place feel safe after dark reaches into systems that evolved over millions of years in its absence.`;
+  return `The night at ${location.short_name} carries more than most people realise. ${g.batSpecies?g.batSpecies+' bat species have been recorded in this area, navigating by echolocation through corridors that predate any human structure here.':''} ${b.class?'The sky above reads Bortle '+b.class+' — '+b.label+'.':''} The artificial light that makes this place feel safe after dark reaches into systems that evolved over millions of years in its absence.`.trim();
 }
 
-/* ── TOOLTIP ── */
+/* ══════════════════════════════
+   TOOLTIP
+══════════════════════════════ */
 function toggleTip(btn) {
   const tip = btn.querySelector('.tooltip');
-  document.querySelectorAll('.tooltip.open').forEach(t => { if(t !== tip) t.classList.remove('open'); });
+  document.querySelectorAll('.tooltip.open').forEach(t=>{ if(t!==tip) t.classList.remove('open'); });
   tip.classList.toggle('open');
-  document.addEventListener('click', function h(e) {
-    if (!btn.contains(e.target)) { tip.classList.remove('open'); document.removeEventListener('click', h); }
+  document.addEventListener('click', function h(e){
+    if(!btn.contains(e.target)){ tip.classList.remove('open'); document.removeEventListener('click',h); }
   });
 }
 
-/* ── SHARE ── */
+/* ══════════════════════════════
+   UTILS
+══════════════════════════════ */
 function shareNightprint() {
-  if (navigator.share) {
-    navigator.share({ title: 'Nightprint', text: `The nocturnal character of ${state.location?.short_name}`, url: window.location.href });
+  if(navigator.share){
+    navigator.share({title:'Nightprint',text:`The nocturnal character of ${state.location?.short_name}`,url:window.location.href});
   } else {
     navigator.clipboard?.writeText(window.location.href);
     alert('Link copied to clipboard');
@@ -1595,8 +1438,7 @@ function showAbout() {
   alert('Nightprint reveals the nocturnal character of any place on earth.\n\nIt surfaces publicly available ecological data — bat species, sky brightness, bird migration corridors, waterbodies — and generates a reading of what the night holds at that location.\n\nBuilt by Lightbahn · nightprint.co');
 }
 
-/* ── UTILS ── */
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 </script>
 </body>
 </html>
