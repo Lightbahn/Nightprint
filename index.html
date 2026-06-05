@@ -447,16 +447,17 @@
     .leaflet-control-zoom a:hover { color:var(--teal) !important; }
     .leaflet-control-attribution { display:none !important; }
 
-    /* ── LANDING ── */
+    /* ── LANDING — outside panel system, direct child of #app ── */
     #p-land {
-      width: 100%; height: 100%;
+      flex: 1;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       padding: 2rem 3rem 5rem;
       text-align: center;
       background: var(--bg);
-      position: absolute; inset: 0;
+      overflow-y: auto;
     }
+    #p-land.hidden { display: none; }
 
     .land-addr-wrap {
       width: 100%; max-width: 460px;
@@ -516,11 +517,8 @@
     </div>
   </header>
 
-  <!-- ── CONTENT ── -->
-  <div id="content">
-
-    <!-- LANDING — address only -->
-    <div id="p-land">
+  <!-- LANDING — outside content, direct child of app -->
+  <div id="p-land">
       <p class="lbl a1" style="margin-bottom:1rem;">The mark your light leaves on the night</p>
       <h1 class="land-logo a2">NIGHTPRINT</h1>
       <p class="land-tag a3">Understand and protect the natural night.</p>
@@ -541,7 +539,10 @@
         Try "Ottawa" or "152 Elgin St, Ottawa" or "Banff National Park"
       </p>
       <button class="land-about" onclick="showAbout()">About Nightprint</button>
-    </div>
+  </div>
+
+  <!-- ── CONTENT (panels live here) ── -->
+  <div id="content" style="display:none;">
 
     <!-- TAB SELECTOR — shown after location confirmed -->
     <div class="panel" id="p-tabs">
@@ -780,13 +781,13 @@ const se = m => m>=2&&m<=4?'spring':m>=5&&m<=7?'summer':m>=8&&m<=10?'autumn':'wi
 
 /* ══ PANEL NAV ══ */
 function showPanel(id) {
-  // Hide all panels
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
-  // Hide landing (not in panel system)
-  $('p-land').style.display = 'none';
   if(id === 'p-land') {
-    $('p-land').style.display = '';  // restore default (flex via CSS)
+    $('p-land').classList.remove('hidden');
+    $('content').style.display = 'none';
   } else {
+    $('p-land').classList.add('hidden');
+    $('content').style.display = '';
     $(id).classList.add('on');
   }
 }
@@ -794,7 +795,8 @@ function showPanel(id) {
 function goLanding() {
   $('hdr').classList.remove('show');
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
-  $('p-land').style.display = '';
+  $('p-land').classList.remove('hidden');
+  $('content').style.display = 'none';
 }
 
 /* ══ LANDING SEARCH ══ */
