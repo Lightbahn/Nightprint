@@ -321,7 +321,37 @@
     .progress-bar.done .progress-bar-fill { width: 100%; }
     .progress-bar.active .progress-bar-fill { width: 100%; transition: width 2s linear; }
 
-    /* Continue button */
+    /* Continue + Back buttons row */
+    .narration-btn-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 0.25rem;
+    }
+
+    .back-narration-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      background: none;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 3px;
+      padding: 11px 20px;
+      cursor: pointer;
+      transition: all 0.2s, opacity 0.3s;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .back-narration-btn.visible { opacity: 1; pointer-events: all; }
+    .back-narration-btn:hover { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); }
+    .back-narration-btn svg { width: 13px; height: 13px; }
+
     .continue-btn {
       display: inline-flex;
       align-items: center;
@@ -339,6 +369,7 @@
       transition: background 0.2s, opacity 0.3s;
       opacity: 0;
       pointer-events: none;
+      margin-left: auto;
     }
     .continue-btn.visible { opacity: 1; pointer-events: all; }
     .continue-btn:hover { background: #ffb830; }
@@ -442,59 +473,83 @@
     }
 
     /* Photo placeholder — swap src when you have the image */
+    /* Number screen — two col layout */
+    #screen-number {
+      padding: 0 !important;
+      align-items: stretch !important;
+    }
+
+    .number-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      width: 100%;
+    }
+
     .night-sky-photo {
-      width: 100%; max-width: 560px;
-      aspect-ratio: 16/9;
-      border-radius: var(--radius);
-      overflow: hidden;
-      margin-bottom: 1.5rem;
-      opacity: 0; animation: fadeUp 1s ease forwards 0.4s;
       position: relative;
+      overflow: hidden;
       background: #0a0c10;
-      border: 1px solid var(--border);
+      opacity: 0; animation: fadeUp 1.2s ease forwards 0.3s;
+      min-height: 60vh;
     }
     .night-sky-photo img {
       width: 100%; height: 100%;
-      object-fit: cover;
-      display: block;
+      object-fit: cover; display: block;
     }
     .photo-placeholder-text {
       position: absolute; inset: 0;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
     }
     .photo-placeholder-text p {
-      font-family: var(--font-mono);
-      font-size: 10px; letter-spacing: 0.1em;
-      color: var(--text-tertiary); text-transform: uppercase;
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.1em; color: var(--text-tertiary); text-transform: uppercase;
     }
-    .photo-placeholder-text .placeholder-icon { font-size: 28px; opacity: 0.2; }
+    .photo-placeholder-text .placeholder-icon { font-size: 36px; opacity: 0.15; }
 
-    .number-caption {
-      font-family: var(--font-body);
-      font-size: clamp(15px, 2.2vw, 20px);
-      font-weight: 300; line-height: 1.75;
-      color: var(--text-secondary);
-      max-width: 540px;
-      opacity: 0; animation: fadeUp 1s ease forwards 0.7s;
-      margin-bottom: 0.75rem;
+    .number-text-col {
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 3rem clamp(1.5rem, 4vw, 3rem);
+      border-left: 1px solid var(--border);
     }
-    .number-caption strong { color: var(--text-primary); font-weight: 400; }
 
-    .number-stat {
-      font-family: var(--font-head);
-      font-size: clamp(36px, 7vw, 72px);
-      font-weight: 300; color: var(--amber-bright);
-      line-height: 1; margin-bottom: 1rem;
+    .number-label {
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--text-tertiary); margin-bottom: 1rem;
       opacity: 0; animation: fadeUp 1s ease forwards 0.5s;
     }
 
+    .number-stat {
+      font-family: var(--font-head);
+      font-size: clamp(40px, 7vw, 80px);
+      font-weight: 300; color: var(--amber-bright);
+      line-height: 1; margin-bottom: 1.25rem;
+      opacity: 0; animation: fadeUp 1s ease forwards 0.7s;
+    }
+
+    .number-caption {
+      font-family: var(--font-body);
+      font-size: clamp(14px, 1.6vw, 17px);
+      font-weight: 300; line-height: 1.8;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      opacity: 0; animation: fadeUp 1s ease forwards 0.9s;
+    }
+    .number-caption strong { color: var(--text-primary); font-weight: 400; }
+
     .number-actions {
       display: flex; gap: 10px; flex-wrap: wrap;
-      justify-content: center;
-      opacity: 0; animation: fadeUp 1s ease forwards 1s;
-      margin-top: 1.5rem;
+      opacity: 0; animation: fadeUp 1s ease forwards 1.1s;
+    }
+
+    @media (max-width: 720px) {
+      .number-two-col { grid-template-columns: 1fr; }
+      .night-sky-photo { min-height: 40vw; }
+      .number-text-col { border-left: none; border-top: 1px solid var(--border); padding: 2rem var(--page-pad); }
     }
 
     .action-btn {
@@ -687,12 +742,20 @@
     <p class="narration-body"    id="narration-body"></p>
     <p class="narration-nudge"   id="narration-nudge"></p>
     <p class="narration-source"  id="narration-source"></p>
-    <button class="continue-btn" id="continue-btn" onclick="nextNarration()">
-      Continue
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-      </svg>
-    </button>
+    <div class="narration-btn-row">
+      <button class="back-narration-btn" id="back-narration-btn" onclick="prevNarration()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Back
+      </button>
+      <button class="continue-btn" id="continue-btn" onclick="nextNarration()">
+        Continue
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <div class="search-overlay" id="search-overlay">
@@ -706,31 +769,36 @@
 
 <!-- SCREEN 3: THE NUMBER -->
 <div class="screen" id="screen-number" style="display:none;">
-  <p class="number-label" id="number-label">The sky above this location</p>
+  <div class="number-two-col">
 
-  <div class="night-sky-photo" id="night-sky-photo">
-    <!-- Replace with: <img src="your-photo.jpg" alt="Natural night sky"> -->
-    <div class="photo-placeholder-text">
-      <span class="placeholder-icon">☽</span>
-      <p>Night sky photo</p>
-      <p style="font-size:9px;margin-top:4px;color:rgba(237,233,224,0.15);">Drop your image here when ready</p>
+    <!-- Left: photo -->
+    <div class="night-sky-photo" id="night-sky-photo">
+      <!-- Replace with: <img src="your-photo.jpg" alt="Natural night sky"> -->
+      <div class="photo-placeholder-text">
+        <span class="placeholder-icon">☽</span>
+        <p>Night sky photo</p>
+        <p style="font-size:9px;margin-top:2px;color:rgba(237,233,224,0.12);">Add your image here when ready</p>
+      </div>
     </div>
+
+    <!-- Right: text -->
+    <div class="number-text-col">
+      <p class="number-label" id="number-label">The sky above this location</p>
+      <p class="number-stat"  id="number-stat"></p>
+      <p class="number-caption" id="number-caption"></p>
+      <div class="number-actions">
+        <button class="action-btn primary"   onclick="shareNightprint()">Share this Nightprint</button>
+        <button class="action-btn secondary" onclick="restartExperience()">Read another place</button>
+      </div>
+      <button class="number-continue" onclick="goToScreen('reading')" style="margin-top:1.5rem;">
+        Read the nocturnal portrait
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="14" height="14">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+    </div>
+
   </div>
-
-  <p class="number-stat" id="number-stat"></p>
-  <p class="number-caption" id="number-caption"></p>
-
-  <div class="number-actions">
-    <button class="action-btn primary" onclick="shareNightprint()">Share this Nightprint</button>
-    <button class="action-btn secondary" onclick="restartExperience()">Read another place</button>
-  </div>
-
-  <button class="number-continue" onclick="goToScreen('reading')">
-    Read the nocturnal portrait
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="14" height="14">
-      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-    </svg>
-  </button>
 </div>
 
 <!-- SCREEN 4: THE READING -->
@@ -1137,37 +1205,69 @@ function renderBats() {
 function renderFlyway() {
   const g = L.layerGroup().addTo(map);
   const { lat, lon } = state.location;
-  const migration = getMigration(state.month);
 
-  // Flyway corridor as a band (polygon) with directional line through centre
-  const bandWidth = 0.18; // degrees
-  const path = [
-    [lat+0.55, lon-0.85], [lat+0.35, lon-0.52], [lat+0.18, lon-0.22],
-    [lat,      lon+0.04], [lat-0.20, lon+0.32],  [lat-0.40, lon+0.60], [lat-0.60, lon+0.88]
-  ];
+  // Helper: draw a curved migration path with arrowhead and label
+  function drawRoute(waypoints, color, opacity, label, arrowDir) {
+    // Dashed line
+    L.polyline(waypoints, {
+      color, weight: 1.5, opacity, dashArray: '9 5'
+    }).addTo(g);
 
-  // Build band polygon — offset path perpendicular
-  const upper = path.map(([lt, ln]) => [lt + bandWidth, ln]);
-  const lower = path.map(([lt, ln]) => [lt - bandWidth, ln]).reverse();
-  L.polygon([...upper, ...lower], {
-    color: 'transparent', fillColor: '#f5a623', fillOpacity: 0.1, weight: 0
-  }).addTo(g);
+    // Arrowhead at midpoint using decorator-style div marker
+    const mid = waypoints[Math.floor(waypoints.length / 2)];
+    const before = waypoints[Math.floor(waypoints.length / 2) - 1] || waypoints[0];
+    // Calculate bearing for arrow rotation
+    const dy = mid[0] - before[0];
+    const dx = mid[1] - before[1];
+    const angle = Math.atan2(dx, dy) * 180 / Math.PI;
+    L.marker(mid, {
+      icon: L.divIcon({
+        html: `<div style="transform:rotate(${angle}deg);color:${color};opacity:${opacity};font-size:14px;line-height:1;">▲</div>`,
+        iconAnchor: [7, 7], className: ''
+      })
+    }).addTo(g);
 
-  // Centre dashed directional line
-  L.polyline(path, { color:'#f5a623', weight:1.5, opacity:0.65, dashArray:'10 6' }).addTo(g);
-
-  // Seasonal direction label on map
-  if(migration.direction) {
-    const labelPt = path[Math.floor(path.length / 2)];
-    const arrow = migration.direction === 'north' ? '↑' : '↓';
-    const season = migration.direction === 'north' ? 'Spring' : 'Autumn';
+    // Route label
+    const labelPt = waypoints[2];
     L.marker(labelPt, {
       icon: L.divIcon({
-        html: `<div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(245,166,35,0.7);white-space:nowrap;letter-spacing:0.06em;">${arrow} ${season} migration route</div>`,
-        iconAnchor: [0, 0], className: ''
+        html: `<div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:${color};opacity:${opacity + 0.1};white-space:nowrap;letter-spacing:0.05em;background:rgba(0,0,0,0.55);padding:2px 5px;border-radius:3px;">${label}</div>`,
+        iconAnchor: [-4, 8], className: ''
       })
     }).addTo(g);
   }
+
+  // Spring route — curved arc heading north-northeast
+  // Slight westward curve then northeast, mimicking Atlantic flyway spring path
+  const spring = [
+    [lat - 0.65, lon - 0.05],
+    [lat - 0.45, lon - 0.15],
+    [lat - 0.22, lon - 0.08],
+    [lat,        lon + 0.06],
+    [lat + 0.22, lon + 0.22],
+    [lat + 0.45, lon + 0.30],
+    [lat + 0.65, lon + 0.20]
+  ];
+
+  // Fall route — slightly different curve heading south-southwest
+  // Offset east, curves more westerly on descent
+  const fall = [
+    [lat + 0.65, lon + 0.35],
+    [lat + 0.44, lon + 0.48],
+    [lat + 0.22, lon + 0.38],
+    [lat,        lon + 0.18],
+    [lat - 0.22, lon + 0.02],
+    [lat - 0.44, lon - 0.18],
+    [lat - 0.65, lon - 0.28]
+  ];
+
+  // Draw fall first (slightly dimmer if not peak fall)
+  const migration = getMigration(state.month);
+  const springOpacity = (migration.direction === 'north') ? 0.70 : 0.35;
+  const fallOpacity   = (migration.direction === 'south') ? 0.70 : 0.35;
+
+  drawRoute(fall,   '#f5a623', fallOpacity,   '↓ Autumn migration', 'south');
+  drawRoute(spring, '#f5a623', springOpacity, '↑ Spring migration', 'north');
 
   return g;
 }
@@ -1176,31 +1276,55 @@ function renderLight() {
   const g = L.layerGroup().addTo(map);
   const { lat, lon } = state.location;
   const bc = state.data?.bortle?.class || 7;
-  // Three concentric amber circles representing light dome
-  [bc * 9000, bc * 5500, bc * 2500].forEach((r, i) => {
+  // Radial amber glow — outer to inner, increasing opacity
+  const radii   = [bc * 12000, bc * 7000, bc * 3500, bc * 1200];
+  const opacities = [0.08, 0.13, 0.18, 0.25];
+  radii.forEach((r, i) => {
     L.circle([lat, lon], {
-      radius: r, color:'#e88a0d', fillColor:'#e88a0d',
-      fillOpacity: [0.05, 0.07, 0.10][i], weight: 0
+      radius: r,
+      color: '#e88a0d',
+      fillColor: '#f5a623',
+      fillOpacity: opacities[i],
+      weight: i === 0 ? 0.5 : 0,
+      opacity: 0.15
     }).addTo(g);
   });
+  // Fly out to show the full glow when this layer activates
   return g;
 }
 
-function setOpacity(layerKey, opacity) {
+// Store original styles for opacity animation
+const _origStyles = {};
+
+function setOpacity(layerKey, targetOpacity) {
   const lg = map?._layers_?.[layerKey];
   if(!lg) return;
+
+  if(!_origStyles[layerKey]) {
+    // Capture originals on first call
+    _origStyles[layerKey] = [];
+    lg.eachLayer(l => {
+      if(l.options) _origStyles[layerKey].push({
+        opacity:     l.options.opacity     ?? 1,
+        fillOpacity: l.options.fillOpacity ?? 0.3
+      });
+    });
+  }
+
+  let i = 0;
   lg.eachLayer(l => {
     try {
+      const orig = _origStyles[layerKey][i] || { opacity:1, fillOpacity:0.3 };
       if(l.setStyle) {
-        const o = l.options;
         l.setStyle({
-          opacity:     typeof o.opacity     !== 'undefined' ? o.opacity     * opacity : opacity,
-          fillOpacity: typeof o.fillOpacity !== 'undefined' ? o.fillOpacity * opacity : opacity * 0.3
+          opacity:     orig.opacity     * targetOpacity,
+          fillOpacity: orig.fillOpacity * targetOpacity
         });
       } else if(l.setOpacity) {
-        l.setOpacity(opacity);
+        l.setOpacity(targetOpacity);
       }
     } catch(e) {}
+    i++;
   });
 }
 
@@ -1279,11 +1403,15 @@ function showStep(step) {
     }));
   }, 150);
 
-  // Show continue button after a beat
+  // Back button — show from step 1 onwards
+  const backBtn = document.getElementById('back-narration-btn');
+  backBtn.classList.remove('visible');
+  if(step > 0) setTimeout(() => backBtn.classList.add('visible'), 1800);
+
+  // Continue button
   const btn = document.getElementById('continue-btn');
   btn.classList.remove('visible');
   const isLast = step === narrations.length - 1;
-  btn.textContent = isLast ? 'See the bigger picture' : 'Continue';
   if(isLast) {
     btn.innerHTML = `See the bigger picture <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
   } else {
@@ -1293,6 +1421,7 @@ function showStep(step) {
 }
 
 function nextNarration() { showStep(state.narrationStep + 1); }
+function prevNarration() { if(state.narrationStep > 0) showStep(state.narrationStep - 1); }
 
 /* ── NUMBER SCREEN ── */
 function buildNumber() {
