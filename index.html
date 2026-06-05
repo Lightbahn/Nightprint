@@ -111,11 +111,16 @@
     /* ── PANELS (full size inside content) ── */
     .panel { position:absolute; inset:0; display:none; overflow-y:auto; background:var(--bg); }
     .panel.on { display:block; }
-    /* Panels that need flex layout */
-    #p-land.on, #p-tabs.on, #p-num.on, #p-read.on, #p-reframe.on, #p-nload.on {
+    /* Panels that need flex layout — centred */
+    #p-land.on, #p-tabs.on, #p-nload.on {
       display:flex; flex-direction:column; align-items:center; justify-content:center;
     }
-    /* Experience panel — no scroll */
+    /* Number, read, reframe — flex column but scrollable */
+    #p-num.on, #p-read.on, #p-reframe.on {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      min-height:100%;
+    }
+    /* Experience panel — no scroll, map fills it */
     .panel.noscroll { overflow:hidden; }
 
     /* ══════════════════════════════
@@ -1098,25 +1103,60 @@ function buildNarrations(){
   const gn=(NIGHT.data.green||[]).length,m=NIGHT.month,mo=mn(m),s=se(m);
   const mig=getMig(m),loc=LOC.short_name;
   NIGHT.narrations=[
-    {heading:b?`The sky above ${loc.split(',')[0]} is Bortle ${b.class}`:`The sky above ${loc.split(',')[0]} is light-polluted`,
-     body:b?`${b.label}. The amber wash on this map is artificial light at night, measured by NASA satellite — exactly what every bat, moth, and migrating bird above here navigates through instead of natural darkness. ${b.class>=7?'At this level the Milky Way is completely invisible.':b.class>=5?'The Milky Way is faint or invisible.':'The sky retains some natural darkness, but light pollution is growing.'}`:`The amber wash is artificial light at night, measured by NASA VIIRS satellite. This is what every nocturnal species here navigates through instead of darkness. This light did not exist 100 years ago.`,
-     nudge:`→ The most impactful changes: shield fixtures downward, reduce intensity after midnight, switch to sources below 3000K.`,
-     source:'Source: Falchi et al. 2016 — Science Advances · NASA VIIRS DNB',layer:'light',species:null},
-    {heading:'Water draws the night alive',
-     body:w?`There is a waterbody ${w.dist}m from here. The edges of rivers and lakes are among the most ecologically active zones on earth after dark — mayflies, caddisflies, and stoneflies emerge in their millions, forming the base of the food chain for every bat, bird, and fish in this area. Bats hunt above the surface. Amphibians breed here.`:`Rivers, lakes, and wetlands are critical nocturnal habitats. Aquatic insects emerge after dark in their millions, forming the base of the food chain. Their entire life cycle depends on darkness.`,
-     nudge:`→ Avoid lighting near water edges. Even a single unshielded fixture disrupts aquatic insect emergence and carries ecological cost far downstream.`,
-     source:'Source: Perkin et al. 2014 — Trends in Ecology & Evolution',layer:'water',species:null},
-    {heading:gn>0?`${gn} green space${gn>1?'s':''} shelter the night`:'Green spaces shelter the night',
-     body:`Parks, forests, and nature reserves are nocturnal refuges inside this light-polluted sky. In ${mo}, ${s==='winter'?'the canopy is bare but small mammals, owls, and overwintering insects depend on these corridors.':s==='summer'?'the canopy is dense. Bats roost in tree hollows, moths navigate between flowering plants, and the leaf litter teems with invertebrate life.':s==='spring'?'these spaces are filling with nesting birds and emerging insects. The first warm nights bring out moths and beetles that have waited through winter.':'these spaces are transitioning. Migrants pass through. The green corridors are at their most dynamic.'}`,
-     nudge:`→ Lighting at the edges of green spaces interrupts species movement between them. Buffers of darkness around parks cost nothing to maintain.`,
-     source:'Source: Gaston et al. 2015 — Philosophical Transactions of the Royal Society B',layer:'water',species:null},
-    {heading:m>=4&&m<=9?'Bats are foraging here tonight':`Bats are ${m<6?'emerging':'entering hibernation'} this month`,
-     body:null,nudge:m>=4&&m<=9?`→ Turn off outdoor lights between dusk and dawn during ${s} months. Even low-level white LED above 3000K reduces bat foraging by up to 50%.`:`→ Avoid disturbing roost sites. Lighting near hibernation sites causes bats to wake prematurely, depleting critical fat reserves.`,
-     source:'Source: Aziz et al. 2015 — Proceedings of the Royal Society B · GBIF',layer:'bats',species:g.batList||[]},
-    {heading:mig.intensity==='high'?`${mig.label} is happening above here now`:mig.intensity==='medium'?`Migration is building above ${loc.split(',')[0]}`:`The migration corridor above ${loc.split(',')[0]}`,
-     body:mig.intensity==='high'?`It is ${mig.label.toLowerCase()} season. On peak nights this ${mo}, tens of thousands of birds cross this exact sky heading ${mig.dir} — navigating by starlight and the Earth's magnetic field, following corridors their ancestors have used for thousands of years.`:mig.intensity==='medium'?`Migration is building in ${mo}. The flyway above here will carry hundreds of thousands of birds heading ${mig.dir} over the coming weeks. Many travel thousands of kilometres without stopping.`:`This corridor carries up to 80,000 birds on peak migration nights each spring and autumn. In ${mo} migration is quiet — but in weeks that sky will be full of birds navigating by the stars.`,
-     nudge:`→ Turn off non-essential lighting during ${mig.intensity==='high'?'peak migration nights this month':'spring and autumn migration seasons'}. Skyglow disorients migrating birds into fatal building collisions.`,
-     source:'Source: Loss et al. 2014 — The Condor · Fatal Light Awareness Program (FLAP Canada) · eBird / Cornell Lab',layer:'flyway',species:null}
+    // 1 — Water + soil: the foundation
+    {
+      heading: w ? `Water ${w.dist}m from here — the foundation of this nocturnal system` : 'Water — the foundation of this nocturnal system',
+      body: w
+        ? `There is a waterbody ${w.dist}m from here. The edges of rivers and lakes are among the most ecologically active zones on earth after dark. Mayflies, caddisflies, and stoneflies emerge from the water in their millions — forming the base of the food chain for every bat, bird, and fish in this area. Below the surface, earthworms and soil organisms complete cycles of decomposition and renewal that happen almost entirely in darkness. This is where the nocturnal system begins.`
+        : `Rivers, lakes, and wetlands are the foundation of nocturnal ecology. Aquatic insects emerge after dark in their millions, forming the base of the food chain. Below the surface, soil organisms complete cycles of decomposition that happen almost entirely in darkness. This is where the nocturnal system begins.`,
+      nudge: `→ Avoid lighting near water edges. Even a single unshielded fixture disrupts aquatic insect emergence and carries ecological cost far downstream — and into the food chains that depend on it.`,
+      source: 'Source: Perkin et al. 2014 — Trends in Ecology & Evolution · DOI: 10.1016/j.tree.2014.06.002',
+      layer: 'water', species: null
+    },
+    // 2 — The air at night: moths and nocturnal pollinators
+    {
+      heading: 'The air at night — moths, beetles, and nocturnal pollinators',
+      body: `In ${mo}, the air above ${gn>0?'these parks and green spaces':'this area'} is alive with insects that most people never see. Moths are the primary nocturnal pollinators of this region — navigating by moonlight and scent to flowering plants that have evolved specifically to be pollinated after dark. Beetles, lacewings, and midges fill ecological roles that are invisible by day. ${s==='summer'?'This is peak season for nocturnal insect activity.':s==='spring'?'Insects are emerging from winter dormancy. The first warm nights bring out species that have waited months.':s==='autumn'?'Insects are preparing to overwinter. These final weeks of activity are critical for next year's populations.':'Many insects are dormant, but the soil fauna that support them remain active through the cold.'}`,
+      nudge: `→ A single bright unshielded light can attract and kill thousands of moths in one night, removing them from the pollination network permanently. Warm amber sources below 2700K reduce this significantly.`,
+      source: 'Source: van Langevelde et al. 2018 — Insect Conservation & Diversity · Gaston et al. 2015 — Phil. Trans. R. Soc. B',
+      layer: 'water', species: null
+    },
+    // 3 — The hunters: bats and owls
+    {
+      heading: m>=4&&m<=9 ? 'Bats and owls are hunting here tonight' : `Bats are ${m<6?'emerging':'entering hibernation'} — owls remain active`,
+      body: null, // AI-generated species detail
+      nudge: m>=4&&m<=9
+        ? `→ Turn off outdoor lights between dusk and dawn during ${s} months. Even low-level white LED above 3000K reduces bat foraging activity by up to 50% — directly affecting insect populations and the owls that depend on them.`
+        : `→ Avoid disturbing roost and hibernation sites. Lighting near these locations disrupts the energy cycles that bats and owls depend on through winter.`,
+      source: 'Source: Aziz et al. 2015 — Proceedings of the Royal Society B · GBIF occurrence database · DOI: 10.1098/rspb.2015.1218',
+      layer: 'bats', species: g.batList||[]
+    },
+    // 4 — The travellers: migratory birds
+    {
+      heading: mig.intensity==='high'
+        ? `${mig.label} is happening above here right now`
+        : mig.intensity==='medium'
+        ? `Migration is building above ${loc.split(',')[0]}`
+        : `The migration corridor above ${loc.split(',')[0]}`,
+      body: mig.intensity==='high'
+        ? `It is ${mig.label.toLowerCase()} season. On peak nights this ${mo}, tens of thousands of birds cross this exact sky heading ${mig.dir} — navigating by starlight and the Earth's magnetic field, following corridors their ancestors have used for thousands of years. They navigate the same darkness that the moths, bats, and soil organisms below them depend on.`
+        : mig.intensity==='medium'
+        ? `Migration is building in ${mo}. The flyway above here will carry hundreds of thousands of birds heading ${mig.dir} over the coming weeks. Many travel thousands of kilometres without stopping, fuelled by darkness and stars.`
+        : `This corridor carries up to 80,000 birds on peak migration nights each spring and autumn. In ${mo} migration is quiet — but this sky above here is one of the most significant nocturnal corridors in this region. The same darkness that bats need to forage and moths need to navigate is what these birds need to cross continents.`,
+      nudge: `→ Turn off non-essential lighting during ${mig.intensity==='high'?'peak migration nights this month':'spring and autumn migration seasons'}. Skyglow disorients migrating birds, pulling them off course and into fatal building collisions. A dark building saves lives.`,
+      source: 'Source: Loss et al. 2014 — The Condor · Fatal Light Awareness Program (FLAP Canada) · eBird / Cornell Lab',
+      layer: 'flyway', species: null
+    },
+    // 5 — The light: lands on everything assembled below
+    {
+      heading: b ? `The sky above here is Bortle ${b.class} — ${b.label}` : 'This is what artificial light at night looks like',
+      body: b
+        ? `The amber wash you see now is artificial light at night, measured by NASA satellite. It lands on everything you have just seen — the water, the moths, the bats, the birds crossing overhead. ${b.class>=7?'At Bortle '+b.class+', the Milky Way is completely invisible and the sky never reaches true darkness. Every nocturnal species above has adapted over millions of years to a sky that no longer exists here.':b.class>=5?'At Bortle '+b.class+', the Milky Way is faint or invisible. The sky is a fraction of its natural darkness. Every species here is navigating a compromised version of the night they evolved in.':'Even at Bortle '+b.class+', the sky is measurably brighter than natural darkness. Light pollution is cumulative — every additional source matters.'}`
+        : `The amber wash you see is artificial light at night, measured by NASA VIIRS satellite. It lands on everything you have just seen — the water, the moths, the bats, the birds crossing overhead. This light did not exist 100 years ago. Every species navigating this sky evolved in near-total darkness over millions of years.`,
+      nudge: `→ The most impactful changes: shield fixtures to direct light downward only, switch to warm sources below 3000K, reduce intensity after midnight. These benefit every layer of the nocturnal system you have just seen.`,
+      source: 'Source: Falchi et al. 2016 — Science Advances · NASA VIIRS DNB · DOI: 10.1126/sciadv.1600377',
+      layer: 'light', species: null
+    }
   ];
 }
 
@@ -1134,7 +1174,7 @@ function buildProg(){
     `<div class="pb" id="pb${i}"><div class="pb-f"></div></div>`).join('');
 }
 
-const LMAP=['light','water','water','bats','flyway'];
+const LMAP=['water','water','bats','flyway','light'];
 
 function showStep(s){
   NIGHT.step=s;
@@ -1188,12 +1228,12 @@ function buildNumScreen(){
     const cnt=(Math.floor(Math.random()*60)+40)*1000;
     $('num-lbl').textContent=`Birds crossing this sky on a peak night this ${mn(m)}`;
     $('num-val').textContent=cnt.toLocaleString();
-    $('num-cap').innerHTML=`During <strong>${mig.label.toLowerCase()}</strong> in ${mn(m)}, an estimated ${cnt.toLocaleString()} birds fly over this location in a single night — pulled away from their natural paths by <strong>artificial light at night</strong> instead of the stars they evolved to navigate by.`;
+    $('num-cap').innerHTML=`During <strong>${mig.label.toLowerCase()}</strong> in ${mn(m)}, an estimated ${cnt.toLocaleString()} birds fly over this location in a single night — pulled away from their natural paths by <strong>artificial light at night</strong> instead of the stars they evolved to navigate by. This system is <strong>4 billion years old.</strong> The light layer is approximately <strong>100 years old.</strong>`;
   }else{
     const mult=b?Math.round(Math.pow(2.5,b.class-1)):500;
     $('num-lbl').textContent='Times brighter than the natural night sky';
     $('num-val').textContent=`×${mult.toLocaleString()}`;
-    $('num-cap').innerHTML=`The sky above ${LOC.short_name.split(',')[0]} is approximately <strong>${mult.toLocaleString()} times brighter</strong> than it was before electric light. Every bat, moth, and migrating bird above this location navigates a sky <strong>that did not exist 100 years ago.</strong>`;
+    $('num-cap').innerHTML=`The sky above ${LOC.short_name.split(',')[0]} is approximately <strong>${mult.toLocaleString()} times brighter</strong> than it was before electric light. The system you just saw — water, insects, bats, migrating birds — is <strong>4 billion years old.</strong> The light layer is approximately <strong>100 years old.</strong>`;
   }
 }
 
