@@ -39,7 +39,7 @@
       --r: 8px;
     }
 
-    html, body { height: 100%; overflow: hidden; }
+    html, body { height: 100%; overflow: hidden; -webkit-overflow-scrolling: touch; }
     body {
       background: var(--bg); color: var(--t1);
       font-family: var(--fb); font-size: 14px;
@@ -106,21 +106,20 @@
     .hdr-tab .ti { font-size: 14px; }
 
     /* ── CONTENT AREA ── */
-    #content { flex: 1; overflow: hidden; position: relative; }
+    #content { flex: 1; overflow: hidden; position: relative; min-height: 0; }
 
     /* ── PANELS (full size inside content) ── */
     .panel { position:absolute; inset:0; display:none; overflow-y:auto; background:var(--bg); }
     .panel.on { display:block; }
-    /* Panels that need flex layout — centred */
-    #p-land.on, #p-tabs.on, #p-nload.on {
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-    }
-    /* Number, read, reframe — flex column but scrollable */
+    /* Flex panels */
+    #p-land.on, #p-tabs.on, #p-nload.on,
     #p-num.on, #p-read.on, #p-reframe.on {
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      min-height:100%;
+      display:flex !important;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
     }
-    /* Experience panel — no scroll, map fills it */
+    /* Experience panel — no scroll */
     .panel.noscroll { overflow:hidden; }
 
     /* ══════════════════════════════
@@ -129,7 +128,9 @@
     #p-land {
       padding: 2rem 3rem 5rem;
       text-align: center;
-      min-height: 100%;
+    }
+    #p-land input, #p-land button {
+      pointer-events: all !important;
     }
 
     .land-logo { font-family:var(--fd); font-size:clamp(72px,12vw,148px); letter-spacing:.05em; line-height:.9; margin-bottom:1rem; }
@@ -143,6 +144,8 @@
       border-radius:var(--r); color:var(--t1); font-family:var(--fb);
       font-size:16px; font-weight:300; padding:16px 50px 16px 20px;
       outline:none; transition:border-color .2s;
+      position:relative; z-index:10; pointer-events:all;
+      -webkit-appearance:none;
     }
     .land-addr-input::placeholder { color:var(--t3); }
     .land-addr-input:focus { border-color:rgba(255,255,255,.3); }
