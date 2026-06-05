@@ -758,8 +758,13 @@ function goLanding() {
 }
 
 /* ══ LANDING SEARCH ══ */
-$('land-input').addEventListener('keydown', e=>{ if(e.key==='Enter') doLandSearch(); });
-$('land-btn').addEventListener('click', doLandSearch);
+document.addEventListener('DOMContentLoaded', () => {
+  $('land-input').addEventListener('keydown', e=>{ if(e.key==='Enter') doLandSearch(); });
+  $('land-btn').addEventListener('click', doLandSearch);
+  $('file-input').addEventListener('change', handleFileChange);
+  $('addr-btn') && $('addr-btn').addEventListener('click', ()=>runCheck());
+  $('srch-input').addEventListener('keydown', handleSrchKey);
+});
 
 async function doLandSearch() {
   const q = $('land-input').value.trim(); if(!q) return;
@@ -801,7 +806,7 @@ function switchTab(tab) {
    TOOL 1 — CHECK YOUR LIGHT
 ══════════════════════════════ */
 
-$('file-input').addEventListener('change', async e=>{
+async function handleFileChange(e) {
   const file=e.target.files[0]; if(!file) return;
   const reader=new FileReader();
   reader.onload=async ev=>{
@@ -1335,12 +1340,12 @@ function mkLegend(){
 
 function openSrch(){$('srch-overlay').classList.add('open');setTimeout(()=>$('srch-input').focus(),100);}
 function closeSrch(){$('srch-overlay').classList.remove('open');}
-$('srch-input').addEventListener('keydown',async e=>{
+async function handleSrchKey(e) {
   if(e.key!=='Enter')return;
   const q=e.target.value.trim();if(!q)return;
   try{const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`,{headers:{'Accept-Language':'en'}});const d=await r.json();if(!d.length)throw new Error();const p=d[0];LOC.lat=parseFloat(p.lat);LOC.lon=parseFloat(p.lon);LOC.display_name=p.display_name;LOC.short_name=p.display_name.split(',').slice(0,2).join(',').trim();LOC.osm_id=p.osm_id;LOC.osm_type=p.osm_type;$('hdr-loc-name').textContent=LOC.short_name.split(',')[0];closeSrch();startNight();}
   catch(e){$('srch-err').textContent='Place not found.';}
-});
+}
 
 /* ══ SHARED DATA ══ */
 async function fetchBortle(lat,lon){try{const r=await fetch(`https://www.lightpollutionmap.info/QueryRaster/?ql=wa_2015&qt=point&qd=${lon},${lat}`);const d=await r.json();const m=d.mpsas||d.value;if(m)return mp2b(parseFloat(m));}catch(e){}return null;}
