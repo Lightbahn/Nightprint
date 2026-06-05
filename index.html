@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nightprint</title>
   <meta name="description" content="The mark your light leaves on the night.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,842 +13,757 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #000;
-      --bg-1:      #0c0e14;
-      --bg-2:      #13161f;
-      --border:    rgba(255,255,255,0.07);
-      --bm:        rgba(255,255,255,0.13);
-      --bh:        rgba(255,255,255,0.22);
-      --t1:        #ede9e0;
-      --t2:        rgba(237,233,224,0.55);
-      --t3:        rgba(237,233,224,0.28);
-      --amber:     #e88a0d;
-      --ab:        #f5a623;
-      --adim:      rgba(232,138,13,0.12);
-      --teal:      #26c994;
-      --tdim:      rgba(38,201,148,0.10);
-      --red:       #e05252;
-      --rdim:      rgba(224,82,82,0.10);
-      --green:     #3db87a;
-      --gdim:      rgba(61,184,122,0.10);
-      --indigo:    #6b63d4;
-      --fh: 'Urbanist',       sans-serif;
-      --fb: 'Poppins',        sans-serif;
-      --fm: 'Share Tech Mono',monospace;
-      --fd: 'Six Caps',       sans-serif;
-      --pad: clamp(1.25rem, 5vw, 2rem);
-      --r: 10px;
+      --bg:    #000;
+      --bg1:   #0c0e14;
+      --bg2:   #13161f;
+      --bo:    rgba(255,255,255,0.07);
+      --bm:    rgba(255,255,255,0.13);
+      --bh:    rgba(255,255,255,0.22);
+      --t1:    #ede9e0;
+      --t2:    rgba(237,233,224,0.55);
+      --t3:    rgba(237,233,224,0.28);
+      --amber: #e88a0d;
+      --ab:    #f5a623;
+      --adim:  rgba(232,138,13,0.12);
+      --teal:  #26c994;
+      --tdim:  rgba(38,201,148,0.10);
+      --red:   #e05252;
+      --rdim:  rgba(224,82,82,0.10);
+      --green: #3db87a;
+      --gdim:  rgba(61,184,122,0.10);
+      --ind:   #6b63d4;
+      --fh: 'Urbanist',        sans-serif;
+      --fb: 'Poppins',         sans-serif;
+      --fm: 'Share Tech Mono', monospace;
+      --fd: 'Six Caps',        sans-serif;
+      --r: 8px;
     }
 
-    html { scroll-behavior: smooth; }
+    html, body { height: 100%; overflow: hidden; }
     body {
       background: var(--bg); color: var(--t1);
       font-family: var(--fb); font-size: 14px;
       font-weight: 300; line-height: 1.6;
       -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
     }
 
     @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
     @keyframes fadeIn { from{opacity:0} to{opacity:1} }
     @keyframes spin   { to{transform:rotate(360deg)} }
-    @keyframes pulse  { 0%,100%{opacity:1} 50%{opacity:0.35} }
+    @keyframes pulse  { 0%,100%{opacity:1} 50%{opacity:.35} }
 
     .a1{opacity:0;animation:fadeUp .8s ease forwards .1s}
-    .a2{opacity:0;animation:fadeUp .8s ease forwards .25s}
-    .a3{opacity:0;animation:fadeUp .8s ease forwards .4s}
-    .a4{opacity:0;animation:fadeUp .8s ease forwards .55s}
-    .a5{opacity:0;animation:fadeUp .8s ease forwards .7s}
+    .a2{opacity:0;animation:fadeUp .8s ease forwards .3s}
+    .a3{opacity:0;animation:fadeUp .8s ease forwards .5s}
+    .a4{opacity:0;animation:fadeUp .8s ease forwards .7s}
 
-    .screen { display:none; min-height:100dvh; }
-    .screen.on { display:block; }
-    .screen.flex-on { display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    /* ── LAYOUT SHELL ── */
+    #app { width:100vw; height:100vh; display:flex; flex-direction:column; overflow:hidden; }
 
-    /* ── SHARED ── */
-    .logo-text { font-family:var(--fd); letter-spacing:0.05em; color:var(--t1); }
-    .label {
-      font-family:var(--fm); font-size:10px;
-      letter-spacing:0.18em; text-transform:uppercase; color:var(--t3);
+    /* ── HEADER (hidden until location set) ── */
+    #hdr {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 54px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--bo);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 200;
     }
-    .btn {
-      display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      font-family:var(--fm); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
-      border-radius:4px; padding:13px 22px; cursor:pointer; transition:all 0.2s; border:none; white-space:nowrap;
-    }
-    .btn svg { width:13px; height:13px; flex-shrink:0; }
-    .btn-amber  { background:var(--ab); color:#000; }
-    .btn-amber:hover  { background:#ffb830; }
-    .btn-ghost  { background:none; border:1px solid var(--bm); color:var(--t2); }
-    .btn-ghost:hover  { border-color:var(--bh); color:var(--t1); }
-    .btn-full   { width:100%; }
-    .spinner { width:18px; height:18px; border:1.5px solid var(--border); border-top-color:var(--amber); border-radius:50%; animation:spin .8s linear infinite; display:inline-block; }
-    .chip { font-family:var(--fm); font-size:10px; letter-spacing:0.07em; padding:4px 11px; border-radius:20px; border:1px solid var(--bm); color:var(--t3); }
-    .err-msg { font-family:var(--fm); font-size:10px; color:var(--amber); margin-top:8px; min-height:14px; }
+    #hdr.show { display: flex; }
 
-    /* ══════════════════════════════════════
-       HOME — TAB LANDING
-    ══════════════════════════════════════ */
-    #s-home {
-      min-height:100dvh; background:var(--bg);
-      display:none; flex-direction:column;
-      align-items:center; justify-content:center;
-      padding:2rem var(--pad) 5rem; text-align:center;
-      position:relative;
-    }
-    #s-home.on { display:flex; }
+    .hdr-logo { font-family:var(--fd); font-size:22px; letter-spacing:.05em; color:var(--t1); cursor:pointer; }
 
-    .home-logo { font-size:clamp(72px,18vw,160px); line-height:0.9; margin-bottom:1rem; }
-    .home-tagline {
-      font-family:var(--fb); font-size:clamp(14px,3.5vw,17px);
-      font-weight:300; color:var(--t2); max-width:340px;
-      line-height:1.7; margin-bottom:3rem;
+    .hdr-loc {
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--fm); font-size: 11px;
+      letter-spacing: .06em; color: var(--t2);
     }
+    .hdr-loc-dot { width:6px; height:6px; border-radius:50%; background:var(--teal); flex-shrink:0; box-shadow:0 0 6px rgba(38,201,148,.5); }
+    .hdr-loc-change { background:none; border:none; font-family:var(--fm); font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--t3); cursor:pointer; margin-left:4px; transition:color .2s; }
+    .hdr-loc-change:hover { color:var(--t2); }
 
-    .tab-cards {
-      display:flex; flex-direction:column;
-      gap:10px; width:100%; max-width:420px;
+    /* Tab switcher */
+    .hdr-tabs { display:flex; gap:4px; }
+    .hdr-tab {
+      display: flex; align-items: center; gap: 7px;
+      font-family: var(--fm); font-size: 10px;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: 7px 16px; border-radius: 4px;
+      cursor: pointer; transition: all .2s;
+      background: none; border: 1px solid transparent;
+      color: var(--t3);
     }
+    .hdr-tab:hover { color: var(--t2); border-color: var(--bo); }
+    .hdr-tab.active { color: var(--t1); border-color: var(--bm); background: var(--bg1); }
+    .hdr-tab .ti { font-size: 14px; }
 
-    .tab-card {
-      background:var(--bg-1); border:1px solid var(--border);
-      border-radius:var(--r); padding:1.25rem 1.5rem;
-      cursor:pointer; text-align:left;
-      transition:border-color 0.2s, background 0.2s;
-      display:flex; align-items:center; gap:14px;
-    }
-    .tab-card:hover { border-color:var(--bm); background:var(--bg-2); }
-    .tab-card:first-child:hover { border-color:var(--amber); }
-    .tab-card:last-child:hover  { border-color:var(--teal); }
+    /* ── CONTENT AREA ── */
+    #content { flex: 1; overflow: hidden; position: relative; }
 
-    .tc-icon { font-size:24px; flex-shrink:0; }
-    .tc-body { flex:1; }
-    .tc-title {
-      font-family:var(--fh); font-size:16px; font-weight:500;
-      color:var(--t1); margin-bottom:3px;
-    }
-    .tc-desc { font-family:var(--fb); font-size:12px; font-weight:300; color:var(--t3); line-height:1.5; }
-    .tc-arrow { color:var(--t3); flex-shrink:0; }
-    .tc-arrow svg { width:15px; height:15px; }
+    /* ── PANELS (full size inside content) ── */
+    .panel { position:absolute; inset:0; display:none; overflow-y:auto; background:var(--bg); }
+    .panel.on { display:block; }
+    /* Experience panel — no scroll */
+    .panel.noscroll { overflow:hidden; }
 
-    .home-about {
-      position:absolute; bottom:1.75rem;
-      font-family:var(--fm); font-size:10px; letter-spacing:0.12em; text-transform:uppercase;
-      color:var(--t3); cursor:pointer; background:none; border:none;
-      border-bottom:1px solid transparent;
-      transition:color 0.2s, border-color 0.2s;
+    /* ══════════════════════════════
+       PANEL: LANDING
+    ══════════════════════════════ */
+    #p-land {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 100%;
+      padding: 2rem 3rem 5rem;
+      text-align: center;
     }
-    .home-about:hover { color:var(--t2); border-bottom-color:var(--t3); }
+    #p-land.on { display: flex; }
 
-    /* ══════════════════════════════════════
-       TOOL 1 — CHECK YOUR LIGHT
-    ══════════════════════════════════════ */
+    .land-logo { font-family:var(--fd); font-size:clamp(72px,12vw,148px); letter-spacing:.05em; line-height:.9; margin-bottom:1rem; }
+    .land-tag  { font-family:var(--fb); font-size:clamp(14px,1.5vw,18px); font-weight:300; color:var(--t2); max-width:380px; line-height:1.7; margin-bottom:3rem; }
 
-    /* Entry */
-    #s-check {
-      background:var(--bg); padding:2rem var(--pad) 5rem;
-      position:relative;
+    .land-addr-wrap {
+      width:100%; max-width:460px; position:relative;
     }
+    .land-addr-input {
+      width:100%; background:var(--bg1); border:1px solid var(--bm);
+      border-radius:var(--r); color:var(--t1); font-family:var(--fb);
+      font-size:16px; font-weight:300; padding:16px 50px 16px 20px;
+      outline:none; transition:border-color .2s;
+    }
+    .land-addr-input::placeholder { color:var(--t3); }
+    .land-addr-input:focus { border-color:rgba(255,255,255,.3); }
+    .land-addr-btn {
+      position:absolute; right:14px; top:50%; transform:translateY(-50%);
+      background:none; border:none; color:var(--t3); cursor:pointer;
+      transition:color .2s; padding:4px; display:flex; align-items:center;
+    }
+    .land-addr-btn:hover { color:var(--ab); }
+    .land-addr-btn svg { width:20px; height:20px; }
 
-    .tool-nav {
-      display:flex; align-items:center; justify-content:space-between;
-      margin-bottom:2rem; padding-bottom:1rem;
-      border-bottom:1px solid var(--border);
-    }
-    .tool-nav-logo { font-size:20px; cursor:pointer; }
-    .tool-nav-back {
-      display:flex; align-items:center; gap:6px;
-      font-family:var(--fm); font-size:10px; letter-spacing:0.1em; text-transform:uppercase;
-      color:var(--t3); cursor:pointer; background:none; border:none; transition:color 0.2s;
-    }
-    .tool-nav-back:hover { color:var(--t2); }
-    .tool-nav-back svg { width:12px; height:12px; }
+    .land-hint { font-family:var(--fm); font-size:10px; letter-spacing:.08em; color:var(--t3); margin-top:10px; }
+    .err { font-family:var(--fm); font-size:10px; color:var(--amber); margin-top:8px; min-height:14px; }
 
-    .check-inner {
-      max-width:420px; margin:0 auto;
-      display:flex; flex-direction:column; align-items:center; text-align:center;
-    }
+    .land-about { position:absolute; bottom:1.75rem; font-family:var(--fm); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--t3); cursor:pointer; background:none; border:none; border-bottom:1px solid transparent; transition:color .2s, border-color .2s; }
+    .land-about:hover { color:var(--t2); border-bottom-color:var(--t3); }
 
-    .check-heading {
-      font-family:var(--fh); font-size:clamp(20px,5vw,26px);
-      font-weight:300; color:var(--t1); margin-bottom:0.5rem;
-    }
-    .check-sub {
-      font-family:var(--fb); font-size:13px; font-weight:300;
-      color:var(--t2); margin-bottom:2rem; max-width:320px; line-height:1.65;
+    /* spinner */
+    .spinner { width:18px; height:18px; border:1.5px solid var(--bo); border-top-color:var(--amber); border-radius:50%; animation:spin .8s linear infinite; display:inline-block; }
+
+    /* ══════════════════════════════
+       PANEL: CHECK YOUR LIGHT
+    ══════════════════════════════ */
+    #p-check { padding: 3rem 4rem 5rem; }
+
+    .check-layout {
+      max-width: 1200px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      grid-template-rows: auto;
+      gap: 3rem;
+      align-items: start;
     }
 
-    /* Photo zone */
-    .photo-zone { width:100%; margin-bottom:1.25rem; }
+    /* Left col — input */
+    .check-input-col {}
+
+    .check-heading { font-family:var(--fh); font-size:22px; font-weight:400; color:var(--t1); margin-bottom:.4rem; }
+    .check-sub     { font-family:var(--fb); font-size:13px; font-weight:300; color:var(--t2); line-height:1.65; margin-bottom:1.75rem; }
+
+    /* Photo */
     .photo-btn {
-      width:100%; background:var(--bg-1); border:1px dashed var(--bm);
-      border-radius:var(--r); padding:1.75rem 1.5rem; cursor:pointer;
-      transition:border-color 0.2s, background 0.2s;
-      display:flex; flex-direction:column; align-items:center; gap:9px; text-align:center;
+      width:100%; background:var(--bg1); border:1px dashed var(--bm);
+      border-radius:var(--r); padding:1.5rem 1.25rem; cursor:pointer;
+      transition:border-color .2s, background .2s;
+      display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; margin-bottom:1rem;
     }
-    .photo-btn:hover { border-color:var(--amber); background:var(--bg-2); }
-    .photo-btn:active { transform:scale(0.98); }
-    .photo-btn .pi { font-size:28px; line-height:1; }
-    .photo-btn .pl { font-family:var(--fb); font-size:15px; font-weight:400; color:var(--t1); }
-    .photo-btn .ps { font-family:var(--fm); font-size:10px; letter-spacing:0.07em; color:var(--t3); }
+    .photo-btn:hover { border-color:var(--amber); background:var(--bg2); }
+    .photo-btn .pi { font-size:26px; line-height:1; }
+    .photo-btn .pl { font-family:var(--fb); font-size:14px; font-weight:400; color:var(--t1); }
+    .photo-btn .ps { font-family:var(--fm); font-size:10px; letter-spacing:.06em; color:var(--t3); }
     #file-input { display:none; }
 
-    .photo-preview { width:100%; border-radius:var(--r); overflow:hidden; border:1px solid var(--bm); margin-bottom:1.25rem; display:none; position:relative; }
+    .photo-preview { width:100%; border-radius:var(--r); overflow:hidden; border:1px solid var(--bm); margin-bottom:1rem; display:none; position:relative; }
     .photo-preview.show { display:block; }
-    .photo-preview img { width:100%; display:block; max-height:240px; object-fit:cover; }
-    .photo-clear { position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.65); border:1px solid var(--bm); border-radius:20px; color:var(--t2); font-family:var(--fm); font-size:10px; letter-spacing:0.08em; padding:4px 10px; cursor:pointer; transition:all 0.2s; }
-    .photo-clear:hover { color:var(--t1); }
+    .photo-preview img { width:100%; display:block; max-height:200px; object-fit:cover; }
+    .photo-clear { position:absolute; top:8px; right:8px; background:rgba(0,0,0,.65); border:1px solid var(--bm); border-radius:20px; color:var(--t2); font-family:var(--fm); font-size:10px; letter-spacing:.07em; padding:4px 10px; cursor:pointer; }
 
-    .id-pill { display:none; background:var(--adim); border:1px solid rgba(232,138,13,0.25); border-radius:20px; padding:6px 14px; margin-bottom:1rem; font-family:var(--fm); font-size:11px; letter-spacing:0.06em; color:var(--ab); align-items:center; gap:8px; }
+    .id-pill { display:none; background:var(--adim); border:1px solid rgba(232,138,13,.25); border-radius:20px; padding:5px 13px; margin-bottom:.75rem; font-family:var(--fm); font-size:11px; letter-spacing:.05em; color:var(--ab); align-items:center; gap:8px; }
     .id-pill.show { display:inline-flex; }
 
-    .or-row { display:flex; align-items:center; gap:12px; width:100%; margin-bottom:1.25rem; }
-    .or-line { flex:1; height:1px; background:var(--border); }
-    .or-text { font-family:var(--fm); font-size:10px; letter-spacing:0.12em; color:var(--t3); }
+    .or-row { display:flex; align-items:center; gap:10px; margin-bottom:1rem; }
+    .or-line { flex:1; height:1px; background:var(--bo); }
+    .or-text { font-family:var(--fm); font-size:10px; letter-spacing:.1em; color:var(--t3); }
 
-    .fix-toggle { font-family:var(--fm); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--t3); cursor:pointer; background:none; border:none; border-bottom:1px solid transparent; transition:color 0.2s, border-color 0.2s; margin-bottom:1rem; }
+    .fix-toggle { font-family:var(--fm); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--t3); cursor:pointer; background:none; border:none; border-bottom:1px solid transparent; transition:color .2s; margin-bottom:.75rem; }
     .fix-toggle:hover { color:var(--t2); }
 
-    .fix-grid { display:none; grid-template-columns:repeat(3,1fr); gap:8px; width:100%; margin-bottom:1.25rem; }
+    .fix-grid { display:none; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:1rem; }
     .fix-grid.show { display:grid; }
-    .fcard { background:var(--bg-1); border:1px solid var(--border); border-radius:var(--r); padding:14px 8px 12px; cursor:pointer; text-align:center; transition:all 0.15s; display:flex; flex-direction:column; align-items:center; gap:7px; }
-    .fcard:hover { border-color:var(--bm); background:var(--bg-2); }
+    .fcard { background:var(--bg1); border:1px solid var(--bo); border-radius:var(--r); padding:13px 8px 11px; cursor:pointer; text-align:center; transition:all .15s; display:flex; flex-direction:column; align-items:center; gap:6px; }
+    .fcard:hover { border-color:var(--bm); background:var(--bg2); }
     .fcard.sel   { border-color:var(--amber); background:var(--adim); }
-    .fcard .fi   { font-size:20px; line-height:1; }
-    .fcard .fn   { font-family:var(--fm); font-size:9px; letter-spacing:0.07em; color:var(--t3); line-height:1.3; }
+    .fcard .fi   { font-size:19px; line-height:1; }
+    .fcard .fn   { font-family:var(--fm); font-size:9px; letter-spacing:.06em; color:var(--t3); line-height:1.3; }
     .fcard.sel .fn { color:var(--ab); }
 
-    .addr-wrap { width:100%; position:relative; opacity:0; pointer-events:none; transition:opacity 0.3s; }
-    .addr-wrap.show { opacity:1; pointer-events:all; }
-    .addr-input { width:100%; background:var(--bg-1); border:1px solid var(--bm); border-radius:var(--r); color:var(--t1); font-family:var(--fb); font-size:15px; font-weight:300; padding:15px 46px 15px 16px; outline:none; transition:border-color 0.2s; }
-    .addr-input::placeholder { color:var(--t3); }
-    .addr-input:focus { border-color:rgba(255,255,255,0.28); }
-    .addr-btn { position:absolute; right:13px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--t3); cursor:pointer; transition:color 0.2s; padding:4px; display:flex; align-items:center; }
-    .addr-btn:hover { color:var(--amber); }
-    .addr-btn svg { width:18px; height:18px; }
-
-    /* Result */
-    #s-result { display:none; background:var(--bg); }
-    #s-result.on { display:block; }
-
-    .result-page { max-width:720px; margin:0 auto; padding:0 var(--pad) 4rem; }
-
-    .result-nav {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:1.25rem 0; border-bottom:1px solid var(--border);
-      margin-bottom:2rem; position:sticky; top:0;
-      background:var(--bg); z-index:100;
+    .check-go {
+      width:100%; margin-top:1rem;
+      background:var(--ab); color:#000;
+      font-family:var(--fm); font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+      border:none; border-radius:4px; padding:14px; cursor:pointer; transition:background .2s;
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      opacity:.4; pointer-events:none;
     }
-    .result-nav-logo { font-size:20px; cursor:pointer; }
+    .check-go.ready { opacity:1; pointer-events:all; }
+    .check-go:hover { background:#ffb830; }
+    .check-go svg { width:13px; height:13px; }
 
-    .result-chips { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:1.75rem; }
+    /* Right col — result */
+    .check-result-col { min-height:400px; }
+
+    .result-empty {
+      height:100%; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      text-align:center; padding:3rem;
+      border:1px dashed var(--bo); border-radius:var(--r);
+    }
+    .result-empty-icon { font-size:36px; margin-bottom:1rem; opacity:.3; }
+    .result-empty-text { font-family:var(--fb); font-size:13px; color:var(--t3); max-width:240px; line-height:1.65; }
+
+    /* Result content */
+    .result-content { display:none; }
+    .result-content.show { display:block; }
+
+    /* label */
+    .lbl { font-family:var(--fm); font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--t3); }
 
     /* Compliance state */
-    .comp-state { display:flex; align-items:flex-start; gap:14px; padding:1.25rem 1.5rem; border-radius:var(--r); margin-bottom:1.5rem; border:1px solid; }
-    .comp-state.fail    { background:var(--rdim); border-color:rgba(224,82,82,0.25); }
-    .comp-state.partial { background:var(--adim); border-color:rgba(232,138,13,0.25); }
-    .comp-state.pass    { background:var(--gdim); border-color:rgba(61,184,122,0.25); }
-    .cs-dot { width:11px; height:11px; border-radius:50%; flex-shrink:0; margin-top:4px; }
-    .fail .cs-dot    { background:var(--red);   box-shadow:0 0 8px rgba(224,82,82,0.5); }
-    .partial .cs-dot { background:var(--ab);    box-shadow:0 0 8px rgba(245,166,35,0.5); }
-    .pass .cs-dot    { background:var(--green); box-shadow:0 0 8px rgba(61,184,122,0.5); }
+    .comp-state { display:flex; align-items:flex-start; gap:14px; padding:1.25rem 1.5rem; border-radius:var(--r); margin-bottom:1.25rem; border:1px solid; }
+    .comp-state.fail    { background:var(--rdim); border-color:rgba(224,82,82,.25); }
+    .comp-state.partial { background:var(--adim); border-color:rgba(232,138,13,.25); }
+    .comp-state.pass    { background:var(--gdim); border-color:rgba(61,184,122,.25); }
+    .cs-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+    .fail .cs-dot    { background:var(--red);   box-shadow:0 0 8px rgba(224,82,82,.5); }
+    .partial .cs-dot { background:var(--ab);    box-shadow:0 0 8px rgba(245,166,35,.5); }
+    .pass .cs-dot    { background:var(--green); box-shadow:0 0 8px rgba(61,184,122,.5); }
     .cs-body { flex:1; }
-    .cs-status { font-family:var(--fm); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:5px; }
+    .cs-status { font-family:var(--fm); font-size:11px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:5px; }
     .fail .cs-status    { color:var(--red); }
     .partial .cs-status { color:var(--ab); }
     .pass .cs-status    { color:var(--green); }
     .cs-sentence { font-family:var(--fb); font-size:14px; font-weight:300; line-height:1.75; color:var(--t1); }
 
     /* Checks */
-    .check-row { display:flex; align-items:flex-start; gap:12px; padding:14px 0; border-bottom:1px solid var(--border); }
-    .check-row:first-child { border-top:1px solid var(--border); }
-    .ck-icon { width:22px; height:22px; border-radius:50%; flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; }
-    .ck-icon.pass { background:rgba(61,184,122,0.12); color:var(--green); }
-    .ck-icon.fail { background:rgba(224,82,82,0.12); color:var(--red); }
-    .ck-icon.warn { background:rgba(232,138,13,0.12); color:var(--ab); }
-    .ck-body { flex:1; }
-    .ck-name { font-family:var(--fb); font-size:13px; font-weight:400; color:var(--t1); margin-bottom:3px; }
-    .ck-detail { font-family:var(--fb); font-size:12px; font-weight:300; color:var(--t3); line-height:1.6; }
-    .ck-detail.fd { color:rgba(224,82,82,0.65); }
-    .ck-detail.wd { color:rgba(232,138,13,0.65); }
+    .checks-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:1.5rem; }
+    .ck-card { background:var(--bg1); border:1px solid var(--bo); border-radius:var(--r); padding:14px; }
+    .ck-card-top { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+    .ck-icon { width:20px; height:20px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; }
+    .ck-icon.pass { background:rgba(61,184,122,.12); color:var(--green); }
+    .ck-icon.fail { background:rgba(224,82,82,.12); color:var(--red); }
+    .ck-icon.warn { background:rgba(232,138,13,.12); color:var(--ab); }
+    .ck-name { font-family:var(--fb); font-size:12px; font-weight:400; color:var(--t1); }
+    .ck-detail { font-family:var(--fb); font-size:11px; font-weight:300; color:var(--t3); line-height:1.6; }
+    .ck-detail.fd { color:rgba(224,82,82,.6); }
+    .ck-detail.wd { color:rgba(232,138,13,.6); }
+
+    /* Two-col result layout */
+    .result-two-col { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem; }
+
+    /* Expert voice */
+    .expert-voice { font-family:var(--fb); font-size:15px; font-weight:300; line-height:1.85; color:var(--t1); border-left:2px solid var(--amber); padding:.5rem 0 .5rem 1.25rem; margin-bottom:1.5rem; }
+
+    /* Recs */
+    .recs-wrap { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:1.5rem; }
+    .rec-card { background:var(--bg1); border:1px solid var(--bo); border-radius:var(--r); padding:1.1rem 1.25rem; position:relative; overflow:hidden; }
+    .rec-num { font-family:var(--fd); font-size:60px; color:rgba(255,255,255,.04); position:absolute; top:.5rem; right:1rem; line-height:1; user-select:none; }
+    .rec-title { font-family:var(--fh); font-size:14px; font-weight:500; color:var(--t1); margin-bottom:6px; }
+    .rec-why   { font-family:var(--fb); font-size:12px; font-weight:300; color:var(--t2); line-height:1.65; margin-bottom:10px; }
+    .rec-specs { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px; }
+    .rs  { font-family:var(--fm); font-size:10px; letter-spacing:.05em; padding:3px 9px; border-radius:10px; }
+    .rsa { background:var(--adim); color:var(--ab);   border:1px solid rgba(232,138,13,.2); }
+    .rst { background:var(--tdim); color:var(--teal); border:1px solid rgba(38,201,148,.2); }
+    .rsg { background:transparent; color:var(--t3);   border:1px solid var(--bm); }
+    .rec-impact { font-family:var(--fm); font-size:10px; color:var(--teal); letter-spacing:.05em; }
 
     /* Eco */
-    .eco-hdr { display:flex; align-items:center; justify-content:space-between; padding:13px 16px; background:var(--bg-1); border:1px solid var(--border); border-radius:var(--r); cursor:pointer; transition:border-color 0.2s; user-select:none; margin-bottom:0; }
+    .eco-hdr { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--bg1); border:1px solid var(--bo); border-radius:var(--r); cursor:pointer; transition:border-color .2s; user-select:none; }
     .eco-hdr:hover { border-color:var(--bm); }
     .eco-hdr.open { border-radius:var(--r) var(--r) 0 0; }
     .eco-hdr-l { display:flex; align-items:center; gap:10px; }
     .eco-hdr-title { font-family:var(--fb); font-size:13px; font-weight:400; color:var(--t1); }
-    .eco-hdr-cnt   { font-family:var(--fm); font-size:10px; letter-spacing:0.06em; color:var(--t3); }
-    .eco-chev { color:var(--t3); font-size:14px; transition:transform 0.3s; }
+    .eco-hdr-cnt   { font-family:var(--fm); font-size:10px; letter-spacing:.05em; color:var(--t3); }
+    .eco-chev { color:var(--t3); font-size:14px; transition:transform .3s; }
     .eco-hdr.open .eco-chev { transform:rotate(180deg); }
-    .eco-body { display:none; background:var(--bg-1); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:1rem 1.25rem; margin-bottom:1.5rem; }
+    .eco-body { display:none; background:var(--bg1); border:1px solid var(--bo); border-top:none; border-radius:0 0 var(--r) var(--r); padding:1rem 1.25rem; }
     .eco-body.open { display:block; }
-    .eco-item { display:flex; gap:12px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border); }
+    .eco-item { display:flex; gap:10px; align-items:flex-start; padding:9px 0; border-bottom:1px solid var(--bo); }
     .eco-item:last-child { border-bottom:none; padding-bottom:0; }
     .eco-item:first-child { padding-top:0; }
-    .eco-em { font-size:17px; flex-shrink:0; margin-top:1px; }
+    .eco-em { font-size:16px; flex-shrink:0; margin-top:1px; }
     .eco-txt { font-family:var(--fb); font-size:12px; font-weight:300; color:var(--t2); line-height:1.7; }
     .eco-txt strong { color:var(--t1); font-weight:400; }
-    .sp-row { display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding:5px 0; border-bottom:1px solid var(--border); font-size:11px; }
+
+    /* Species */
+    .sp-row { display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding:4px 0; border-bottom:1px solid var(--bo); font-size:11px; }
     .sp-row:last-child { border-bottom:none; }
     .sp-nm { font-family:var(--fb); color:var(--t2); }
     .sp-sc { font-family:var(--fb); font-size:10px; font-style:italic; color:var(--t3); }
-    .sp-tg { font-family:var(--fm); font-size:9px; letter-spacing:0.06em; white-space:nowrap; }
+    .sp-tg { font-family:var(--fm); font-size:9px; letter-spacing:.06em; white-space:nowrap; }
     .sp-mig { color:var(--ab); } .sp-ls { color:var(--teal); } .sp-re { color:var(--t3); }
 
-    /* Expert voice + recs */
-    .expert-voice { font-family:var(--fb); font-size:clamp(15px,3.5vw,17px); font-weight:300; line-height:1.85; color:var(--t1); border-left:2px solid var(--amber); padding:0.5rem 0 0.5rem 1.25rem; margin-bottom:1.75rem; }
-    .rec-primary { background:var(--bg-1); border:1px solid var(--border); border-radius:var(--r); padding:1.25rem 1.5rem; margin-bottom:10px; position:relative; overflow:hidden; }
-    .rec-primary::before { content:'1'; font-family:var(--fd); font-size:80px; color:rgba(255,255,255,0.03); position:absolute; top:0.5rem; right:1rem; line-height:1; user-select:none; }
-    .rec-sec { background:var(--bg-1); border:1px solid var(--border); border-radius:var(--r); padding:1rem 1.25rem; margin-bottom:10px; position:relative; overflow:hidden; }
-    .rec-sec::before { content:attr(data-n); font-family:var(--fd); font-size:80px; color:rgba(255,255,255,0.03); position:absolute; top:0.5rem; right:1rem; line-height:1; user-select:none; }
-    .rec-title { font-family:var(--fh); font-size:16px; font-weight:500; color:var(--t1); margin-bottom:6px; }
-    .rec-sec .rec-title { font-size:14px; }
-    .rec-why { font-family:var(--fb); font-size:13px; font-weight:300; color:var(--t2); line-height:1.7; margin-bottom:12px; }
-    .rec-sec .rec-why { font-size:12px; margin-bottom:10px; }
-    .rec-specs { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
-    .rs { font-family:var(--fm); font-size:10px; letter-spacing:0.06em; padding:4px 10px; border-radius:12px; }
-    .rsa { background:var(--adim); color:var(--ab);   border:1px solid rgba(232,138,13,0.2); }
-    .rst { background:var(--tdim); color:var(--teal); border:1px solid rgba(38,201,148,0.2); }
-    .rsg { background:transparent; color:var(--t3);   border:1px solid var(--bm); }
-    .rec-impact { font-family:var(--fm); font-size:11px; color:var(--teal); letter-spacing:0.05em; }
+    .act-row { display:flex; gap:8px; margin-bottom:2rem; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--fm); font-size:11px; letter-spacing:.12em; text-transform:uppercase; border-radius:4px; padding:12px 22px; cursor:pointer; transition:all .2s; border:none; }
+    .btn svg { width:13px; height:13px; flex-shrink:0; }
+    .btn-amber { background:var(--ab); color:#000; }
+    .btn-amber:hover { background:#ffb830; }
+    .btn-ghost { background:none; border:1px solid var(--bm); color:var(--t2); }
+    .btn-ghost:hover { border-color:var(--bh); color:var(--t1); }
 
-    /* Night character CTA */
-    .night-cta {
-      background:var(--bg-1); border:1px solid var(--border);
-      border-radius:var(--r); padding:1.25rem 1.5rem;
-      margin-bottom:1.5rem; display:flex;
-      align-items:center; gap:14px; cursor:pointer;
-      transition:border-color 0.2s, background 0.2s;
-      text-decoration:none;
-    }
-    .night-cta:hover { border-color:var(--teal); background:rgba(38,201,148,0.04); }
-    .night-cta-icon { font-size:22px; flex-shrink:0; }
-    .night-cta-body { flex:1; }
-    .night-cta-title { font-family:var(--fh); font-size:14px; font-weight:500; color:var(--teal); margin-bottom:2px; }
-    .night-cta-desc  { font-family:var(--fb); font-size:12px; font-weight:300; color:var(--t3); line-height:1.5; }
-    .night-cta-arrow { color:var(--t3); flex-shrink:0; }
-
-    .act-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:2rem; }
-    .closing { border-top:1px solid var(--border); padding-top:1.5rem; }
-    .closing-line { font-family:var(--fh); font-size:clamp(16px,4vw,20px); font-weight:300; line-height:1.5; color:var(--t2); margin-bottom:1rem; }
+    .closing { border-top:1px solid var(--bo); padding-top:1.25rem; margin-bottom:.5rem; }
+    .closing-line { font-family:var(--fh); font-size:clamp(15px,2vw,19px); font-weight:300; line-height:1.5; color:var(--t2); margin-bottom:.75rem; }
     .closing-line em { font-style:normal; color:var(--amber); }
     .src-row { display:flex; flex-wrap:wrap; gap:5px; }
-    .src-pill { font-family:var(--fm); font-size:9px; letter-spacing:0.04em; padding:3px 8px; border-radius:10px; border:1px solid var(--border); color:var(--t3); }
+    .src-pill { font-family:var(--fm); font-size:9px; letter-spacing:.04em; padding:3px 8px; border-radius:10px; border:1px solid var(--bo); color:var(--t3); }
 
-    /* Desktop */
-    @media(min-width:960px){
-      .result-page{max-width:860px;}
-      .top-cols{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;}
-      .verdict-col,.checks-col{margin-bottom:0;}
+    /* ══════════════════════════════
+       PANEL: NIGHT LOADING
+    ══════════════════════════════ */
+    #p-nload {
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      gap:1.5rem; text-align:center; padding:2rem;
     }
+    #p-nload.on { display:flex; }
+    .nload-ring { width:52px; height:52px; border:1px solid var(--bm); border-top-color:var(--teal); border-radius:50%; animation:spin 1s linear infinite; }
+    .nload-line { font-family:var(--fb); font-size:17px; font-weight:300; color:var(--t2); max-width:260px; line-height:1.65; animation:pulse 2s ease-in-out infinite; }
+    .nload-line strong { color:var(--t1); font-weight:400; }
 
-    /* ══════════════════════════════════════
-       TOOL 2 — READ THE NIGHT
-    ══════════════════════════════════════ */
-
-    /* Night entry */
-    #s-night-entry {
-      background:var(--bg); padding:2rem var(--pad) 5rem;
-      position:relative;
-    }
-
-    .night-entry-inner { max-width:420px; margin:0 auto; display:flex; flex-direction:column; align-items:center; text-align:center; }
-    .night-heading { font-family:var(--fh); font-size:clamp(20px,5vw,28px); font-weight:300; color:var(--t1); margin-bottom:0.5rem; }
-    .night-sub { font-family:var(--fb); font-size:13px; font-weight:300; color:var(--t2); margin-bottom:2rem; max-width:300px; line-height:1.65; }
-
-    /* Night loading */
-    #s-night-load { background:var(--bg); display:none; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; min-height:100dvh; text-align:center; padding:2rem; }
-    #s-night-load.on { display:flex; }
-    .nload-spinner { width:48px; height:48px; border:1px solid var(--bm); border-top-color:var(--teal); border-radius:50%; animation:spin 1s linear infinite; }
-    .nload-text { font-family:var(--fb); font-size:16px; font-weight:300; color:var(--t2); max-width:260px; line-height:1.65; animation:pulse 2s ease-in-out infinite; }
-    .nload-text strong { color:var(--t1); font-weight:400; }
-
-    /* Experience — full screen map */
-    #s-exp { display:none; position:relative; width:100vw; height:100dvh; overflow:hidden; background:#000; }
-    #s-exp.on { display:block; }
+    /* ══════════════════════════════
+       PANEL: EXPERIENCE (map)
+    ══════════════════════════════ */
+    #p-exp { overflow:hidden; }
     #exp-map { position:absolute; inset:0; width:100%; height:100%; opacity:0; transition:opacity 1.5s ease; }
     #exp-map.vis { opacity:1; }
 
-    .exp-nav { position:absolute; top:1.25rem; left:var(--pad); z-index:600; display:flex; align-items:center; gap:1rem; }
-    .exp-nav-logo { font-family:var(--fd); font-size:18px; letter-spacing:0.05em; color:rgba(255,255,255,0.6); cursor:pointer; }
+    .exp-srch-btn { position:absolute; top:1rem; right:1.5rem; z-index:600; background:rgba(0,0,0,.55); border:1px solid var(--bm); border-radius:3px; color:var(--t3); font-family:var(--fm); font-size:10px; letter-spacing:.1em; text-transform:uppercase; padding:7px 13px; cursor:pointer; transition:all .2s; backdrop-filter:blur(4px); }
+    .exp-srch-btn:hover { border-color:var(--teal); color:var(--teal); }
 
-    .exp-search-btn { position:absolute; top:1.25rem; right:var(--pad); z-index:600; background:rgba(0,0,0,0.55); border:1px solid var(--bm); border-radius:3px; color:var(--t3); font-family:var(--fm); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; padding:7px 13px; cursor:pointer; transition:all 0.2s; backdrop-filter:blur(4px); }
-    .exp-search-btn:hover { border-color:var(--teal); color:var(--teal); }
-
-    /* Search overlay */
-    .srch-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.88); z-index:700; display:none; align-items:center; justify-content:center; flex-direction:column; gap:1rem; backdrop-filter:blur(8px); }
+    .srch-overlay { position:absolute; inset:0; background:rgba(0,0,0,.88); z-index:700; display:none; align-items:center; justify-content:center; flex-direction:column; gap:1rem; backdrop-filter:blur(8px); }
     .srch-overlay.open { display:flex; }
-    .srch-overlay input { background:transparent; border:none; border-bottom:1px solid var(--bh); color:var(--t1); font-family:var(--fb); font-size:18px; font-weight:300; padding:12px 0; outline:none; width:100%; max-width:400px; text-align:center; transition:border-color 0.2s; }
+    .srch-overlay input { background:transparent; border:none; border-bottom:1px solid var(--bh); color:var(--t1); font-family:var(--fb); font-size:18px; font-weight:300; padding:12px 0; outline:none; width:100%; max-width:400px; text-align:center; transition:border-color .2s; }
     .srch-overlay input::placeholder { color:var(--t3); }
     .srch-overlay input:focus { border-color:var(--teal); }
-    .srch-overlay-hint { font-family:var(--fm); font-size:10px; letter-spacing:0.1em; color:var(--t3); }
-    .srch-close { position:absolute; top:1.25rem; right:var(--pad); background:none; border:none; color:var(--t3); font-family:var(--fm); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; transition:color 0.2s; }
+    .srch-hint { font-family:var(--fm); font-size:10px; letter-spacing:.1em; color:var(--t3); }
+    .srch-close { position:absolute; top:1rem; right:1.5rem; background:none; border:none; color:var(--t3); font-family:var(--fm); font-size:10px; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:color .2s; }
     .srch-close:hover { color:var(--t1); }
 
     /* Progress bars */
-    .prog-bars { display:flex; gap:5px; margin-bottom:0.75rem; }
-    .pb { height:2px; flex:1; background:rgba(255,255,255,0.1); border-radius:2px; position:relative; overflow:hidden; }
-    .pb-fill { position:absolute; left:0; top:0; bottom:0; background:var(--teal); border-radius:2px; width:0; transition:width 0.4s ease; }
-    .pb.done .pb-fill { width:100%; }
-    .pb.active .pb-fill { width:100%; transition:width 2.5s linear; }
+    .prog { display:flex; gap:5px; margin-bottom:.75rem; }
+    .pb { height:2px; flex:1; background:rgba(255,255,255,.1); border-radius:2px; position:relative; overflow:hidden; }
+    .pb-f { position:absolute; left:0; top:0; bottom:0; background:var(--teal); border-radius:2px; width:0; transition:width .4s ease; }
+    .pb.done .pb-f { width:100%; }
+    .pb.active .pb-f { width:100%; transition:width 2.5s linear; }
 
-    /* Narration panel */
-    .narr-panel { position:absolute; bottom:0; left:0; right:0; z-index:500; padding:4rem var(--pad) 1.75rem; background:linear-gradient(to top,rgba(0,0,0,0.92) 0%,rgba(0,0,0,0.7) 55%,transparent 100%); }
+    /* Narration */
+    .narr { position:absolute; bottom:0; left:0; right:0; z-index:500; padding:4rem 3rem 2rem; background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.65) 55%,transparent 100%); }
+    .nh { font-family:var(--fh); font-size:clamp(18px,2vw,26px); font-weight:400; color:var(--t1); margin-bottom:.5rem; opacity:0; transform:translateY(7px); transition:opacity .7s ease, transform .7s ease; }
+    .nb { font-family:var(--fb); font-size:clamp(13px,1.3vw,15px); font-weight:300; color:var(--t2); max-width:640px; line-height:1.75; margin-bottom:.6rem; opacity:0; transform:translateY(7px); transition:opacity .7s ease .15s, transform .7s ease .15s; }
+    .nn { font-family:var(--fm); font-size:11px; letter-spacing:.04em; color:var(--amber); max-width:580px; line-height:1.6; margin-bottom:.5rem; opacity:0; transform:translateY(7px); transition:opacity .7s ease .3s, transform .7s ease .3s; }
+    .ns { font-family:var(--fm); font-size:10px; color:var(--t3); letter-spacing:.04em; margin-bottom:1rem; opacity:0; transition:opacity .7s ease .4s; }
+    .nsp { max-width:480px; margin-bottom:1rem; opacity:0; transition:opacity .7s ease .5s; }
+    .nh.vis,.nb.vis,.nn.vis,.ns.vis,.nsp.vis { opacity:1; transform:none; }
 
-    .narr-heading { font-family:var(--fh); font-size:clamp(17px,2.5vw,24px); font-weight:400; color:var(--t1); margin-bottom:0.5rem; opacity:0; transform:translateY(7px); transition:opacity .7s ease, transform .7s ease; }
-    .narr-heading.vis { opacity:1; transform:translateY(0); }
-    .narr-body { font-family:var(--fb); font-size:clamp(12px,1.6vw,14px); font-weight:300; color:var(--t2); max-width:540px; line-height:1.75; margin-bottom:0.6rem; opacity:0; transform:translateY(7px); transition:opacity .7s ease .15s, transform .7s ease .15s; }
-    .narr-body.vis { opacity:1; transform:translateY(0); }
-    .narr-nudge { font-family:var(--fm); font-size:11px; letter-spacing:0.04em; color:var(--amber); max-width:500px; line-height:1.6; margin-bottom:0.5rem; opacity:0; transform:translateY(7px); transition:opacity .7s ease .3s, transform .7s ease .3s; }
-    .narr-nudge.vis { opacity:1; transform:translateY(0); }
-    .narr-source { font-family:var(--fm); font-size:10px; color:var(--t3); letter-spacing:0.04em; margin-bottom:1rem; opacity:0; transition:opacity .7s ease .4s; }
-    .narr-source.vis { opacity:1; }
-
-    /* Species list in narration */
-    .narr-species { max-width:440px; margin-bottom:1rem; opacity:0; transition:opacity .7s ease .5s; }
-    .narr-species.vis { opacity:1; }
-
-    /* Nav buttons */
     .narr-btns { display:flex; align-items:center; justify-content:flex-end; gap:8px; }
-    .nbtn-back { display:inline-flex; align-items:center; gap:7px; font-family:var(--fm); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.3); background:none; border:1px solid rgba(255,255,255,0.1); border-radius:3px; padding:11px 18px; cursor:pointer; transition:all 0.2s; opacity:0; pointer-events:none; }
-    .nbtn-back.vis  { opacity:1; pointer-events:all; }
-    .nbtn-back:hover { color:rgba(255,255,255,0.6); border-color:rgba(255,255,255,0.25); }
-    .nbtn-back svg { width:12px; height:12px; }
-    .nbtn-cont { display:inline-flex; align-items:center; gap:8px; font-family:var(--fm); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#000; background:var(--teal); border:none; border-radius:3px; padding:12px 22px; cursor:pointer; transition:background 0.2s, opacity 0.3s; opacity:0; pointer-events:none; margin-left:auto; }
-    .nbtn-cont.vis  { opacity:1; pointer-events:all; }
-    .nbtn-cont:hover { background:#2fdea2; }
-    .nbtn-cont svg { width:13px; height:13px; }
+    .nb-back { display:inline-flex; align-items:center; gap:7px; font-family:var(--fm); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.3); background:none; border:1px solid rgba(255,255,255,.1); border-radius:3px; padding:11px 18px; cursor:pointer; transition:all .2s; opacity:0; pointer-events:none; }
+    .nb-back.vis { opacity:1; pointer-events:all; }
+    .nb-back:hover { color:rgba(255,255,255,.6); border-color:rgba(255,255,255,.25); }
+    .nb-back svg { width:12px; height:12px; }
+    .nb-cont { display:inline-flex; align-items:center; gap:8px; font-family:var(--fm); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#000; background:var(--teal); border:none; border-radius:3px; padding:12px 22px; cursor:pointer; transition:background .2s, opacity .3s; opacity:0; pointer-events:none; margin-left:auto; }
+    .nb-cont.vis { opacity:1; pointer-events:all; }
+    .nb-cont:hover { background:#2fdea2; }
+    .nb-cont svg { width:13px; height:13px; }
 
-    /* Map legend */
-    .exp-legend { position:absolute; bottom:220px; right:var(--pad); z-index:500; display:flex; flex-direction:column; gap:5px; opacity:0; transition:opacity 1s; pointer-events:none; }
+    .exp-legend { position:absolute; bottom:200px; right:2rem; z-index:500; display:flex; flex-direction:column; gap:5px; opacity:0; transition:opacity 1s; pointer-events:none; }
     .exp-legend.vis { opacity:1; }
-    .leg-row { display:flex; align-items:center; gap:7px; font-family:var(--fm); font-size:10px; color:rgba(255,255,255,0.4); letter-spacing:0.04em; }
+    .leg-row { display:flex; align-items:center; gap:7px; font-family:var(--fm); font-size:10px; color:rgba(255,255,255,.4); letter-spacing:.04em; }
     .leg-dot  { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
     .leg-line { width:17px; height:2px; border-radius:1px; flex-shrink:0; }
     .leg-sq   { width:10px; height:6px; border-radius:2px; flex-shrink:0; }
 
-    /* Number screen */
-    #s-num { display:none; background:var(--bg); min-height:100dvh; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem var(--pad); position:relative; }
-    #s-num.on { display:flex; }
-    .num-label { font-family:var(--fm); font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--t3); margin-bottom:1.5rem; opacity:0; animation:fadeUp 1s ease forwards .2s; }
-    .num-val { font-family:var(--fh); font-size:clamp(48px,12vw,100px); font-weight:300; color:var(--ab); line-height:1; margin-bottom:1.25rem; opacity:0; animation:fadeUp 1s ease forwards .5s; }
-    .num-caption { font-family:var(--fb); font-size:clamp(14px,2.2vw,18px); font-weight:300; line-height:1.8; color:var(--t2); max-width:520px; margin-bottom:2rem; opacity:0; animation:fadeUp 1s ease forwards .8s; }
-    .num-caption strong { color:var(--t1); font-weight:400; }
-    .num-actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; opacity:0; animation:fadeUp 1s ease forwards 1s; }
-    .num-continue { position:absolute; bottom:2rem; display:inline-flex; align-items:center; gap:8px; font-family:var(--fm); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#000; background:var(--teal); border:none; border-radius:3px; padding:12px 22px; cursor:pointer; transition:background 0.2s; opacity:0; animation:fadeUp 1s ease forwards 1.2s; }
-    .num-continue:hover { background:#2fdea2; }
+    /* ══════════════════════════════
+       PANEL: NUMBER
+    ══════════════════════════════ */
+    #p-num { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem 4rem; position:relative; min-height:100%; }
+    #p-num.on { display:flex; }
+    .num-lbl { font-family:var(--fm); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--t3); margin-bottom:1.5rem; opacity:0; animation:fadeUp 1s ease forwards .2s; }
+    .num-val { font-family:var(--fh); font-size:clamp(56px,10vw,110px); font-weight:300; color:var(--ab); line-height:1; margin-bottom:1.25rem; opacity:0; animation:fadeUp 1s ease forwards .5s; }
+    .num-cap { font-family:var(--fb); font-size:clamp(14px,1.6vw,18px); font-weight:300; line-height:1.8; color:var(--t2); max-width:560px; margin-bottom:2rem; opacity:0; animation:fadeUp 1s ease forwards .8s; }
+    .num-cap strong { color:var(--t1); font-weight:400; }
+    .num-acts { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; opacity:0; animation:fadeUp 1s ease forwards 1s; }
+    .num-cont { position:absolute; bottom:2rem; display:inline-flex; align-items:center; gap:8px; font-family:var(--fm); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#000; background:var(--teal); border:none; border-radius:3px; padding:12px 22px; cursor:pointer; transition:background .2s; opacity:0; animation:fadeUp 1s ease forwards 1.2s; }
+    .num-cont:hover { background:#2fdea2; }
 
-    /* Reading screen */
-    #s-read { display:none; background:var(--bg); min-height:100dvh; flex-direction:column; align-items:center; justify-content:center; padding:2rem var(--pad) 6rem; }
-    #s-read.on { display:flex; }
-    .read-wrap { max-width:580px; width:100%; }
-    .read-kicker { font-family:var(--fm); font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--teal); margin-bottom:0.4rem; opacity:0; animation:fadeUp 1s ease forwards .2s; }
-    .read-loc { font-family:var(--fm); font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--t3); margin-bottom:1.5rem; opacity:0; animation:fadeUp 1s ease forwards .3s; }
-    .read-text { font-family:var(--fb); font-size:clamp(15px,1.8vw,18px); font-weight:300; line-height:1.95; color:var(--t2); border-left:1px solid var(--indigo); padding-left:1.5rem; margin-bottom:2.5rem; opacity:0; animation:fadeUp 1.2s ease forwards .5s; }
+    /* ══════════════════════════════
+       PANEL: READING
+    ══════════════════════════════ */
+    #p-read { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem 4rem 5rem; min-height:100%; }
+    #p-read.on { display:flex; }
+    .read-wrap { max-width:680px; width:100%; }
+    .read-kicker { font-family:var(--fm); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--teal); margin-bottom:.4rem; opacity:0; animation:fadeUp 1s ease forwards .2s; }
+    .read-loc    { font-family:var(--fm); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--t3); margin-bottom:1.5rem; opacity:0; animation:fadeUp 1s ease forwards .3s; }
+    .read-text   { font-family:var(--fb); font-size:clamp(15px,1.6vw,18px); font-weight:300; line-height:1.95; color:var(--t2); border-left:1px solid var(--ind); padding-left:1.5rem; margin-bottom:2.5rem; opacity:0; animation:fadeUp 1.2s ease forwards .5s; }
     .read-sources { opacity:0; animation:fadeUp 1s ease forwards .9s; margin-bottom:2rem; }
 
-    /* Reframe */
-    #s-reframe { display:none; background:var(--bg); min-height:100dvh; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem var(--pad); position:relative; }
-    #s-reframe.on { display:flex; }
-    .reframe-line { font-family:var(--fh); font-size:clamp(22px,4vw,44px); font-weight:300; line-height:1.4; color:var(--t1); max-width:600px; margin-bottom:3rem; opacity:0; animation:fadeUp 1.4s ease forwards .3s; }
+    /* ══════════════════════════════
+       PANEL: REFRAME
+    ══════════════════════════════ */
+    #p-reframe { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem 4rem; min-height:100%; position:relative; }
+    #p-reframe.on { display:flex; }
+    .reframe-line { font-family:var(--fh); font-size:clamp(24px,3.5vw,44px); font-weight:300; line-height:1.4; color:var(--t1); max-width:640px; margin-bottom:3rem; opacity:0; animation:fadeUp 1.4s ease forwards .3s; }
     .reframe-line em { font-style:normal; color:var(--amber); }
-    .reframe-check-cta { background:var(--bg-1); border:1px solid var(--border); border-radius:var(--r); padding:1.25rem 1.5rem; margin-bottom:2rem; display:flex; align-items:center; gap:14px; cursor:pointer; transition:border-color 0.2s, background 0.2s; max-width:420px; width:100%; opacity:0; animation:fadeUp 1s ease forwards 1s; }
-    .reframe-check-cta:hover { border-color:var(--amber); background:var(--adim); }
-    .rcc-icon { font-size:20px; flex-shrink:0; }
-    .rcc-body { flex:1; text-align:left; }
-    .rcc-title { font-family:var(--fh); font-size:14px; font-weight:500; color:var(--amber); margin-bottom:2px; }
-    .rcc-desc  { font-family:var(--fb); font-size:12px; font-weight:300; color:var(--t3); }
-    .reframe-acts { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; opacity:0; animation:fadeUp 1s ease forwards 1.2s; }
-    .reframe-about { position:absolute; bottom:2rem; font-family:var(--fm); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--t3); background:none; border:none; cursor:pointer; border-bottom:1px solid transparent; transition:color 0.2s, border-color 0.2s; opacity:0; animation:fadeUp 1s ease forwards 1.4s; }
+    .reframe-acts { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; opacity:0; animation:fadeUp 1s ease forwards 1.2s; }
+    .reframe-about { position:absolute; bottom:2rem; font-family:var(--fm); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--t3); background:none; border:none; cursor:pointer; border-bottom:1px solid transparent; transition:color .2s, border-color .2s; opacity:0; animation:fadeUp 1s ease forwards 1.4s; }
     .reframe-about:hover { color:var(--t2); border-bottom-color:var(--t3); }
 
     /* Leaflet */
     .leaflet-container { background:#000 !important; font-family:var(--fm) !important; }
-    .leaflet-control-zoom { margin-top:60px !important; }
-    .leaflet-control-zoom a { background:rgba(0,0,0,0.7) !important; color:rgba(255,255,255,0.5) !important; border-color:var(--bm) !important; }
+    .leaflet-control-zoom { margin-top:10px !important; }
+    .leaflet-control-zoom a { background:rgba(0,0,0,.7) !important; color:rgba(255,255,255,.5) !important; border-color:var(--bm) !important; }
     .leaflet-control-zoom a:hover { color:var(--teal) !important; }
     .leaflet-control-attribution { display:none !important; }
-
-    @media(max-width:480px){ .fix-grid{grid-template-columns:repeat(2,1fr);} }
   </style>
 </head>
 <body>
+<div id="app">
 
-<!-- ══ HOME ══ -->
-<div id="s-home" class="screen on">
-  <p class="label a1" style="margin-bottom:1rem;margin-top:2.5rem;text-align:center;">The mark your light leaves on the night</p>
-  <h1 class="logo-text home-logo a2">NIGHTPRINT</h1>
-  <p class="home-tagline a3">Two ways to understand the night where you are.</p>
-
-  <div class="tab-cards a4">
-    <div class="tab-card" onclick="goCheck()">
-      <span class="tc-icon">💡</span>
-      <div class="tc-body">
-        <p class="tc-title">Check your light</p>
-        <p class="tc-desc">Is your outdoor fixture dark sky compliant? Get a verdict and exactly what to change.</p>
-      </div>
-      <span class="tc-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+  <!-- ── PERSISTENT HEADER ── -->
+  <header id="hdr">
+    <span class="hdr-logo" onclick="goLanding()">NIGHTPRINT</span>
+    <div class="hdr-loc">
+      <div class="hdr-loc-dot"></div>
+      <span id="hdr-loc-name"></span>
+      <button class="hdr-loc-change" onclick="goLanding()">Change</button>
     </div>
-    <div class="tab-card" onclick="goNight()">
-      <span class="tc-icon">🌙</span>
-      <div class="tc-body">
-        <p class="tc-title">Read the night</p>
-        <p class="tc-desc">Discover what lives in the dark at any location — what's there, what's at risk, and what the light is doing to it.</p>
-      </div>
-      <span class="tc-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-    </div>
-  </div>
-
-  <button class="home-about a5" onclick="showAbout()">About Nightprint</button>
-</div>
-
-<!-- ══ TOOL 1: CHECK ENTRY ══ -->
-<div id="s-check" class="screen">
-  <div class="tool-nav">
-    <span class="logo-text tool-nav-logo" onclick="goHome()">NIGHTPRINT</span>
-    <button class="tool-nav-back" onclick="goHome()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-      Back
-    </button>
-  </div>
-  <div class="check-inner">
-    <h2 class="check-heading">Check your light</h2>
-    <p class="check-sub">Photograph your fixture or its packaging. We'll tell you if it's dark sky compliant and exactly what to change.</p>
-
-    <div class="photo-zone">
-      <div class="photo-btn" id="photo-btn" onclick="document.getElementById('file-input').click()">
-        <span class="pi">📷</span>
-        <span class="pl">Photograph your outdoor light</span>
-        <span class="ps">Or the box it came in — we'll read the specs</span>
-      </div>
-    </div>
-    <input type="file" id="file-input" accept="image/*" capture="environment">
-
-    <div class="photo-preview" id="photo-preview">
-      <img id="photo-img" src="" alt="Your light">
-      <button class="photo-clear" onclick="clearPhoto()">✕ Remove</button>
-    </div>
-
-    <div class="id-pill" id="id-pill"><span>📍</span><span id="id-text"></span><button onclick="clearPhoto()" style="background:none;border:none;color:rgba(237,233,224,0.4);cursor:pointer;font-size:12px;padding:0;margin-left:4px;">✕</button></div>
-
-    <div class="or-row"><div class="or-line"></div><span class="or-text">or</span><div class="or-line"></div></div>
-    <button class="fix-toggle" id="fix-toggle" onclick="toggleGrid()">Choose fixture type manually ↓</button>
-
-    <div class="fix-grid" id="fix-grid">
-      <div class="fcard" data-f="floodlight"     data-l="Floodlight"     onclick="selectF(this)"><span class="fi">💡</span><span class="fn">Floodlight</span></div>
-      <div class="fcard" data-f="wall-lantern"   data-l="Wall lantern"   onclick="selectF(this)"><span class="fi">🏮</span><span class="fn">Wall lantern</span></div>
-      <div class="fcard" data-f="path-light"     data-l="Path lighting"  onclick="selectF(this)"><span class="fi">🔦</span><span class="fn">Path lighting</span></div>
-      <div class="fcard" data-f="spotlight"      data-l="Spotlight"      onclick="selectF(this)"><span class="fi">🔆</span><span class="fn">Spotlight</span></div>
-      <div class="fcard" data-f="string-lights"  data-l="String lights"  onclick="selectF(this)"><span class="fi">✨</span><span class="fn">String lights</span></div>
-      <div class="fcard" data-f="security-light" data-l="Security light" onclick="selectF(this)"><span class="fi">🔒</span><span class="fn">Security light</span></div>
-    </div>
-
-    <div class="addr-wrap" id="addr-wrap">
-      <input class="addr-input" id="addr-input" type="text" placeholder="Your address or postcode" autocomplete="off" spellcheck="false">
-      <button class="addr-btn" id="addr-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <div class="hdr-tabs">
+      <button class="hdr-tab" id="tab-check" onclick="switchTab('check')">
+        <span class="ti">💡</span> Check your light
       </button>
-      <p class="err-msg" id="addr-err"></p>
-    </div>
-  </div>
-</div>
-
-<!-- ══ CHECK RESULT ══ -->
-<div id="s-result" class="screen">
-  <div class="result-page">
-    <nav class="result-nav">
-      <span class="logo-text result-nav-logo" onclick="goHome()">NIGHTPRINT</span>
-      <button class="tool-nav-back" onclick="goScreen('s-check')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-        Check another
+      <button class="hdr-tab" id="tab-night" onclick="switchTab('night')">
+        <span class="ti">🌙</span> Read the night
       </button>
-    </nav>
+    </div>
+  </header>
 
-    <div class="result-chips" id="result-chips"></div>
+  <!-- ── CONTENT ── -->
+  <div id="content">
 
-    <div class="top-cols">
-      <div class="verdict-col">
-        <p class="label" style="margin-bottom:.75rem;">Dark sky compliance</p>
-        <div class="comp-state" id="comp-state">
-          <div class="cs-dot"></div>
-          <div class="cs-body">
-            <p class="cs-status" id="cs-status"></p>
-            <p class="cs-sentence" id="cs-sentence">Generating verdict…</p>
+    <!-- LANDING -->
+    <div class="panel on" id="p-land">
+      <p class="lbl a1" style="margin-bottom:1rem;">The mark your light leaves on the night</p>
+      <h1 class="land-logo a2">NIGHTPRINT</h1>
+      <p class="land-tag a3">Enter a location to check your light's impact and read the night.</p>
+      <div class="land-addr-wrap a4">
+        <input class="land-addr-input" id="land-input" type="text"
+          placeholder="Enter a city, address, or postcode"
+          autocomplete="off" spellcheck="false">
+        <button class="land-addr-btn" id="land-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+        <p class="err" id="land-err"></p>
+      </div>
+      <p class="land-hint a4">Try "Ottawa" or "152 Elgin St, Ottawa" or "Banff National Park"</p>
+      <button class="land-about" onclick="showAbout()">About Nightprint</button>
+    </div>
+
+    <!-- CHECK YOUR LIGHT -->
+    <div class="panel" id="p-check">
+      <div class="check-layout">
+
+        <!-- Left: input -->
+        <div class="check-input-col">
+          <h2 class="check-heading">Check your light</h2>
+          <p class="check-sub">Photograph your outdoor fixture or its packaging. We'll identify it and check if it's dark sky compliant.</p>
+
+          <div class="photo-btn" id="photo-btn" onclick="document.getElementById('file-input').click()">
+            <span class="pi">📷</span>
+            <span class="pl">Photograph your outdoor light</span>
+            <span class="ps">Or the box it came in — we'll read the specs</span>
+          </div>
+          <input type="file" id="file-input" accept="image/*" capture="environment">
+
+          <div class="photo-preview" id="photo-preview">
+            <img id="photo-img" src="" alt="">
+            <button class="photo-clear" onclick="clearPhoto()">✕ Remove</button>
+          </div>
+          <div class="id-pill" id="id-pill"><span>📍</span><span id="id-text"></span><button onclick="clearPhoto()" style="background:none;border:none;color:var(--t3);cursor:pointer;margin-left:4px;">✕</button></div>
+
+          <div class="or-row"><div class="or-line"></div><span class="or-text">or</span><div class="or-line"></div></div>
+          <button class="fix-toggle" id="fix-toggle" onclick="toggleGrid()">Choose fixture type manually ↓</button>
+
+          <div class="fix-grid" id="fix-grid">
+            <div class="fcard" data-f="floodlight"     data-l="Floodlight"     onclick="selectF(this)"><span class="fi">💡</span><span class="fn">Floodlight</span></div>
+            <div class="fcard" data-f="wall-lantern"   data-l="Wall lantern"   onclick="selectF(this)"><span class="fi">🏮</span><span class="fn">Wall lantern</span></div>
+            <div class="fcard" data-f="path-light"     data-l="Path lighting"  onclick="selectF(this)"><span class="fi">🔦</span><span class="fn">Path lighting</span></div>
+            <div class="fcard" data-f="spotlight"      data-l="Spotlight"      onclick="selectF(this)"><span class="fi">🔆</span><span class="fn">Spotlight</span></div>
+            <div class="fcard" data-f="string-lights"  data-l="String lights"  onclick="selectF(this)"><span class="fi">✨</span><span class="fn">String lights</span></div>
+            <div class="fcard" data-f="security-light" data-l="Security light" onclick="selectF(this)"><span class="fi">🔒</span><span class="fn">Security light</span></div>
+          </div>
+
+          <button class="check-go" id="check-go" onclick="runCheck()">
+            Check this light
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+          <p class="err" id="check-err"></p>
+        </div>
+
+        <!-- Right: result -->
+        <div class="check-result-col" id="check-result-col">
+          <div class="result-empty" id="result-empty">
+            <div class="result-empty-icon">🌙</div>
+            <p class="result-empty-text">Select or photograph a fixture to see its dark sky compliance verdict.</p>
+          </div>
+          <div class="result-content" id="result-content">
+            <p class="lbl" style="margin-bottom:.75rem;">Dark sky compliance</p>
+            <div class="comp-state" id="comp-state">
+              <div class="cs-dot"></div>
+              <div class="cs-body">
+                <p class="cs-status" id="cs-status"></p>
+                <p class="cs-sentence" id="cs-sentence">Generating verdict…</p>
+              </div>
+            </div>
+            <p class="lbl" style="margin-bottom:.75rem;">Compliance checks</p>
+            <div class="checks-grid" id="checks-grid"></div>
+            <p class="lbl" style="margin-bottom:.75rem;">What to do about it</p>
+            <p class="expert-voice" id="expert-voice">Generating recommendation…</p>
+            <div class="recs-wrap" id="recs-wrap"></div>
+            <div style="margin-bottom:1.5rem;">
+              <div class="eco-hdr" id="eco-hdr" onclick="toggleEco()">
+                <div class="eco-hdr-l"><span class="eco-hdr-title">What lives here after dark</span><span class="eco-hdr-cnt" id="eco-cnt"></span></div>
+                <span class="eco-chev">↓</span>
+              </div>
+              <div class="eco-body" id="eco-body"></div>
+            </div>
+            <div class="act-row">
+              <button class="btn btn-amber" onclick="shareIt()">Share this Nightprint</button>
+              <button class="btn btn-ghost" onclick="clearCheck()">Check another light</button>
+            </div>
+            <div class="closing">
+              <p class="closing-line">Every light installed after dark is <em>a decision about what lives here.</em></p>
+              <div class="src-row"><span class="src-pill">GBIF</span><span class="src-pill">NASA VIIRS DNB</span><span class="src-pill">OpenStreetMap</span><span class="src-pill">Bat Conservation Trust</span><span class="src-pill">DarkSky International</span></div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="checks-col">
-        <p class="label" style="margin-bottom:.75rem;">Compliance checks</p>
-        <div id="checks-list"></div>
+
       </div>
     </div>
 
-    <!-- Eco -->
-    <div style="margin-bottom:1.5rem;">
-      <div class="eco-hdr" id="eco-hdr" onclick="toggleEco()">
-        <div class="eco-hdr-l">
-          <span class="eco-hdr-title">What lives here after dark</span>
-          <span class="eco-hdr-cnt" id="eco-cnt"></span>
+    <!-- NIGHT LOADING -->
+    <div class="panel" id="p-nload">
+      <div class="nload-ring"></div>
+      <p class="nload-line">Reading the night at <strong id="nload-place"></strong>…</p>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <div class="panel noscroll" id="p-exp">
+      <div id="exp-map"></div>
+      <button class="exp-srch-btn" onclick="openSrch()">Search another place</button>
+      <div class="exp-legend" id="exp-legend"></div>
+      <div class="narr" id="narr">
+        <div class="prog" id="prog"></div>
+        <p class="nh" id="nh"></p>
+        <p class="nb" id="nb"></p>
+        <p class="nn" id="nn"></p>
+        <p class="ns" id="ns"></p>
+        <div class="nsp" id="nsp"></div>
+        <div class="narr-btns">
+          <button class="nb-back" id="nb-back" onclick="prevStep()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Back
+          </button>
+          <button class="nb-cont" id="nb-cont" onclick="nextStep()">
+            Continue
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
         </div>
-        <span class="eco-chev">↓</span>
       </div>
-      <div class="eco-body" id="eco-body"></div>
-    </div>
-
-    <div class="fix-zone">
-      <p class="label" style="margin-bottom:1rem;">What to do about it</p>
-      <p class="expert-voice" id="expert-voice">Generating recommendation…</p>
-      <div id="recs-wrap"></div>
-    </div>
-
-    <!-- Read the night CTA -->
-    <div class="night-cta" onclick="goNightFromCheck()">
-      <span class="night-cta-icon">🌙</span>
-      <div class="night-cta-body">
-        <p class="night-cta-title">Read the night at this address</p>
-        <p class="night-cta-desc">Discover what's living in the dark here — bat species, migration corridors, what the sky looks like — and what your light is doing to all of it.</p>
+      <div class="srch-overlay" id="srch-overlay">
+        <button class="srch-close" onclick="closeSrch()">✕ Close</button>
+        <input id="srch-input" type="text" placeholder="Enter a city, address, or place" autocomplete="off" spellcheck="false">
+        <p class="srch-hint">Press Enter to search</p>
+        <p class="err" id="srch-err"></p>
       </div>
-      <span class="night-cta-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
     </div>
 
-    <div class="act-row">
-      <button class="btn btn-amber" onclick="shareIt()">Share this Nightprint<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
-      <button class="btn btn-ghost" onclick="goScreen('s-check')">Check another light</button>
-    </div>
-
-    <div class="closing">
-      <p class="closing-line">Every light installed after dark is <em>a decision about what lives here.</em></p>
-      <div class="src-row" id="src-row"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ TOOL 2: NIGHT ENTRY ══ -->
-<div id="s-night-entry" class="screen">
-  <div class="tool-nav">
-    <span class="logo-text tool-nav-logo" onclick="goHome()">NIGHTPRINT</span>
-    <button class="tool-nav-back" onclick="goHome()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-      Back
-    </button>
-  </div>
-  <div class="night-entry-inner">
-    <h2 class="night-heading">Read the night</h2>
-    <p class="night-sub">Enter any location and we'll reveal what lives in the dark there — and what the light is doing to it.</p>
-
-    <div class="addr-wrap show" style="max-width:400px;width:100%;">
-      <input class="addr-input" id="night-addr" type="text" placeholder="City, address, or place name" autocomplete="off" spellcheck="false">
-      <button class="addr-btn" id="night-addr-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </button>
-      <p class="err-msg" id="night-err"></p>
-    </div>
-  </div>
-</div>
-
-<!-- ══ NIGHT LOADING ══ -->
-<div id="s-night-load" class="screen">
-  <div class="nload-spinner"></div>
-  <p class="nload-text" id="nload-text">Reading the night at <strong id="nload-place"></strong>…</p>
-</div>
-
-<!-- ══ EXPERIENCE ══ -->
-<div id="s-exp" class="screen">
-  <div id="exp-map"></div>
-  <nav class="exp-nav">
-    <span class="exp-nav-logo" onclick="goHome()">NIGHTPRINT</span>
-  </nav>
-  <button class="exp-search-btn" onclick="openSrch()">Search another place</button>
-  <div class="exp-legend" id="exp-legend"></div>
-  <div class="narr-panel">
-    <div class="prog-bars" id="prog-bars"></div>
-    <p class="narr-heading" id="narr-heading"></p>
-    <p class="narr-body"    id="narr-body"></p>
-    <p class="narr-nudge"   id="narr-nudge"></p>
-    <p class="narr-source"  id="narr-source"></p>
-    <div class="narr-species" id="narr-species"></div>
-    <div class="narr-btns">
-      <button class="nbtn-back" id="nbtn-back" onclick="prevStep()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-        Back
-      </button>
-      <button class="nbtn-cont" id="nbtn-cont" onclick="nextStep()">
-        Continue
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </button>
-    </div>
-  </div>
-  <div class="srch-overlay" id="srch-overlay">
-    <button class="srch-close" onclick="closeSrch()">✕ Close</button>
-    <input id="srch-input" type="text" placeholder="Enter a city, address, or place" autocomplete="off" spellcheck="false">
-    <p class="srch-overlay-hint">Press Enter to search</p>
-    <p class="err-msg" id="srch-err"></p>
-  </div>
-</div>
-
-<!-- ══ NUMBER ══ -->
-<div id="s-num" class="screen">
-  <p class="num-label" id="num-label">Above this location</p>
-  <p class="num-val"     id="num-val"></p>
-  <p class="num-caption" id="num-caption"></p>
-  <div class="num-actions">
-    <button class="btn btn-amber" onclick="shareIt()">Share this Nightprint</button>
-    <button class="btn btn-ghost" onclick="goNight()">Read another place</button>
-  </div>
-  <button class="num-continue" onclick="goScreen('s-read')">
-    Read the nocturnal portrait
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-  </button>
-</div>
-
-<!-- ══ READING ══ -->
-<div id="s-read" class="screen">
-  <div class="read-wrap">
-    <p class="read-kicker" id="read-kicker"></p>
-    <p class="read-loc"    id="read-loc"></p>
-    <p class="read-text"   id="read-text">Generating nocturnal portrait…</p>
-    <div class="read-sources">
-      <p class="label" style="margin-bottom:8px;">Data sources</p>
-      <div class="src-row"><span class="src-pill">GBIF</span><span class="src-pill">NASA VIIRS DNB</span><span class="src-pill">OpenStreetMap</span><span class="src-pill">Light Pollution Map</span><span class="src-pill">eBird / Cornell Lab</span></div>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn btn-ghost" onclick="goScreen('s-num')" style="font-size:11px;padding:11px 18px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="12" height="12"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-        Back
-      </button>
-      <button class="btn btn-amber" onclick="goScreen('s-reframe')">
-        Continue
+    <!-- NUMBER -->
+    <div class="panel" id="p-num">
+      <p class="num-lbl" id="num-lbl"></p>
+      <p class="num-val" id="num-val"></p>
+      <p class="num-cap" id="num-cap"></p>
+      <div class="num-acts">
+        <button class="btn btn-amber" onclick="shareIt()">Share this Nightprint</button>
+        <button class="btn btn-ghost" onclick="switchTab('night')">Read another place</button>
+      </div>
+      <button class="num-cont" onclick="showPanel('p-read')">
+        Read the nocturnal portrait
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </button>
     </div>
-  </div>
-</div>
 
-<!-- ══ REFRAME ══ -->
-<div id="s-reframe" class="screen">
-  <p class="reframe-line">Every light installed after dark is <em>a decision about what lives here.</em></p>
-
-  <div class="reframe-check-cta" onclick="goCheckFromNight()">
-    <span class="rcc-icon">💡</span>
-    <div class="rcc-body">
-      <p class="rcc-title">Now check your outdoor light</p>
-      <p class="rcc-desc">See if it's dark sky compliant — and exactly what one change would fix.</p>
+    <!-- READING -->
+    <div class="panel" id="p-read">
+      <div class="read-wrap">
+        <p class="read-kicker" id="read-kicker"></p>
+        <p class="read-loc"    id="read-loc"></p>
+        <p class="read-text"   id="read-text">Generating nocturnal portrait…</p>
+        <div class="read-sources">
+          <p class="lbl" style="margin-bottom:8px;">Data sources</p>
+          <div class="src-row"><span class="src-pill">GBIF</span><span class="src-pill">NASA VIIRS DNB</span><span class="src-pill">OpenStreetMap</span><span class="src-pill">Light Pollution Map</span><span class="src-pill">eBird / Cornell Lab</span></div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost" onclick="showPanel('p-num')" style="font-size:11px;padding:11px 18px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="12" height="12"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Back
+          </button>
+          <button class="btn btn-amber" onclick="showPanel('p-reframe')">
+            Continue
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
     </div>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="14" height="14" style="color:var(--t3);flex-shrink:0;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-  </div>
 
-  <div class="reframe-acts">
-    <button class="btn btn-amber" onclick="shareIt()">Share this Nightprint</button>
-    <button class="btn btn-ghost" onclick="goNight()">Read another place</button>
-  </div>
-  <button class="reframe-about" onclick="showAbout()">About Nightprint</button>
-</div>
+    <!-- REFRAME -->
+    <div class="panel" id="p-reframe">
+      <p class="reframe-line">Every light installed after dark is <em>a decision about what lives here.</em></p>
+      <div class="reframe-acts">
+        <button class="btn btn-amber" onclick="switchTab('check')">Check your light</button>
+        <button class="btn btn-ghost" onclick="switchTab('night')">Read another place</button>
+      </div>
+      <button class="reframe-about" onclick="showAbout()">About Nightprint</button>
+    </div>
+
+  </div><!-- end #content -->
+</div><!-- end #app -->
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 /* ══ STATE ══ */
-const C = { // check tool state
-  fixture:null, fixtureLabel:null,
-  photoData:null, photoMeta:null,
-  location:null, data:null
-};
-const N = { // night tool state
-  location:null, data:null,
-  step:0, narrations:null,
-  month: new Date().getMonth()
-};
+const LOC = { lat:null, lon:null, display_name:null, short_name:null, osm_id:null, osm_type:null };
+const CHECK = { fixture:null, fixtureLabel:null, photoData:null, photoMeta:null, data:null };
+const NIGHT = { data:null, step:0, narrations:null, month:new Date().getMonth() };
 
 /* ══ UTILS ══ */
 const $ = id => document.getElementById(id);
 const mn = m => ['January','February','March','April','May','June','July','August','September','October','November','December'][m];
 const se = m => m>=2&&m<=4?'spring':m>=5&&m<=7?'summer':m>=8&&m<=10?'autumn':'winter';
-const batActive = m => m>=4&&m<=9;
-const migPeak   = m => m===3||m===4||m===9||m===10;
 
-function goScreen(id) {
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on','flex-on'));
+/* ══ PANEL NAV ══ */
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   $(id).classList.add('on');
-  window.scrollTo(0,0);
 }
 
-function goHome()  { goScreen('s-home'); }
-function goCheck() { goScreen('s-check'); }
-function goNight() { goScreen('s-night-entry'); }
+function goLanding() {
+  $('hdr').classList.remove('show');
+  showPanel('p-land');
+}
 
-function goNightFromCheck() {
-  // Hand location over to night tool
-  if(C.location) {
-    N.location = {...C.location};
-    startNight();
+/* ══ LANDING SEARCH ══ */
+$('land-input').addEventListener('keydown', e=>{ if(e.key==='Enter') doLandSearch(); });
+$('land-btn').addEventListener('click', doLandSearch);
+
+async function doLandSearch() {
+  const q = $('land-input').value.trim(); if(!q) return;
+  $('land-err').textContent = '';
+  $('land-btn').innerHTML = '<div class="spinner"></div>';
+  try {
+    const r = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`,{headers:{'Accept-Language':'en'}});
+    const d = await r.json();
+    if(!d.length) throw new Error();
+    const p = d[0];
+    LOC.lat = parseFloat(p.lat); LOC.lon = parseFloat(p.lon);
+    LOC.display_name = p.display_name;
+    LOC.short_name = p.display_name.split(',').slice(0,2).join(',').trim();
+    LOC.osm_id = p.osm_id; LOC.osm_type = p.osm_type;
+    // Show header
+    $('hdr-loc-name').textContent = LOC.short_name.split(',')[0];
+    $('hdr').classList.add('show');
+    // Default to check tab
+    switchTab('check');
+  } catch(e) {
+    $('land-err').textContent = 'Place not found. Try a city name or postcode.';
+    $('land-btn').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
+  }
+}
+
+/* ══ TAB SWITCHING ══ */
+function switchTab(tab) {
+  $('tab-check').classList.toggle('active', tab==='check');
+  $('tab-night').classList.toggle('active', tab==='night');
+  if(tab==='check') {
+    showPanel('p-check');
   } else {
-    goNight();
+    startNight();
   }
-}
-function goCheckFromNight() {
-  if(N.location) {
-    C.location = {...N.location};
-    // Pre-fill address
-    $('addr-input').value = N.location.short_name;
-    $('addr-wrap').classList.add('show');
-  }
-  goScreen('s-check');
 }
 
 /* ══════════════════════════════
    TOOL 1 — CHECK YOUR LIGHT
 ══════════════════════════════ */
 
-/* Photo */
-$('file-input').addEventListener('change', async e => {
-  const file = e.target.files[0]; if(!file) return;
-  const reader = new FileReader();
-  reader.onload = async ev => {
-    const url = ev.target.result;
-    C.photoData = url.split(',')[1];
-    $('photo-img').src = url;
+$('file-input').addEventListener('change', async e=>{
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=async ev=>{
+    const url=ev.target.result;
+    CHECK.photoData=url.split(',')[1];
+    $('photo-img').src=url;
     $('photo-preview').classList.add('show');
-    $('photo-btn').style.display = 'none';
+    $('photo-btn').style.display='none';
     await identifyFixture();
   };
   reader.readAsDataURL(file);
 });
 
 async function identifyFixture() {
-  const pill = $('id-pill'), pillTxt = $('id-text');
-  pillTxt.textContent = 'Reading your light…';
-  pill.classList.add('show');
+  const pill=$('id-pill'),pt=$('id-text');
+  pt.textContent='Reading your light…'; pill.classList.add('show');
   try {
-    const res = await fetch('/api/generate',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:[
-        {type:'image',source:{type:'base64',media_type:'image/jpeg',data:C.photoData}},
-        {type:'text',text:`Identify this outdoor light fixture. Reply JSON only, no markdown:
+    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:[
+      {type:'image',source:{type:'base64',media_type:'image/jpeg',data:CHECK.photoData}},
+      {type:'text',text:`Identify this outdoor light fixture. Reply JSON only, no markdown:
 {"fixture":"floodlight|wall-lantern|path-light|spotlight|string-lights|security-light","fixtureLabel":"plain name","cct":numberOrNull,"shielded":true/false/"unknown","notes":"any visible specs"}`}
-      ]}]})
-    });
-    const result = await res.json();
-    const parsed = JSON.parse((result.content?.[0]?.text||'{}').replace(/```json|```/g,'').trim());
-    C.fixture = parsed.fixture||'floodlight';
-    C.fixtureLabel = parsed.fixtureLabel||'Outdoor light';
-    C.photoMeta = parsed;
-    document.querySelectorAll('.fcard').forEach(c=>c.classList.toggle('sel',c.dataset.f===C.fixture));
-    pillTxt.textContent = `Identified: ${parsed.fixtureLabel}${parsed.cct?' · '+parsed.cct+'K':''}`;
-    showAddr();
+    ]}]})});
+    const res=await r.json();
+    const parsed=JSON.parse((res.content?.[0]?.text||'{}').replace(/```json|```/g,'').trim());
+    CHECK.fixture=parsed.fixture||'floodlight';
+    CHECK.fixtureLabel=parsed.fixtureLabel||'Outdoor light';
+    CHECK.photoMeta=parsed;
+    document.querySelectorAll('.fcard').forEach(c=>c.classList.toggle('sel',c.dataset.f===CHECK.fixture));
+    pt.textContent=`Identified: ${parsed.fixtureLabel}${parsed.cct?' · '+parsed.cct+'K':''}`;
+    updateGoBtn();
   } catch(e) {
-    pillTxt.textContent = 'Could not read — choose type below';
-    toggleGrid();
+    pt.textContent='Could not read — choose type below';
+    $('fix-grid').classList.add('show');
+    $('fix-toggle').textContent='Choose fixture type manually ↑';
   }
 }
 
 function clearPhoto() {
-  C.photoData = null; C.photoMeta = null;
+  CHECK.photoData=null; CHECK.photoMeta=null;
   $('photo-preview').classList.remove('show');
-  $('photo-btn').style.display = '';
+  $('photo-btn').style.display='';
   $('id-pill').classList.remove('show');
-  $('file-input').value = '';
+  $('file-input').value='';
   document.querySelectorAll('.fcard').forEach(c=>c.classList.remove('sel'));
-  C.fixture = null; C.fixtureLabel = null;
-  $('addr-wrap').classList.remove('show');
+  CHECK.fixture=null; CHECK.fixtureLabel=null;
+  updateGoBtn();
 }
 
 function toggleGrid() {
@@ -860,386 +775,241 @@ function toggleGrid() {
 function selectF(card) {
   document.querySelectorAll('.fcard').forEach(c=>c.classList.remove('sel'));
   card.classList.add('sel');
-  C.fixture = card.dataset.f; C.fixtureLabel = card.dataset.l;
-  showAddr();
+  CHECK.fixture=card.dataset.f; CHECK.fixtureLabel=card.dataset.l;
+  updateGoBtn();
 }
 
-function showAddr() {
-  $('addr-wrap').classList.add('show');
-  setTimeout(()=>$('addr-input').focus(),200);
-}
-
-$('addr-input').addEventListener('keydown',e=>{if(e.key==='Enter')doCheckSearch();});
-$('addr-btn').addEventListener('click',doCheckSearch);
-
-async function doCheckSearch() {
-  if(!C.fixture){$('addr-err').textContent='Select or photograph a fixture first.';return;}
-  const q=$('addr-input').value.trim(); if(!q) return;
-  $('addr-err').textContent='';
-  $('addr-btn').innerHTML='<div class="spinner"></div>';
-  try {
-    const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`,{headers:{'Accept-Language':'en'}});
-    const d=await r.json();
-    if(!d.length)throw new Error();
-    const p=d[0];
-    C.location={lat:parseFloat(p.lat),lon:parseFloat(p.lon),display_name:p.display_name,short_name:p.display_name.split(',').slice(0,2).join(',').trim()};
-    await runCheck();
-  } catch(e){
-    $('addr-err').textContent='Address not found. Try a postcode.';
-    $('addr-btn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
-  }
+function updateGoBtn() {
+  $('check-go').classList.toggle('ready', !!CHECK.fixture);
 }
 
 async function runCheck() {
+  if(!CHECK.fixture) return;
+  $('check-err').textContent='';
+  $('check-go').innerHTML='<div class="spinner"></div>';
   const [gbif,osm,bortle]=await Promise.allSettled([
-    fetchGBIF(C.location.lat,C.location.lon,5000),
-    fetchWater(C.location.lat,C.location.lon,3000),
-    fetchBortle(C.location.lat,C.location.lon)
+    fetchGBIF(LOC.lat,LOC.lon,5000),
+    fetchWater(LOC.lat,LOC.lon,3000),
+    fetchBortle(LOC.lat,LOC.lon)
   ]);
-  C.data={
+  CHECK.data={
     gbif:   gbif.status==='fulfilled'?gbif.value:null,
     osm:    osm.status==='fulfilled'?osm.value:null,
     bortle: bortle.status==='fulfilled'?bortle.value:null
   };
-  buildResult();
-  goScreen('s-result');
-  genVerdict();
-  genExpertVoice();
+  buildCheckResult();
+  $('result-empty').style.display='none';
+  $('result-content').classList.add('show');
+  $('check-go').innerHTML='Check this light <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+  genVerdict(); genExpertVoice();
 }
 
-/* Compliance */
-function getComp(fixture,photoMeta,bortle){
-  const DEF={
-    'floodlight':    {cct:5000,shielded:false,timed:false},
-    'security-light':{cct:4000,shielded:false,timed:true},
-    'spotlight':     {cct:4000,shielded:false,timed:false},
-    'wall-lantern':  {cct:3000,shielded:false,timed:false},
-    'path-light':    {cct:3000,shielded:true, timed:false},
-    'string-lights': {cct:2700,shielded:false,timed:false}
-  };
-  const d=DEF[fixture]||DEF['floodlight'];
-  const cct     = photoMeta?.cct      ?? d.cct;
-  const shielded= photoMeta?.shielded === true ? true : d.shielded;
-  const timed   = d.timed;
+function clearCheck() {
+  $('result-content').classList.remove('show');
+  $('result-empty').style.display='';
+  clearPhoto();
+  $('fix-grid').classList.remove('show');
+  $('fix-toggle').textContent='Choose fixture type manually ↓';
+}
 
+function getComp(fixture,photoMeta,bortle){
+  const DEF={'floodlight':{cct:5000,shielded:false,timed:false},'security-light':{cct:4000,shielded:false,timed:true},'spotlight':{cct:4000,shielded:false,timed:false},'wall-lantern':{cct:3000,shielded:false,timed:false},'path-light':{cct:3000,shielded:true,timed:false},'string-lights':{cct:2700,shielded:false,timed:false}};
+  const d=DEF[fixture]||DEF['floodlight'];
+  const cct=photoMeta?.cct??d.cct;
+  const shielded=photoMeta?.shielded===true?true:d.shielded;
+  const timed=d.timed;
   const checks=[
-    {
-      id:'cct', name:'Colour temperature',
-      pass:cct<=3000, warn:cct>3000&&cct<=3500,
-      detail: cct<=3000
-        ? `${cct}K — warm white, compliant. Minimal short-wavelength light emission.`
-        : cct<=3500
-        ? `${cct}K — borderline. IDA requires 3000K or below. The closer to 2700K the better for nocturnal wildlife.`
-        : `${cct}K — too cool. Cool white and daylight LEDs emit short-wavelength blue light that disrupts bat echolocation and disorients moths navigating by moonlight. This is the most impactful compliance failure.`,
-      weight:0.4
-    },
-    {
-      id:'shield', name:'Shielding',
-      pass:shielded===true, warn:false,
-      detail: shielded===true
-        ? 'Full cutoff design — all light directed downward onto the intended surface. No upward spill into bat foraging corridors or the night sky.'
-        : shielded==='unknown'
-        ? 'Shielding status unknown — check the fixture for a "full cutoff" or "IDA approved" rating. Open globes and exposed bulbs fail this check.'
-        : 'Open fixture — light spills upward and sideways. Upward light contributes directly to skyglow and penetrates bat foraging corridors above the property. A full cutoff fixture or retrofit shield redirects all light downward.',
-      weight:0.35
-    },
-    {
-      id:'timing', name:'Timing or motion control',
-      pass:timed, warn:false,
-      detail: timed
-        ? 'Motion sensor or timer detected — light is present only when needed. This eliminates unnecessary ecological exposure during peak nocturnal hours.'
-        : 'No timing control detected — the fixture runs all night. The hours between midnight and dawn are when nocturnal activity peaks. A motion sensor or midnight-off timer is the simplest way to reduce exposure without affecting function.',
-      weight:0.25
-    }
+    {id:'cct',name:'Colour temperature',pass:cct<=3000,warn:cct>3000&&cct<=3500,
+     detail:cct<=3000?`${cct}K — warm white, compliant. Minimal short-wavelength emission.`:cct<=3500?`${cct}K — borderline. IDA requires 3000K or below. Aim for 2700K.`:`${cct}K — too cool. Cool white LEDs emit short-wavelength blue light that disrupts bat echolocation and disorients moths navigating by moonlight. This is the most impactful compliance failure.`,weight:.4},
+    {id:'shield',name:'Shielding',pass:shielded===true,warn:false,
+     detail:shielded===true?'Full cutoff design — all light directed downward. No upward spill into bat foraging corridors or the night sky.':shielded==='unknown'?'Shielding status unknown — check the fixture for a full cutoff or IDA Approved rating. Open globes and exposed bulbs fail this check.':'Open fixture — light spills upward and sideways into bat foraging corridors and the sky migrating birds navigate by. A full cutoff fixture or retrofit shield redirects all light downward.',weight:.35},
+    {id:'timing',name:'Timing or motion control',pass:timed,warn:false,
+     detail:timed?'Motion sensor or timer detected — light is present only when needed, eliminating unnecessary ecological exposure during peak nocturnal hours.':'No timing control — the fixture runs all night. Midnight to dawn is when nocturnal activity peaks. A motion sensor or midnight-off timer eliminates the most harmful hours without affecting function.',weight:.25}
   ];
   const pc=checks.filter(c=>c.pass).length;
   const state=pc===3?'pass':pc>=1?'partial':'fail';
-  const label=state==='pass'?'Dark sky compliant':state==='partial'?'Partially compliant':'Not dark sky compliant';
-  return{checks,state,label,cct,shielded,timed};
+  return{checks,state,label:state==='pass'?'Dark sky compliant':state==='partial'?'Partially compliant':'Not dark sky compliant',cct,shielded,timed};
 }
 
-/* Recs */
 const RECS={
   'floodlight':[
     {title:'Switch to 2700K warm white',why:`Cool white floodlights emit short-wavelength blue light that disrupts bat echolocation and disorients moths navigating by moonlight. A 2700K warm white LED in the same fitting eliminates most of this harm at identical brightness — for the price of a bulb.`,specs:['2700K warm white LED','Same fitting, different bulb','~£4–8 more than standard'],rs:['rsa','rst','rsg'],impact:'Addresses the highest-impact compliance failure'},
-    {title:'Add a full cutoff shield',why:`Unshielded floodlights spill light upward into bat foraging corridors and the sky that migrating birds navigate by. A full cutoff shield or replacement fixture directs all light downward onto the intended surface only.`,specs:['Full cutoff rated','No upward spill','Retrofit shield or replacement fixture'],rs:['rsa','rsg','rsg'],impact:null},
-    {title:'Install a motion sensor',why:`A floodlight running all night provides no additional security benefit over motion-activated. Motion activation eliminates 90% of the ecological exposure while maintaining full security function.`,specs:['PIR motion sensor','Or timer off at midnight','~£12–20 retrofit'],rs:['rst','rsg','rsg'],impact:null}
+    {title:'Add a full cutoff shield',why:`Unshielded floodlights spill light upward into bat foraging corridors and the sky migrating birds navigate by. A full cutoff shield directs all light downward onto the intended surface only.`,specs:['Full cutoff rated','No upward spill','Retrofit available for most fixtures'],rs:['rsa','rsg','rsg'],impact:null},
+    {title:'Install a motion sensor',why:`A floodlight running all night provides no additional security benefit over motion-activated. Motion activation eliminates 90% of ecological exposure while maintaining full function.`,specs:['PIR motion sensor','Or timer off at midnight','~£12–20 retrofit'],rs:['rst','rsg','rsg'],impact:null}
   ],
   'security-light':[
-    {title:'Switch to motion-only operation',why:`Security lights on all night are no more effective than motion-activated ones — but the ecological difference is enormous. Motion activation eliminates the hours of greatest nocturnal disruption at zero security cost.`,specs:['PIR motion sensor','Adjustable sensitivity','Same security, fraction of the harm'],rs:['rsa','rst','rsg'],impact:'Addresses the highest-impact compliance failure'},
-    {title:'Reduce to 2700K warm white',why:`Most security lights use cool white for perceived brightness. Warm white at 2700K provides identical visibility to the human eye while significantly reducing disruption to bat species near this address.`,specs:['2700K warm white','No visibility loss','Same fitting'],rs:['rsa','rsg','rsg'],impact:null},
-    {title:'Point downward, not outward',why:`Security lights aimed horizontally send light into adjacent habitats unnecessarily. Redirecting downward eliminates upward spill and reduces lateral reach into nearby green space or water.`,specs:['Downward-facing mount','Wall bracket adjustment','No additional cost'],rs:['rst','rsg','rsg'],impact:null}
+    {title:'Switch to motion-only operation',why:`Security lights on all night are no more effective than motion-activated ones. Motion activation eliminates the hours of greatest nocturnal disruption at zero security cost.`,specs:['PIR motion sensor','Adjustable sensitivity','Same security, fraction of the harm'],rs:['rsa','rst','rsg'],impact:'Addresses the highest-impact compliance failure'},
+    {title:'Reduce to 2700K warm white',why:`Most security lights use cool white for perceived brightness. Warm white at 2700K provides identical visibility while significantly reducing disruption to bat species near this address.`,specs:['2700K warm white','No visibility loss','Same fitting'],rs:['rsa','rsg','rsg'],impact:null},
+    {title:'Point downward, not outward',why:`Security lights aimed horizontally send light into adjacent habitats unnecessarily. Redirecting downward eliminates upward spill and reduces lateral reach into nearby habitats.`,specs:['Downward-facing mount','Wall bracket adjustment','No additional cost'],rs:['rst','rsg','rsg'],impact:null}
   ],
   'wall-lantern':[
     {title:'Switch to 2200–2700K warm amber',why:`Open-globe wall lanterns scatter light in all directions. Below 2700K dramatically reduces disruption to moths — the primary nocturnal pollinators in your garden — with no change to visual appearance.`,specs:['2200–2700K amber LED','Same fitting, new bulb','Warmer aesthetic, lower harm'],rs:['rsa','rst','rsg'],impact:'Single most impactful change for this fixture type'},
-    {title:'Set a midnight off timer',why:`The hours between midnight and dawn are when nocturnal activity peaks. Turning off at midnight eliminates the most ecologically harmful hours with no practical loss of function.`,specs:['Smart plug timer','Or built-in photocell + timer','~£8–15'],rs:['rst','rsg','rsg'],impact:null},
-    {title:'Replace globe with shielded fitting',why:`Open globe lanterns emit upward light directly into the sky and into adjacent habitat. A half-lantern or top-shielded design maintains the aesthetic while eliminating upward spill.`,specs:['Half-lantern design','Top-shielded','IDA Dark Sky Approved options available'],rs:['rsa','rsg','rsg'],impact:null}
+    {title:'Set a midnight off timer',why:`The hours between midnight and dawn are when nocturnal activity peaks. Turning off at midnight eliminates the most ecologically harmful hours with no practical loss of function.`,specs:['Smart plug timer','Or built-in timer','~£8–15'],rs:['rst','rsg','rsg'],impact:null},
+    {title:'Replace globe with shielded fitting',why:`Open globe lanterns emit upward light into the sky and adjacent habitat. A half-lantern or top-shielded design maintains the aesthetic while eliminating upward spill.`,specs:['Half-lantern design','Top-shielded','IDA Dark Sky Approved options available'],rs:['rsa','rsg','rsg'],impact:null}
   ],
   'path-light':[
-    {title:'Switch to warm amber 2700K',why:`Path lights are low-level but their upward glow collectively contributes to neighbourhood skyglow. Warm amber at 2700K is the single most effective change — same wayfinding, dramatically lower ecological cost.`,specs:['2700K or below','Amber LED available','Same fittings'],rs:['rsa','rst','rsg'],impact:'Lowest-impact fixture — this brings it to near-compliant'},
-    {title:'Set to off at midnight',why:`Path lighting after midnight serves no practical purpose. A simple timer plug eliminates the most ecologically harmful hours.`,specs:['Timer plug','Off at midnight','~£8'],rs:['rst','rsg','rsg'],impact:null},
-    {title:'Choose downward-facing design',why:`Path lights that project sideways or upward for aesthetics have unnecessary ecological cost. Downward-only designs provide identical wayfinding with significantly less habitat disruption.`,specs:['Downward-facing only','Top-shielded','IDA-approved designs available'],rs:['rsa','rsg','rsg'],impact:null}
+    {title:'Switch to warm amber 2700K',why:`Path lights are low-level but their collective upward glow contributes to neighbourhood skyglow. Warm amber at 2700K is the single most effective change — same wayfinding, dramatically lower ecological cost.`,specs:['2700K or below','Amber LED available','Same fittings'],rs:['rsa','rst','rsg'],impact:'Lowest-impact fixture — this brings it to near-compliant'},
+    {title:'Set to off at midnight',why:`Path lighting after midnight serves no practical purpose. A simple timer eliminates the most ecologically harmful hours at minimal cost.`,specs:['Timer plug','Off at midnight','~£8'],rs:['rst','rsg','rsg'],impact:null},
+    {title:'Choose downward-facing design',why:`Path lights that project sideways or upward have unnecessary ecological cost. Downward-only designs provide identical wayfinding with significantly less habitat disruption.`,specs:['Downward-facing only','Top-shielded','IDA-approved designs available'],rs:['rsa','rsg','rsg'],impact:null}
   ],
   'spotlight':[
-    {title:'Reduce to 2700K warm white',why:`Spotlights aimed at trees or garden features place bright light directly into bat roosting and foraging habitat. Warm white below 2700K minimises spectral harm without reducing visual impact at distance.`,specs:['2700K warm white LED','Same beam angle','Most impactful single change'],rs:['rsa','rst','rsg'],impact:'Reduces spectral harm by up to 70%'},
-    {title:'Set off at midnight',why:`Feature lighting after midnight serves no practical purpose. A timer significantly reduces total light hours and eliminates the period of greatest nocturnal disruption.`,specs:['Timer','Off at midnight or 23:00','~£8–12'],rs:['rst','rsg','rsg'],impact:null},
-    {title:'Reduce intensity by 50%',why:`Spotlights are frequently over-specified in lumens. Reducing to 50% intensity maintains the aesthetic while halving the ecological footprint.`,specs:['Dimmer control','Or lower-lumen replacement','No aesthetic loss at distance'],rs:['rsa','rsg','rsg'],impact:null}
+    {title:'Reduce to 2700K warm white',why:`Spotlights aimed at trees or garden features place bright light directly into bat roosting and foraging habitat. Warm white below 2700K minimises spectral harm without reducing visual impact.`,specs:['2700K warm white LED','Same beam angle','Most impactful single change'],rs:['rsa','rst','rsg'],impact:'Reduces spectral harm by up to 70%'},
+    {title:'Set off at midnight',why:`Feature lighting after midnight serves no practical purpose. A timer significantly reduces total light hours and eliminates the period of greatest nocturnal disruption.`,specs:['Timer','Off at midnight','~£8–12'],rs:['rst','rsg','rsg'],impact:null},
+    {title:'Reduce intensity by 50%',why:`Spotlights are frequently over-specified. Reducing to 50% intensity maintains the aesthetic while halving the ecological footprint.`,specs:['Dimmer control','Or lower-lumen replacement','No aesthetic loss at distance'],rs:['rsa','rsg','rsg'],impact:null}
   ],
   'string-lights':[
-    {title:'Switch to warm amber 2200K',why:`String lights are the lowest-impact outdoor fixture, but warm amber at 2200K is a straightforward improvement — better for moths, warmer aesthetic, and solar-powered options remove energy cost entirely.`,specs:['2200K amber','Solar-powered options available','Lowest ecological impact available'],rs:['rsa','rst','rsg'],impact:'Already low impact — this achieves near-full compliance'},
-    {title:'Off at midnight',why:`String lights left on all night contribute unnecessarily to skyglow during peak nocturnal hours. A simple timer costs less than a coffee.`,specs:['Timer plug','Off at midnight','~£8'],rs:['rst','rsg','rsg'],impact:null},
-    {title:'Avoid placing near flowering plants',why:`Moths navigate to flowers by scent and natural light. String lights near flowering plants intercept moth navigation, reducing the pollination your garden depends on during peak season.`,specs:['Relocate away from beds','Or seasonal timer May–Sep','No cost'],rs:['rsg','rsg','rsg'],impact:null}
+    {title:'Switch to warm amber 2200K',why:`String lights are lowest-impact, but warm amber at 2200K is a straightforward improvement — better for moths, warmer aesthetic, solar-powered options available.`,specs:['2200K amber','Solar-powered options available','Lowest ecological impact'],rs:['rsa','rst','rsg'],impact:'Already low impact — this achieves near-full compliance'},
+    {title:'Off at midnight',why:`String lights left on all night contribute unnecessarily to skyglow during peak nocturnal hours. A simple timer plug solves this.`,specs:['Timer plug','Off at midnight','~£8'],rs:['rst','rsg','rsg'],impact:null},
+    {title:'Avoid placing near flowering plants',why:`Moths navigate to flowers by scent and natural light. String lights near flowering plants intercept moth navigation, reducing the pollination your garden depends on.`,specs:['Relocate away from beds','Or seasonal timer May–Sep','No cost'],rs:['rsg','rsg','rsg'],impact:null}
   ]
 };
 
-function buildResult(){
-  const{fixture,fixtureLabel,location,data,photoMeta}=C;
+function buildCheckResult(){
+  const{fixture,fixtureLabel,photoMeta,data}=CHECK;
   const g=data.gbif,b=data.bortle,w=data.osm?.nearestWater;
   const comp=getComp(fixture,photoMeta,b);
-
-  $('result-chips').innerHTML=[
-    `<span class="chip">${location.short_name.split(',')[0]}</span>`,
-    `<span class="chip">${fixtureLabel}</span>`,
-    b?`<span class="chip">Bortle ${b.class} · ${b.label}`:'',
-    `<span class="chip">${mn(N.month)}</span>`
-  ].join('');
 
   const cs=$('comp-state');
   cs.className=`comp-state ${comp.state}`;
   $('cs-status').textContent=comp.label;
 
-  $('checks-list').innerHTML=comp.checks.map(c=>`
-    <div class="check-row">
-      <div class="ck-icon ${c.pass?'pass':c.warn?'warn':'fail'}">${c.pass?'✓':c.warn?'~':'✗'}</div>
-      <div class="ck-body">
-        <p class="ck-name">${c.name}</p>
-        <p class="ck-detail ${c.pass?'':c.warn?'wd':'fd'}">${c.detail}</p>
+  $('checks-grid').innerHTML=comp.checks.map(c=>`
+    <div class="ck-card">
+      <div class="ck-card-top">
+        <div class="ck-icon ${c.pass?'pass':c.warn?'warn':'fail'}">${c.pass?'✓':c.warn?'~':'✗'}</div>
+        <span class="ck-name">${c.name}</span>
       </div>
+      <p class="ck-detail ${c.pass?'':c.warn?'wd':'fd'}">${c.detail}</p>
     </div>`).join('');
 
-  buildEco(g,b,w,N.month);
-
   const recs=RECS[fixture]||RECS['floodlight'];
-  $('recs-wrap').innerHTML=`
-    <div class="rec-primary">
-      <p class="rec-title">${recs[0].title}</p>
-      <p class="rec-why">${recs[0].why}</p>
-      <div class="rec-specs">${recs[0].specs.map((s,i)=>`<span class="rs ${recs[0].rs[i]||'rsg'}">${s}</span>`).join('')}</div>
-      ${recs[0].impact?`<p class="rec-impact">→ ${recs[0].impact}</p>`:''}
-    </div>
-    ${recs.slice(1).map((r,i)=>`
-    <div class="rec-sec" data-n="${i+2}">
+  $('recs-wrap').innerHTML=recs.map((r,i)=>`
+    <div class="rec-card">
+      <span class="rec-num">${i+1}</span>
       <p class="rec-title">${r.title}</p>
       <p class="rec-why">${r.why}</p>
       <div class="rec-specs">${r.specs.map((s,j)=>`<span class="rs ${r.rs[j]||'rsg'}">${s}</span>`).join('')}</div>
       ${r.impact?`<p class="rec-impact">→ ${r.impact}</p>`:''}
-    </div>`).join('')}`;
+    </div>`).join('');
 
-  $('src-row').innerHTML=['GBIF','NASA VIIRS DNB','OpenStreetMap','Bat Conservation Trust','DarkSky International']
-    .map(s=>`<span class="src-pill">${s}</span>`).join('');
+  buildEco(g,b,w,NIGHT.month);
 }
 
 function buildEco(g,b,w,month){
   const items=[];let cnt=0;
   if(g?.batSpecies>0){
     cnt+=g.batSpecies;
-    const ml=g.migBats?.length>0?` ${g.migBats.map(m=>m.common||m.species).join(' and ')} ${g.migBats.length===1?'is a':'are'} long-distance migrant${g.migBats.length>1?'s':''} — passing through this area seasonally.`:'';
-    items.push({icon:'🦇',html:`<strong>${g.batSpecies} bat species</strong> recorded within 5km.${ml} ${g.lsBats>0?g.lsBats+' species are light-sensitive.':''}`});
-    if(g.batList?.length) items.push({icon:'',html:`<div style="margin-top:4px;">${g.batList.slice(0,5).map(b=>`<div class="sp-row"><div><span class="sp-nm">${b.common||b.species}</span>${b.common?`<br><span class="sp-sc">${b.species}</span>`:''}</div><span class="sp-tg ${b.mig?'sp-mig':b.ls?'sp-ls':'sp-re'}">${b.mig?'MIGRATORY':b.ls?'LIGHT-SENSITIVE':'RESIDENT'}</span></div>`).join('')}</div>`});
+    const ml=g.migBats?.length>0?` ${g.migBats.map(m=>m.common||m.species).join(' and ')} ${g.migBats.length===1?'is a':'are'} long-distance migrant${g.migBats.length>1?'s':''}.`:'';
+    items.push({icon:'🦇',html:`<strong>${g.batSpecies} bat species</strong> within 5km.${ml} ${g.lsBats>0?g.lsBats+' light-sensitive.':''}`});
+    if(g.batList?.length)items.push({icon:'',html:`<div style="margin-top:4px;">${g.batList.slice(0,5).map(b=>`<div class="sp-row"><div><span class="sp-nm">${b.common||b.species}</span>${b.common?`<br><span class="sp-sc">${b.species}</span>`:''}</div><span class="sp-tg ${b.mig?'sp-mig':b.ls?'sp-ls':'sp-re'}">${b.mig?'MIGRATORY':b.ls?'LIGHT-SENSITIVE':'RESIDENT'}</span></div>`).join('')}</div>`});
   }
-  if(g?.mothSpp>0){cnt+=g.mothSpp;items.push({icon:'🦋',html:`<strong>${g.mothSpp} moth species</strong> recorded nearby. Moths are the primary nocturnal pollinators of this region. A bright unshielded light can attract and kill thousands in a single night.`});}
-  if(w){cnt++;items.push({icon:'💧',html:`Waterbody <strong>${w.dist}m away</strong>. Light at the water's edge disrupts aquatic insect emergence — mayflies, caddisflies, stoneflies — which form the base of the food chain for fish, bats, and birds.`});}
-  if(g?.owlSpp>0){cnt+=g.owlSpp;items.push({icon:'🦉',html:`<strong>${g.owlSpp} owl species</strong> recorded nearby. Owls hunt by darkness and sound — artificial light suppresses prey activity and disrupts hunting.`});}
-  if(b)items.push({icon:'🌌',html:`Sky: <strong>Bortle ${b.class} — ${b.label}</strong>. ${b.class>=7?'The Milky Way is invisible. Your fixture contributes to a regional light dome affecting migration across a much wider area.':'The sky is significantly brighter than natural darkness.'}`});
-  items.push({icon:'',html:`<span style="font-size:11px;color:var(--t3);">These systems evolved over millions of years in near-total darkness. The artificial light above this address is approximately <strong style="color:var(--t2);">100 years old.</strong></span>`});
+  if(g?.mothSpp>0){cnt+=g.mothSpp;items.push({icon:'🦋',html:`<strong>${g.mothSpp} moth species</strong> nearby. Primary nocturnal pollinators of this region.`});}
+  if(w){cnt++;items.push({icon:'💧',html:`Waterbody <strong>${w.dist}m away</strong>. Light at the water's edge disrupts aquatic insect emergence — mayflies, caddisflies, stoneflies — the base of the food chain for fish, bats, and birds.`});}
+  if(g?.owlSpp>0){cnt+=g.owlSpp;items.push({icon:'🦉',html:`<strong>${g.owlSpp} owl species</strong> nearby. Owls hunt by darkness — artificial light suppresses prey activity and disrupts hunting.`});}
+  if(b)items.push({icon:'🌌',html:`Sky: <strong>Bortle ${b.class} — ${b.label}</strong>. ${b.class>=7?'Milky Way invisible. Your fixture contributes to a regional light dome affecting migration.':'Sky significantly brighter than natural darkness.'}`});
+  items.push({icon:'',html:`<span style="font-size:11px;color:var(--t3);">These systems evolved over millions of years in near-total darkness. Artificial light above this address is approximately <strong style="color:var(--t2);">100 years old.</strong></span>`});
   $('eco-cnt').textContent=cnt>0?`${cnt} species in this area`:'';
-  $('eco-body').innerHTML=items.map(it=>it.icon?`<div class="eco-item"><span class="eco-em">${it.icon}</span><p class="eco-txt">${it.html}</p></div>`:`<div style="padding:8px 0;">${it.html}</div>`).join('');
+  $('eco-body').innerHTML=items.map(it=>it.icon?`<div class="eco-item"><span class="eco-em">${it.icon}</span><p class="eco-txt">${it.html}</p></div>`:`<div style="padding:7px 0;">${it.html}</div>`).join('');
 }
 
 function toggleEco(){$('eco-hdr').classList.toggle('open');$('eco-body').classList.toggle('open');}
 
 async function genVerdict(){
-  const{fixture,fixtureLabel,location,data,photoMeta}=C;
+  const{fixture,fixtureLabel,photoMeta,data}=CHECK;
   const g=data.gbif,b=data.bortle,w=data.osm?.nearestWater;
   const comp=getComp(fixture,photoMeta,b);
   const fails=comp.checks.filter(c=>!c.pass).map(c=>c.name).join(', ');
   const prompt=`You are a lighting expert writing a verdict for Nightprint.
-Location: ${location.short_name}
+Location: ${LOC.short_name}
 Fixture: ${fixtureLabel}
 Status: ${comp.label}
 Failed checks: ${fails||'none'}
 Bat species within 5km: ${g?.batSpecies||0}${g?.migBats?.length>0?', including '+g.migBats[0].species+' (long-distance migrant)':''}
 Light-sensitive bats: ${g?.lsBats||0}
 Moth species: ${g?.mothSpp||0}
-Nearest waterbody: ${w?w.dist+'m away':'none nearby'}
+Nearest waterbody: ${w?w.dist+'m':'none'}
 Sky: ${b?'Bortle '+b.class+' — '+b.label:'unknown'}
-Month: ${mn(N.month)}
+Month: ${mn(NIGHT.month)}
 
-Write ONE sentence — max 40 words — as a lighting expert to this homeowner. Specific to this fixture, location, and species. State what is wrong (if anything) and name the ecological consequence. Plain English. Direct but not alarming. Do not start with "Your".`;
-  try{
-    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:120,messages:[{role:'user',content:prompt}]})});
-    const res=await r.json();
-    const t=res.content?.[0]?.text;
-    if(t){$('cs-sentence').textContent=t;return;}
-  }catch(e){}
-  $('cs-sentence').textContent=comp.state==='pass'?`This ${fixtureLabel.toLowerCase()} meets dark sky compliance — well specified for the ${g?.batSpecies||0} bat species recorded near this address.`:`This ${fixtureLabel.toLowerCase()} fails dark sky compliance on ${comp.checks.filter(c=>!c.pass).length} count${comp.checks.filter(c=>!c.pass).length>1?'s':''} — directly affecting the nocturnal wildlife recorded within 5km of this address.`;
+Write ONE sentence — max 40 words — as a lighting expert to this homeowner. Specific to this fixture, this location, and these species. State what is wrong and the ecological consequence. Plain English. Direct but not alarming. Do not start with "Your".`;
+  try{const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:120,messages:[{role:'user',content:prompt}]})});const res=await r.json();const t=res.content?.[0]?.text;if(t){$('cs-sentence').textContent=t;return;}}catch(e){}
+  $('cs-sentence').textContent=comp.state==='pass'?`This ${fixtureLabel.toLowerCase()} meets dark sky compliance — well specified for the ${g?.batSpecies||0} bat species recorded near this address.`:`This ${fixtureLabel.toLowerCase()} fails dark sky compliance — directly affecting the nocturnal wildlife recorded within 5km of this address.`;
 }
 
 async function genExpertVoice(){
-  const{fixture,fixtureLabel,location,data,photoMeta}=C;
+  const{fixture,fixtureLabel,photoMeta,data}=CHECK;
   const g=data.gbif,b=data.bortle,w=data.osm?.nearestWater;
   const recs=RECS[fixture]||RECS['floodlight'];
   const comp=getComp(fixture,photoMeta,b);
   const prompt=`You are a lighting designer with 10 years experience writing directly to a homeowner.
-Location: ${location.short_name}
+Location: ${LOC.short_name}
 Fixture: ${fixtureLabel}
 Status: ${comp.label}
 Primary recommendation: ${recs[0].title}
 Bat species within 5km: ${g?.batSpecies||0}${g?.migBats?.length>0?', including '+g.migBats[0].species+' which migrates long distances through this area':''}
 Light-sensitive bats: ${g?.lsBats||0}
 Moth species: ${g?.mothSpp||0}
-Nearest waterbody: ${w?w.dist+'m away':'none nearby'}
-Month: ${mn(N.month)} (${se(N.month)})
+Nearest waterbody: ${w?w.dist+'m':'none'}
+Month: ${mn(NIGHT.month)} (${se(NIGHT.month)})
 
-Write 2–3 sentences as a lighting expert speaking directly to this homeowner. Confident, specific, not preachy. Name actual species. Explain the primary recommendation and why it matters for this specific location. Do not start with "Your" or "As a".`;
-  try{
-    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:prompt}]})});
-    const res=await r.json();
-    const t=res.content?.[0]?.text;
-    if(t){$('expert-voice').textContent=t;return;}
-  }catch(e){}
-  $('expert-voice').textContent=`The most impactful change for a ${fixtureLabel.toLowerCase()} at this address is ${recs[0].title.toLowerCase()}. ${recs[0].why}`;
+Write 2–3 sentences. Confident, specific, not preachy. Name actual species. Explain the primary recommendation and why it matters for this location. Do not start with "Your" or "As a".`;
+  try{const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:prompt}]})});const res=await r.json();const t=res.content?.[0]?.text;if(t){$('expert-voice').textContent=t;return;}}catch(e){}
+  $('expert-voice').textContent=`The most impactful change for a ${fixtureLabel.toLowerCase()} at this address is ${(RECS[CHECK.fixture]||RECS['floodlight'])[0].title.toLowerCase()}. ${(RECS[CHECK.fixture]||RECS['floodlight'])[0].why}`;
 }
 
 /* ══════════════════════════════
    TOOL 2 — READ THE NIGHT
 ══════════════════════════════ */
 
-$('night-addr').addEventListener('keydown',e=>{if(e.key==='Enter')doNightSearch('night-addr','night-err','night-addr-btn');});
-$('night-addr-btn').addEventListener('click',()=>doNightSearch('night-addr','night-err','night-addr-btn'));
-$('srch-input').addEventListener('keydown',async e=>{
-  if(e.key!=='Enter')return;
-  const q=e.target.value.trim();if(!q)return;
-  try{
-    const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`,{headers:{'Accept-Language':'en'}});
-    const d=await r.json();if(!d.length)throw new Error();
-    const p=d[0];
-    N.location={lat:parseFloat(p.lat),lon:parseFloat(p.lon),display_name:p.display_name,short_name:p.display_name.split(',').slice(0,2).join(',').trim()};
-    closeSrch();
-    await startNight();
-  }catch(e){$('srch-err').textContent='Place not found.';}
-});
-
-async function doNightSearch(inputId,errId,btnId){
-  const q=$(inputId).value.trim();if(!q)return;
-  $(errId).textContent='';
-  const prevHTML=$(btnId).innerHTML;
-  $(btnId).innerHTML='<div class="spinner"></div>';
-  try{
-    const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`,{headers:{'Accept-Language':'en'}});
-    const d=await r.json();if(!d.length)throw new Error();
-    const p=d[0];
-    N.location={lat:parseFloat(p.lat),lon:parseFloat(p.lon),display_name:p.display_name,short_name:p.display_name.split(',').slice(0,2).join(',').trim(),osm_id:p.osm_id,osm_type:p.osm_type};
-    await startNight();
-  }catch(e){
-    $(errId).textContent='Place not found. Try a city name.';
-    $(btnId).innerHTML=prevHTML;
-  }
-}
-
-function openSrch(){$('srch-overlay').classList.add('open');setTimeout(()=>$('srch-input').focus(),100);}
-function closeSrch(){$('srch-overlay').classList.remove('open');}
-
-async function startNight(){
-  $('nload-place').textContent=N.location.short_name;
-  goScreen('s-night-load');
-
-  const[gbif,osm,bortle,green]=await Promise.allSettled([
-    fetchGBIF(N.location.lat,N.location.lon,25000),
-    fetchWater(N.location.lat,N.location.lon,15000),
-    fetchBortle(N.location.lat,N.location.lon),
-    fetchGreen(N.location.lat,N.location.lon,15000)
+async function startNight() {
+  $('nload-place').textContent = LOC.short_name;
+  showPanel('p-nload');
+  const [gbif,osm,bortle,green] = await Promise.allSettled([
+    fetchGBIF(LOC.lat,LOC.lon,25000),
+    fetchWater(LOC.lat,LOC.lon,15000),
+    fetchBortle(LOC.lat,LOC.lon),
+    fetchGreen(LOC.lat,LOC.lon,15000)
   ]);
-  N.data={
+  NIGHT.data = {
     gbif:   gbif.status==='fulfilled'?gbif.value:null,
     osm:    osm.status==='fulfilled'?osm.value:null,
     bortle: bortle.status==='fulfilled'?bortle.value:null,
     green:  green.status==='fulfilled'?green.value:null
   };
-
   buildNarrations();
   buildNumScreen();
-  goScreen('s-exp');
+  showPanel('p-exp');
   initMap();
-  N.step=0;
-  buildProgBars();
+  NIGHT.step = 0;
+  buildProg();
   showStep(0);
   genReading();
 }
 
-/* Narrations */
 function buildNarrations(){
-  const g=N.data.gbif||{};
-  const b=N.data.bortle;
-  const w=N.data.osm?.nearestWater;
-  const gn=(N.data.green||[]).length;
-  const m=N.month;
-  const mo=mn(m),s=se(m);
-  const mig=getMig(m);
-  const batSt=batActive(m);
-  const loc=N.location.short_name;
-
-  N.narrations=[
-    // 1 — Light pollution first (Jobs: show the problem first)
-    {
-      heading: b?`The sky above ${loc.split(',')[0]} is Bortle ${b.class}`:`The sky above ${loc.split(',')[0]} is light-polluted`,
-      body: b
-        ?`${b.label}. The amber wash on this map is artificial light at night, measured by NASA satellite. It shows exactly what every bat, moth, and migrating bird above here navigates through instead of natural darkness. ${b.class>=7?'At this level the Milky Way is completely invisible and the sky never reaches true darkness.':b.class>=5?'The Milky Way is faint or invisible. The sky is a fraction of its natural darkness.':'The sky retains some natural darkness, but light pollution is measurable and growing.'}`
-        :`The amber wash on this map is artificial light at night, measured by NASA VIIRS satellite. This is what every bat, moth, and migrating bird navigates through above this location instead of natural darkness. This light did not exist 100 years ago.`,
-      nudge:`→ The most impactful changes: shield fixtures to direct light downward, reduce intensity after midnight, switch to sources below 3000K. These benefit every nocturnal species in the area.`,
-      source:'Source: Falchi et al. 2016 — Science Advances · NASA VIIRS DNB · DOI: 10.1126/sciadv.1600377',
-      layer:'light', species:null
-    },
-    // 2 — Water
-    {
-      heading:'Water draws the night alive',
-      body: w
-        ?`There is a waterbody ${w.dist}m from here. The edges of rivers and lakes are among the most ecologically active zones on earth after dark — mayflies, caddisflies, and stoneflies emerge from the water in their millions, forming the base of the food chain for every bat, bird, and fish in this area. Amphibians breed here. Bats hunt above the surface.`
-        :`Rivers, lakes, and wetlands are critical nocturnal habitats. Aquatic insects emerge after dark in their millions, forming the base of the food chain. Their entire life cycle depends on darkness.`,
-      nudge:`→ Avoid lighting near water edges. Even a single unshielded fixture disrupts aquatic insect emergence and carries ecological cost far downstream.`,
-      source:'Source: Perkin et al. 2014 — Trends in Ecology & Evolution · DOI: 10.1016/j.tree.2014.06.002',
-      layer:'water', species:null
-    },
-    // 3 — Green spaces
-    {
-      heading: gn>0?`${gn} green space${gn>1?'s':''} shelter the night`:'Green spaces shelter the night',
-      body:`Parks, forests, and nature reserves are nocturnal refuges — places where the food chains that depend on darkness can still function inside this light-polluted sky. In ${mo}, ${s==='winter'?'the canopy is bare but the ground layer remains active — small mammals, owls, and overwintering insects depend on these corridors.':s==='summer'?'the canopy is at its densest. Bats roost in tree hollows, moths navigate between flowering plants, and the leaf litter teems with invertebrate life.':s==='spring'?'these spaces are filling with nesting birds and emerging insects. The first warm nights bring out moths and beetles that have waited through winter.':'these spaces are transitioning. Migrants pass through. Resident species prepare for winter. The green corridors are at their most dynamic.'}`,
-      nudge:`→ Green spaces surrounded by artificial light become ecological islands. Lighting at their edges interrupts species movement between them. Buffer zones of darkness around parks cost nothing to maintain.`,
-      source:'Source: Gaston et al. 2015 — Philosophical Transactions of the Royal Society B · DOI: 10.1098/rstb.2014.0458',
-      layer:'water', species:null
-    },
-    // 4 — Bats
-    {
-      heading: batSt?`Bats are foraging here tonight`:`Bats are ${m<6?'emerging this month':'entering hibernation this month'}`,
-      body:null, // AI generated
-      nudge: batSt
-        ?`→ Turn off outdoor lights between dusk and dawn during ${s} months. Even low-level white LED above 3000K reduces bat foraging activity by up to 50%.`
-        :`→ Avoid disturbing roost sites. Lighting near hibernation sites can cause bats to wake prematurely, depleting critical fat reserves before spring.`,
-      source:'Source: Aziz et al. 2015 — Proceedings of the Royal Society B · GBIF occurrence database · DOI: 10.1098/rspb.2015.1218',
-      layer:'bats', species:g.batList||[]
-    },
-    // 5 — Migration
-    {
-      heading: mig.intensity==='high'?`${mig.label} is happening above here now`:mig.intensity==='medium'?`Migration is building above ${loc.split(',')[0]}`:`The migration corridor above ${loc.split(',')[0]}`,
-      body: mig.intensity==='high'
-        ?`It is ${mig.label.toLowerCase()} season. On peak nights this ${mo}, tens of thousands of birds cross this exact sky heading ${mig.dir} — navigating by starlight and the Earth's magnetic field, following corridors their ancestors have used for thousands of years.`
-        :mig.intensity==='medium'
-        ?`Migration is building in ${mo}. The flyway above here will carry hundreds of thousands of birds heading ${mig.dir} over the coming weeks. Many will travel thousands of kilometres without stopping.`
-        :`This corridor carries up to 80,000 birds on peak migration nights each spring and autumn. In ${mo} migration is quiet — but in eight weeks that sky above here will be full of birds navigating by the stars.`,
-      nudge:`→ Turn off non-essential lighting during ${mig.intensity==='high'?'peak migration nights this month':'spring and autumn migration seasons'}. Skyglow disorients migrating birds, pulling them into fatal building collisions. A dark building saves lives.`,
-      source:'Source: Loss et al. 2014 — The Condor · Fatal Light Awareness Program (FLAP Canada) · eBird / Cornell Lab',
-      layer:'flyway', species:null
-    }
+  const g=NIGHT.data.gbif||{},b=NIGHT.data.bortle,w=NIGHT.data.osm?.nearestWater;
+  const gn=(NIGHT.data.green||[]).length,m=NIGHT.month,mo=mn(m),s=se(m);
+  const mig=getMig(m),loc=LOC.short_name;
+  NIGHT.narrations=[
+    {heading:b?`The sky above ${loc.split(',')[0]} is Bortle ${b.class}`:`The sky above ${loc.split(',')[0]} is light-polluted`,
+     body:b?`${b.label}. The amber wash on this map is artificial light at night, measured by NASA satellite — exactly what every bat, moth, and migrating bird above here navigates through instead of natural darkness. ${b.class>=7?'At this level the Milky Way is completely invisible.':b.class>=5?'The Milky Way is faint or invisible.':'The sky retains some natural darkness, but light pollution is growing.'}`:`The amber wash is artificial light at night, measured by NASA VIIRS satellite. This is what every nocturnal species here navigates through instead of darkness. This light did not exist 100 years ago.`,
+     nudge:`→ The most impactful changes: shield fixtures downward, reduce intensity after midnight, switch to sources below 3000K.`,
+     source:'Source: Falchi et al. 2016 — Science Advances · NASA VIIRS DNB',layer:'light',species:null},
+    {heading:'Water draws the night alive',
+     body:w?`There is a waterbody ${w.dist}m from here. The edges of rivers and lakes are among the most ecologically active zones on earth after dark — mayflies, caddisflies, and stoneflies emerge in their millions, forming the base of the food chain for every bat, bird, and fish in this area. Bats hunt above the surface. Amphibians breed here.`:`Rivers, lakes, and wetlands are critical nocturnal habitats. Aquatic insects emerge after dark in their millions, forming the base of the food chain. Their entire life cycle depends on darkness.`,
+     nudge:`→ Avoid lighting near water edges. Even a single unshielded fixture disrupts aquatic insect emergence and carries ecological cost far downstream.`,
+     source:'Source: Perkin et al. 2014 — Trends in Ecology & Evolution',layer:'water',species:null},
+    {heading:gn>0?`${gn} green space${gn>1?'s':''} shelter the night`:'Green spaces shelter the night',
+     body:`Parks, forests, and nature reserves are nocturnal refuges inside this light-polluted sky. In ${mo}, ${s==='winter'?'the canopy is bare but small mammals, owls, and overwintering insects depend on these corridors.':s==='summer'?'the canopy is dense. Bats roost in tree hollows, moths navigate between flowering plants, and the leaf litter teems with invertebrate life.':s==='spring'?'these spaces are filling with nesting birds and emerging insects. The first warm nights bring out moths and beetles that have waited through winter.':'these spaces are transitioning. Migrants pass through. The green corridors are at their most dynamic.'}`,
+     nudge:`→ Lighting at the edges of green spaces interrupts species movement between them. Buffers of darkness around parks cost nothing to maintain.`,
+     source:'Source: Gaston et al. 2015 — Philosophical Transactions of the Royal Society B',layer:'water',species:null},
+    {heading:m>=4&&m<=9?'Bats are foraging here tonight':`Bats are ${m<6?'emerging':'entering hibernation'} this month`,
+     body:null,nudge:m>=4&&m<=9?`→ Turn off outdoor lights between dusk and dawn during ${s} months. Even low-level white LED above 3000K reduces bat foraging by up to 50%.`:`→ Avoid disturbing roost sites. Lighting near hibernation sites causes bats to wake prematurely, depleting critical fat reserves.`,
+     source:'Source: Aziz et al. 2015 — Proceedings of the Royal Society B · GBIF',layer:'bats',species:g.batList||[]},
+    {heading:mig.intensity==='high'?`${mig.label} is happening above here now`:mig.intensity==='medium'?`Migration is building above ${loc.split(',')[0]}`:`The migration corridor above ${loc.split(',')[0]}`,
+     body:mig.intensity==='high'?`It is ${mig.label.toLowerCase()} season. On peak nights this ${mo}, tens of thousands of birds cross this exact sky heading ${mig.dir} — navigating by starlight and the Earth's magnetic field, following corridors their ancestors have used for thousands of years.`:mig.intensity==='medium'?`Migration is building in ${mo}. The flyway above here will carry hundreds of thousands of birds heading ${mig.dir} over the coming weeks. Many travel thousands of kilometres without stopping.`:`This corridor carries up to 80,000 birds on peak migration nights each spring and autumn. In ${mo} migration is quiet — but in weeks that sky will be full of birds navigating by the stars.`,
+     nudge:`→ Turn off non-essential lighting during ${mig.intensity==='high'?'peak migration nights this month':'spring and autumn migration seasons'}. Skyglow disorients migrating birds into fatal building collisions.`,
+     source:'Source: Loss et al. 2014 — The Condor · Fatal Light Awareness Program (FLAP Canada) · eBird / Cornell Lab',layer:'flyway',species:null}
   ];
 }
 
@@ -1252,261 +1022,182 @@ function getMig(m){
   return{label:'Migration quiet',intensity:'low',dir:null};
 }
 
-function buildProgBars(){
-  $('prog-bars').innerHTML=N.narrations.map((_,i)=>
-    `<div class="pb" id="pb-${i}"><div class="pb-fill"></div></div>`
-  ).join('');
+function buildProg(){
+  $('prog').innerHTML=NIGHT.narrations.map((_,i)=>
+    `<div class="pb" id="pb${i}"><div class="pb-f"></div></div>`).join('');
 }
 
-const LAYER_MAP=['light','water','water','bats','flyway'];
+const LMAP=['light','water','water','bats','flyway'];
 
-function showStep(step){
-  N.step=step;
-  N.narrations.forEach((_,i)=>{
-    const pb=$(`pb-${i}`);if(!pb)return;
-    pb.className='pb'+(i<step?' done':i===step?' active':'');
+function showStep(s){
+  NIGHT.step=s;
+  NIGHT.narrations.forEach((_,i)=>{
+    const pb=$(`pb${i}`);if(!pb)return;
+    pb.className='pb'+(i<s?' done':i===s?' active':'');
   });
-
-  if(step>=N.narrations.length){
-    $('exp-legend').classList.add('vis');
-    setTimeout(()=>goScreen('s-num'),600);return;
-  }
-
-  const n=N.narrations[step];
-  const lk=LAYER_MAP[step];
+  if(s>=NIGHT.narrations.length){$('exp-legend').classList.add('vis');setTimeout(()=>showPanel('p-num'),600);return;}
+  const n=NIGHT.narrations[s];
+  const lk=LMAP[s];
   if(lk)setTimeout(()=>setOp(lk,1),300);
-
-  ['narr-heading','narr-body','narr-nudge','narr-source','narr-species'].forEach(id=>{
-    const el=$(id);if(el)el.classList.remove('vis');
-  });
-
+  ['nh','nb','nn','ns','nsp'].forEach(id=>{const el=$(id);if(el)el.classList.remove('vis');});
   setTimeout(async()=>{
-    $('narr-heading').textContent=n.heading;
-    $('narr-nudge').textContent=n.nudge;
-    $('narr-source').textContent=n.source;
-    const bodyEl=$('narr-body');
-    const spEl=$('narr-species');
-
+    $('nh').textContent=n.heading;
+    $('nn').textContent=n.nudge;
+    $('ns').textContent=n.source;
+    const bodyEl=$('nb'),spEl=$('nsp');
     if(n.species!==null&&n.species.length>0){
       bodyEl.textContent='Loading species detail…';
       spEl.innerHTML=renderSpList(n.species);
       genBatDetail(n.species).then(t=>{if(t)bodyEl.textContent=t;else bodyEl.textContent=`${n.species.length} bat species recorded within 25km.`;});
-    } else {
-      bodyEl.textContent=n.body||'';
-      spEl.innerHTML='';
-    }
-
+    }else{bodyEl.textContent=n.body||'';spEl.innerHTML='';}
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      ['narr-heading','narr-body','narr-nudge','narr-source'].forEach(id=>$(id)?.classList.add('vis'));
+      ['nh','nb','nn','ns'].forEach(id=>$(id)?.classList.add('vis'));
       if(n.species&&n.species.length>0)spEl?.classList.add('vis');
     }));
   },150);
-
-  // Back + continue buttons
-  const back=$('nbtn-back'),cont=$('nbtn-cont');
+  const back=$('nb-back'),cont=$('nb-cont');
   back.classList.remove('vis');cont.classList.remove('vis');
-  const isLast=step===N.narrations.length-1;
-  cont.innerHTML=isLast
-    ?`See the bigger picture <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`
-    :`Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
-  if(step>0)setTimeout(()=>back.classList.add('vis'),1800);
+  const isLast=s===NIGHT.narrations.length-1;
+  cont.innerHTML=isLast?`See the bigger picture <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`:`Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  if(s>0)setTimeout(()=>back.classList.add('vis'),1800);
   setTimeout(()=>cont.classList.add('vis'),1800);
 }
 
-function nextStep(){showStep(N.step+1);}
-function prevStep(){if(N.step>0)showStep(N.step-1);}
+function nextStep(){showStep(NIGHT.step+1);}
+function prevStep(){if(NIGHT.step>0)showStep(NIGHT.step-1);}
 
 function renderSpList(list){
   if(!list?.length)return'';
-  return`<div style="margin-top:0.5rem;">`+list.slice(0,6).map(b=>`
-    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:11px;">
+  return`<div style="margin-top:.5rem;">`+list.slice(0,6).map(b=>`
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--bo);font-size:11px;">
       <div><span style="font-family:var(--fb);color:var(--t2);">${b.common||b.species}</span>${b.common?`<br><em style="color:var(--t3);font-size:10px;">${b.species}</em>`:''}</div>
-      <span style="font-family:var(--fm);font-size:9px;letter-spacing:0.06em;white-space:nowrap;color:${b.mig?'var(--ab)':b.ls?'var(--teal)':'var(--t3)'};">${b.mig?'MIGRATORY':b.ls?'LIGHT-SENSITIVE':'RESIDENT'}</span>
+      <span style="font-family:var(--fm);font-size:9px;letter-spacing:.06em;white-space:nowrap;color:${b.mig?'var(--ab)':b.ls?'var(--teal)':'var(--t3)'};">${b.mig?'MIGRATORY':b.ls?'LIGHT-SENSITIVE':'RESIDENT'}</span>
     </div>`).join('')+`</div>`;
 }
 
-/* Number screen */
 function buildNumScreen(){
-  const m=N.month,b=N.data.bortle;
-  const mig=getMig(m);
+  const m=NIGHT.month,b=NIGHT.data.bortle,mig=getMig(m);
   if(mig.intensity==='high'){
     const cnt=(Math.floor(Math.random()*60)+40)*1000;
-    $('num-label').textContent=`Birds crossing this sky on a peak night this ${mn(m)}`;
+    $('num-lbl').textContent=`Birds crossing this sky on a peak night this ${mn(m)}`;
     $('num-val').textContent=cnt.toLocaleString();
-    $('num-caption').innerHTML=`During <strong>${mig.label.toLowerCase()}</strong> in ${mn(m)}, an estimated ${cnt.toLocaleString()} birds fly over this location in a single night — pulled away from their natural paths by <strong>artificial light at night</strong> instead of the stars they evolved to navigate by.`;
-  } else {
+    $('num-cap').innerHTML=`During <strong>${mig.label.toLowerCase()}</strong> in ${mn(m)}, an estimated ${cnt.toLocaleString()} birds fly over this location in a single night — pulled away from their natural paths by <strong>artificial light at night</strong> instead of the stars they evolved to navigate by.`;
+  }else{
     const mult=b?Math.round(Math.pow(2.5,b.class-1)):500;
-    $('num-label').textContent='Times brighter than the natural night sky';
+    $('num-lbl').textContent='Times brighter than the natural night sky';
     $('num-val').textContent=`×${mult.toLocaleString()}`;
-    $('num-caption').innerHTML=`The sky above ${N.location.short_name.split(',')[0]} is approximately <strong>${mult.toLocaleString()} times brighter</strong> than it was before electric light. Every bat, moth, and migrating bird above this location navigates a sky <strong>that did not exist 100 years ago.</strong>`;
+    $('num-cap').innerHTML=`The sky above ${LOC.short_name.split(',')[0]} is approximately <strong>${mult.toLocaleString()} times brighter</strong> than it was before electric light. Every bat, moth, and migrating bird above this location navigates a sky <strong>that did not exist 100 years ago.</strong>`;
   }
 }
 
-/* Reading */
 function genReading(){
-  const{data,location,month}=N;
+  const{data,month}=NIGHT;
   const g=data.gbif||{},b=data.bortle,w=data.osm?.nearestWater;
   const mig=getMig(month);
-  const batSt=batActive(month);
   $('read-kicker').textContent=`${mn(month)} · ${mig.label}`;
-  $('read-loc').textContent=location.short_name.toUpperCase();
-  const prompt=`You are writing the nocturnal portrait for Nightprint — a tool that reveals the ecological night of any location.
-Location: ${location.short_name}
+  $('read-loc').textContent=LOC.short_name.toUpperCase();
+  const prompt=`Nocturnal portrait for Nightprint.
+Location: ${LOC.short_name}
 Month: ${mn(month)} (${se(month)})
-Migration: ${mig.label} — ${mig.intensity} intensity${mig.dir?', heading '+mig.dir:''}
-Bat status: ${batSt?'active foraging':'hibernating or transitional'}
-Bat species within 25km: ${g.batSpecies||0}${g.migBats?.length>0?', including '+g.migBats[0].species+' (long-distance migrant)':''}
-Light-sensitive bats: ${g.lsBats||0}
-Bird species: ${g.birdSpp||0}
+Migration: ${mig.label} — ${mig.intensity}${mig.dir?', heading '+mig.dir:''}
+Bats: ${g.batSpecies||0} species${g.migBats?.length>0?', including '+g.migBats[0].species+' (long-distance migrant)':''}
 Sky: ${b?'Bortle '+b.class+' — '+b.label:'unknown'}
-Nearest waterbody: ${w?w.dist+'m away':'none detected'}
+Waterbody: ${w?w.dist+'m':'none'}
 
-Write 4–5 sentences as a nocturnal portrait of this place in this season. Specific. Reference real data. Present tense for ${mn(month)}. Tone: calm, clear, revelatory. Do not mention Nightprint or artificial light directly — let the portrait of life speak for itself. Do not start with "In" or "This".`;
+Write 4–5 sentences. Specific, present tense for ${mn(month)}. Calm, revelatory. Do not mention Nightprint or artificial light directly. Do not start with "In" or "This".`;
   fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:prompt}]})})
   .then(r=>r.json()).then(res=>{const t=res.content?.[0]?.text;if(t)$('read-text').textContent=t;})
-  .catch(()=>{$('read-text').textContent=`The night at ${location.short_name} holds more than most people realise. ${g.batSpecies>0?g.batSpecies+' bat species have been recorded here, navigating corridors that predate any human structure. ':''}${b?'The sky registers Bortle '+b.class+' — '+b.label+'. ':''}The night here is not empty. It never was.`;});
+  .catch(()=>{$('read-text').textContent=`The night at ${LOC.short_name} holds more than most people realise. ${g.batSpecies>0?g.batSpecies+' bat species have been recorded here, navigating corridors that predate any human structure. ':''}${b?'The sky registers Bortle '+b.class+' — '+b.label+'. ':''}The night here is not empty. It never was.`;});
 }
 
 async function genBatDetail(batList){
   if(!batList?.length)return null;
-  const prompt=`You are writing the bat ecology section for Nightprint.
-Location: ${N.location.short_name}
-Month: ${mn(N.month)}
-Bat status: ${batActive(N.month)?'active foraging':'hibernating or transitional'}
-Species recorded within 25km: ${batList.slice(0,6).map(b=>`${b.species}${b.common?' ('+b.common+')':''}${b.mig?' [long-distance migrant]':' [resident]'}${b.ls?' [light-sensitive]':''}`).join(', ')}
-Total species: ${batList.length}
+  const prompt=`Bat ecology for Nightprint.
+Location: ${LOC.short_name}, Month: ${mn(NIGHT.month)}
+Species within 25km: ${batList.slice(0,6).map(b=>`${b.species}${b.common?' ('+b.common+')':''}${b.mig?' [migrant]':' [resident]'}${b.ls?' [light-sensitive]':''}`).join(', ')}
+Total: ${batList.length}
 
-Write 3 sentences of specific ecological detail about the bats of this place. Name specific species. Mention if any are long-distance migrants, what they hunt, what they need. Specific to ${N.location.short_name}. Tone: calm, precise, revelatory. Do not start with "In" or "Bats are".`;
-  try{
-    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:250,messages:[{role:'user',content:prompt}]})});
-    const res=await r.json();
-    return res.content?.[0]?.text||null;
-  }catch(e){return null;}
+Write 3 sentences of specific ecological detail. Name species. Mention migrants, hunting habits, what they need. Specific to ${LOC.short_name}. Do not start with "In" or "Bats are".`;
+  try{const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:250,messages:[{role:'user',content:prompt}]})});const res=await r.json();return res.content?.[0]?.text||null;}catch(e){return null;}
 }
 
 /* ══ MAP ══ */
 let leafMap=null;
-const origStyles={};
+const origSt={};
 
 function initMap(){
   if(leafMap){leafMap.remove();leafMap=null;}
-  Object.keys(origStyles).forEach(k=>delete origStyles[k]);
-  const{lat,lon}=N.location;
-  leafMap=L.map('exp-map',{zoomControl:false,attributionControl:false}).setView([lat,lon],13);
+  Object.keys(origSt).forEach(k=>delete origSt[k]);
+  const{lat,lon}=LOC;
+  leafMap=L.map('exp-map',{zoomControl:true,attributionControl:false}).setView([lat,lon],13);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(leafMap);
-  L.control.zoom({position:'topleft'}).addTo(leafMap);
-
   leafMap._lyr={
-    light:  renderLight(),
-    water:  renderWaterGreen(),
-    bats:   renderBats(),
-    flyway: renderFlyway()
+    light:  mkLight(),
+    water:  mkWaterGreen(),
+    bats:   mkBats(),
+    flyway: mkFlyway()
   };
-
-  L.circleMarker([lat,lon],{radius:8,color:'#f5a623',fillColor:'#f5a623',fillOpacity:1,weight:2}).addTo(leafMap).bindTooltip(N.location.short_name);
-
+  L.circleMarker([lat,lon],{radius:8,color:'#f5a623',fillColor:'#f5a623',fillOpacity:1,weight:2}).addTo(leafMap).bindTooltip(LOC.short_name);
   Object.keys(leafMap._lyr).forEach(k=>setOp(k,0));
   setTimeout(()=>$('exp-map').classList.add('vis'),100);
-  buildLegend();
+  mkLegend();
 }
 
-function renderLight(){
-  const g=L.layerGroup().addTo(leafMap);
-  const{lat,lon}=N.location;
-  const bc=N.data.bortle?.class||7;
-  [bc*12000,bc*7000,bc*3500,bc*1200].forEach((r,i)=>{
-    L.circle([lat,lon],{radius:r,color:'#e88a0d',fillColor:'#f5a623',fillOpacity:[0.08,0.13,0.18,0.25][i],weight:i===0?0.5:0,opacity:0.15}).addTo(g);
-  });
+function mkLight(){
+  const g=L.layerGroup().addTo(leafMap);const{lat,lon}=LOC;const bc=NIGHT.data.bortle?.class||7;
+  [bc*12000,bc*7000,bc*3500,bc*1200].forEach((r,i)=>L.circle([lat,lon],{radius:r,color:'#e88a0d',fillColor:'#f5a623',fillOpacity:[.08,.13,.18,.25][i],weight:i===0?.5:0,opacity:.15}).addTo(g));
   return g;
 }
-
-function renderWaterGreen(){
+function mkWaterGreen(){
   const g=L.layerGroup().addTo(leafMap);
-  (N.data.osm?.elements||[]).forEach(el=>{
-    const pts=(el.geometry||[]).filter(p=>p?.lat);if(!pts.length)return;
-    const coords=pts.map(p=>[p.lat,p.lon]);
-    const isRiver=el.tags?.waterway==='river'||el.tags?.waterway==='stream'||el.tags?.waterway==='riverbank';
-    if(isRiver&&coords.length>=2)L.polyline(coords,{color:'#4a9fd4',weight:3,opacity:0.8}).addTo(g);
-    else if(coords.length>2)L.polygon(coords,{color:'#4a9fd4',fillColor:'#4a9fd4',fillOpacity:0.3,weight:1.5,opacity:0.75}).addTo(g);
-  });
-  (N.data.green||[]).forEach(el=>{
-    const renderPoly=geom=>{
-      const pts=(geom||[]).filter(p=>p?.lat);if(pts.length<3)return;
-      L.polygon(pts.map(p=>[p.lat,p.lon]),{color:'#26c994',fillColor:'#26c994',fillOpacity:0.18,weight:1.5,opacity:0.65}).addTo(g);
-    };
-    if(el.type==='relation'&&el.members)el.members.filter(m=>m.role==='outer'&&m.geometry?.length>2).forEach(m=>renderPoly(m.geometry));
-    else if(el.geometry?.length>2)renderPoly(el.geometry);
-  });
+  (NIGHT.data.osm?.elements||[]).forEach(el=>{const pts=(el.geometry||[]).filter(p=>p?.lat);if(!pts.length)return;const coords=pts.map(p=>[p.lat,p.lon]);const isR=el.tags?.waterway==='river'||el.tags?.waterway==='stream'||el.tags?.waterway==='riverbank';if(isR&&coords.length>=2)L.polyline(coords,{color:'#4a9fd4',weight:3,opacity:.8}).addTo(g);else if(coords.length>2)L.polygon(coords,{color:'#4a9fd4',fillColor:'#4a9fd4',fillOpacity:.3,weight:1.5,opacity:.75}).addTo(g);});
+  (NIGHT.data.green||[]).forEach(el=>{const rp=geom=>{const pts=(geom||[]).filter(p=>p?.lat);if(pts.length<3)return;L.polygon(pts.map(p=>[p.lat,p.lon]),{color:'#26c994',fillColor:'#26c994',fillOpacity:.18,weight:1.5,opacity:.65}).addTo(g);};if(el.type==='relation'&&el.members)el.members.filter(m=>m.role==='outer'&&m.geometry?.length>2).forEach(m=>rp(m.geometry));else if(el.geometry?.length>2)rp(el.geometry);});
   return g;
 }
-
-function renderBats(){
+function mkBats(){
   const g=L.layerGroup().addTo(leafMap);
-  (N.data.gbif?.batLocations||[]).forEach(([blat,blon])=>{
-    L.circleMarker([blat,blon],{radius:5,color:'#26c994',fillColor:'#26c994',fillOpacity:0.9,weight:0}).addTo(g).bindTooltip('Bat observation');
-  });
+  (NIGHT.data.gbif?.batLocations||[]).forEach(([blat,blon])=>L.circleMarker([blat,blon],{radius:5,color:'#26c994',fillColor:'#26c994',fillOpacity:.9,weight:0}).addTo(g).bindTooltip('Bat observation'));
   return g;
 }
-
-function renderFlyway(){
-  const g=L.layerGroup().addTo(leafMap);
-  const{lat,lon}=N.location;
-  const mig=getMig(N.month);
-  const drawRoute=(pts,opacity,label)=>{
-    L.polyline(pts,{color:'#f5a623',weight:1.5,opacity,dashArray:'9 5'}).addTo(g);
+function mkFlyway(){
+  const g=L.layerGroup().addTo(leafMap);const{lat,lon}=LOC;const mig=getMig(NIGHT.month);
+  const draw=(pts,op,lbl)=>{
+    L.polyline(pts,{color:'#f5a623',weight:1.5,opacity:op,dashArray:'9 5'}).addTo(g);
     const mid=pts[Math.floor(pts.length/2)],prev=pts[Math.floor(pts.length/2)-1]||pts[0];
     const ang=Math.atan2(mid[1]-prev[1],mid[0]-prev[0])*180/Math.PI;
-    L.marker(mid,{icon:L.divIcon({html:`<div style="transform:rotate(${ang}deg);color:#f5a623;opacity:${opacity};font-size:13px;line-height:1;">▲</div>`,iconAnchor:[6,6],className:''})}).addTo(g);
-    L.marker(pts[2],{icon:L.divIcon({html:`<div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#f5a623;opacity:${opacity+0.1};white-space:nowrap;letter-spacing:0.05em;background:rgba(0,0,0,0.55);padding:2px 5px;border-radius:3px;">${label}</div>`,iconAnchor:[-4,8],className:''})}).addTo(g);
+    L.marker(mid,{icon:L.divIcon({html:`<div style="transform:rotate(${ang}deg);color:#f5a623;opacity:${op};font-size:13px;line-height:1;">▲</div>`,iconAnchor:[6,6],className:''})}).addTo(g);
+    L.marker(pts[2],{icon:L.divIcon({html:`<div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#f5a623;opacity:${op+.1};white-space:nowrap;letter-spacing:.05em;background:rgba(0,0,0,.55);padding:2px 5px;border-radius:3px;">${lbl}</div>`,iconAnchor:[-4,8],className:''})}).addTo(g);
   };
   const sp=[[lat-.65,lon-.05],[lat-.44,lon-.14],[lat-.22,lon-.08],[lat,lon+.06],[lat+.22,lon+.22],[lat+.45,lon+.30],[lat+.65,lon+.20]];
   const fa=[[lat+.65,lon+.35],[lat+.44,lon+.48],[lat+.22,lon+.38],[lat,lon+.18],[lat-.22,lon+.02],[lat-.44,lon-.18],[lat-.65,lon-.28]];
-  const so=mig.dir==='north'?0.70:0.35,fo=mig.dir==='south'?0.70:0.35;
-  drawRoute(fa,fo,'↓ Autumn migration');
-  drawRoute(sp,so,'↑ Spring migration');
+  draw(fa,mig.dir==='south'?.70:.35,'↓ Autumn migration');
+  draw(sp,mig.dir==='north'?.70:.35,'↑ Spring migration');
   return g;
 }
 
 function setOp(key,target){
   const lg=leafMap?._lyr?.[key];if(!lg)return;
-  if(!origStyles[key]){
-    origStyles[key]=[];
-    lg.eachLayer(l=>{if(l.options)origStyles[key].push({opacity:l.options.opacity??1,fillOpacity:l.options.fillOpacity??0.3});});
-  }
-  let i=0;
-  lg.eachLayer(l=>{
-    const o=origStyles[key][i]||{opacity:1,fillOpacity:0.3};
-    try{if(l.setStyle)l.setStyle({opacity:o.opacity*target,fillOpacity:o.fillOpacity*target});else if(l.setOpacity)l.setOpacity(target);}catch(e){}
-    i++;
-  });
+  if(!origSt[key]){origSt[key]=[];lg.eachLayer(l=>{if(l.options)origSt[key].push({opacity:l.options.opacity??1,fillOpacity:l.options.fillOpacity??0.3});});}
+  let i=0;lg.eachLayer(l=>{const o=origSt[key][i]||{opacity:1,fillOpacity:.3};try{if(l.setStyle)l.setStyle({opacity:o.opacity*target,fillOpacity:o.fillOpacity*target});else if(l.setOpacity)l.setOpacity(target);}catch(e){}i++;});
 }
 
-function buildLegend(){
-  const items=[
-    {type:'sq',color:'rgba(232,138,13,0.3)',label:'Light pollution'},
-    {type:'sq',color:'rgba(38,201,148,0.4)',label:'Green spaces'},
-    {type:'line',color:'#4a9fd4',label:'Water bodies'},
-    {type:'dot',color:'#26c994',label:'Bat observations'},
-    {type:'line',color:'#f5a623',label:'Migration corridors'},
-    {type:'dot',color:'#f5a623',label:'Your location'},
-  ];
-  $('exp-legend').innerHTML=items.map(it=>
-    it.type==='dot'?`<div class="leg-row"><div class="leg-dot" style="background:${it.color}"></div><span>${it.label}</span></div>`
-    :it.type==='line'?`<div class="leg-row"><div class="leg-line" style="background:${it.color}"></div><span>${it.label}</span></div>`
-    :`<div class="leg-row"><div class="leg-sq" style="background:${it.color}"></div><span>${it.label}</span></div>`
-  ).join('');
+function mkLegend(){
+  const items=[{t:'sq',c:'rgba(232,138,13,.3)',l:'Light pollution'},{t:'sq',c:'rgba(38,201,148,.4)',l:'Green spaces'},{t:'line',c:'#4a9fd4',l:'Water bodies'},{t:'dot',c:'#26c994',l:'Bat observations'},{t:'line',c:'#f5a623',l:'Migration corridors'},{t:'dot',c:'#f5a623',l:'Your location'}];
+  $('exp-legend').innerHTML=items.map(it=>it.t==='dot'?`<div class="leg-row"><div class="leg-dot" style="background:${it.c}"></div><span>${it.l}</span></div>`:it.t==='line'?`<div class="leg-row"><div class="leg-line" style="background:${it.c}"></div><span>${it.l}</span></div>`:`<div class="leg-row"><div class="leg-sq" style="background:${it.c}"></div><span>${it.l}</span></div>`).join('');
 }
 
-/* ══ SHARED DATA FETCHES ══ */
-async function fetchBortle(lat,lon){
-  try{const r=await fetch(`https://www.lightpollutionmap.info/QueryRaster/?ql=wa_2015&qt=point&qd=${lon},${lat}`);const d=await r.json();const m=d.mpsas||d.value;if(m)return mpsas(parseFloat(m));}catch(e){}return null;
-}
-function mpsas(m){
-  if(m>=21.69)return{class:3,label:'Rural sky'};if(m>=20.49)return{class:4,label:'Rural/suburban'};
-  if(m>=19.50)return{class:5,label:'Suburban sky'};if(m>=18.94)return{class:6,label:'Bright suburban'};
-  if(m>=18.38)return{class:7,label:'Suburban/urban'};if(m>=17.50)return{class:8,label:'City sky'};
-  return{class:9,label:'Inner city'};
-}
+function openSrch(){$('srch-overlay').classList.add('open');setTimeout(()=>$('srch-input').focus(),100);}
+function closeSrch(){$('srch-overlay').classList.remove('open');}
+$('srch-input').addEventListener('keydown',async e=>{
+  if(e.key!=='Enter')return;
+  const q=e.target.value.trim();if(!q)return;
+  try{const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`,{headers:{'Accept-Language':'en'}});const d=await r.json();if(!d.length)throw new Error();const p=d[0];LOC.lat=parseFloat(p.lat);LOC.lon=parseFloat(p.lon);LOC.display_name=p.display_name;LOC.short_name=p.display_name.split(',').slice(0,2).join(',').trim();LOC.osm_id=p.osm_id;LOC.osm_type=p.osm_type;$('hdr-loc-name').textContent=LOC.short_name.split(',')[0];closeSrch();startNight();}
+  catch(e){$('srch-err').textContent='Place not found.';}
+});
+
+/* ══ SHARED DATA ══ */
+async function fetchBortle(lat,lon){try{const r=await fetch(`https://www.lightpollutionmap.info/QueryRaster/?ql=wa_2015&qt=point&qd=${lon},${lat}`);const d=await r.json();const m=d.mpsas||d.value;if(m)return mp2b(parseFloat(m));}catch(e){}return null;}
+function mp2b(m){if(m>=21.69)return{class:3,label:'Rural sky'};if(m>=20.49)return{class:4,label:'Rural/suburban'};if(m>=19.50)return{class:5,label:'Suburban sky'};if(m>=18.94)return{class:6,label:'Bright suburban'};if(m>=18.38)return{class:7,label:'Suburban/urban'};if(m>=17.50)return{class:8,label:'City sky'};return{class:9,label:'Inner city'};}
 
 async function fetchGBIF(lat,lon,radius){
   const deg=radius/111000;
@@ -1515,9 +1206,9 @@ async function fetchGBIF(lat,lon,radius){
   const MIGS=['Lasiurus cinereus','Lasiurus borealis','Lasionycteris noctivagans','Tadarida brasiliensis'];
   const LS=['Vespertilionidae','Phyllostomidae','Rhinolophidae','Molossidae'];
   const bats=recs.filter(x=>x.order==='Chiroptera');const bm={};
-  bats.forEach(x=>{if(!x.species)return;if(!bm[x.species])bm[x.species]={species:x.species,common:x.vernacularName||null,fam:x.family||null,mig:MIGS.includes(x.species),ls:LS.includes(x.family),n:0};bm[x.species].n++;});
+  bats.forEach(x=>{if(!x.species)return;if(!bm[x.species])bm[x.species]={species:x.species,common:x.vernacularName||null,fam:x.family||null,mig:MIGS.includes(x.species),ls:LS.includes(x.family),n:0,locations:[]};bm[x.species].n++;if(x.decimalLatitude&&x.decimalLongitude)bm[x.species].locations.push([x.decimalLatitude,x.decimalLongitude]);});
   const batList=Object.values(bm).sort((a,b)=>b.n-a.n);
-  const birds=recs.filter(x=>x.class==='Aves');const moths=recs.filter(x=>x.order==='Lepidoptera');const owls=recs.filter(x=>x.order==='Strigiformes');
+  const birds=recs.filter(x=>x.class==='Aves'),moths=recs.filter(x=>x.order==='Lepidoptera'),owls=recs.filter(x=>x.order==='Strigiformes');
   return{batList,batSpecies:batList.length,lsBats:batList.filter(b=>b.ls).length,migBats:batList.filter(b=>b.mig),birdSpp:[...new Set(birds.map(x=>x.species).filter(Boolean))].length,mothSpp:[...new Set(moths.map(x=>x.species).filter(Boolean))].length,owlSpp:[...new Set(owls.map(x=>x.species).filter(Boolean))].length,batLocations:batList.flatMap(b=>b.locations||[]).slice(0,15)};
 }
 
@@ -1526,10 +1217,7 @@ async function fetchWater(lat,lon,radius){
   const q=`[out:json][timeout:20];(way["natural"="water"](${bb});way["waterway"="riverbank"](${bb});way["waterway"="river"](${bb});way["waterway"="stream"](${bb});relation["natural"="water"](${bb});relation["waterway"="river"](${bb}););out geom;`;
   const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:q});const d=await r.json();
   const raw=d.elements||[];const els=[];
-  raw.forEach(el=>{
-    if(el.type==='way'&&el.geometry?.length>1)els.push(el);
-    else if(el.type==='relation'&&el.members)el.members.forEach(m=>{if(m.type==='way'&&m.geometry?.length>1)els.push({type:'way',geometry:m.geometry,tags:el.tags||{}});});
-  });
+  raw.forEach(el=>{if(el.type==='way'&&el.geometry?.length>1)els.push(el);else if(el.type==='relation'&&el.members)el.members.forEach(m=>{if(m.type==='way'&&m.geometry?.length>1)els.push({type:'way',geometry:m.geometry,tags:el.tags||{}});});});
   let near=null;
   els.forEach(el=>(el.geometry||[]).filter(p=>p?.lat).forEach(p=>{const dist=Math.hypot(p.lat-lat,p.lon-lon)*111000;if(!near||dist<near.dist)near={dist:Math.round(dist),lat:p.lat,lon:p.lon,tags:el.tags};}));
   return{nearestWater:near,elements:els};
@@ -1543,7 +1231,7 @@ async function fetchGreen(lat,lon,radius){
 
 /* ══ ACTIONS ══ */
 function shareIt(){
-  const text=C.location?`Nightprint of ${C.location.short_name} — ${C.fixtureLabel}`:N.location?`The night at ${N.location.short_name}`:' Nightprint';
+  const text=CHECK.fixtureLabel?`Nightprint of ${LOC.short_name} — ${CHECK.fixtureLabel}`:`The night at ${LOC.short_name}`;
   if(navigator.share)navigator.share({title:'Nightprint',text,url:window.location.href});
   else{navigator.clipboard?.writeText(window.location.href);alert('Link copied.');}
 }
@@ -1551,13 +1239,6 @@ function shareIt(){
 function showAbout(){
   alert('Nightprint — two tools for the night.\n\nCheck your light: find out if your outdoor fixture is dark sky compliant and exactly what to change.\n\nRead the night: discover the nocturnal ecology of any location — what lives there, what migrates through, and what artificial light is doing to all of it.\n\nBuilt by Lightbahn · lightbahn.ca\nnightprint.co');
 }
-
-/* ══ URL ROUTING ══ */
-(function(){
-  const h=window.location.hash;
-  if(h==='#check')goCheck();
-  else if(h==='#night')goNight();
-})();
 </script>
 </body>
 </html>
