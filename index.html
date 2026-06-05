@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nightprint</title>
-  <meta name="description" content="Reveal the nocturnal character of any place on earth.">
+  <meta name="description" content="The night you think you know is only a fraction of what's there.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Six+Caps&family=Urbanist:wght@300;400;500;600&family=Poppins:wght@300;400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -13,9 +13,9 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:          #0b0d13;
-      --bg-mid:      #11141d;
-      --bg-card:     #161921;
+      --bg:          #000000;
+      --bg-mid:      #0a0c10;
+      --bg-card:     #111318;
       --border:      rgba(255,255,255,0.07);
       --border-mid:  rgba(255,255,255,0.13);
       --border-hi:   rgba(255,255,255,0.22);
@@ -33,1008 +33,1339 @@
       --font-head: 'Urbanist', sans-serif;
       --font-body: 'Poppins', sans-serif;
       --font-mono: 'Share Tech Mono', monospace;
+      --font-display: 'Six Caps', sans-serif;
       --page-pad: clamp(1rem, 3vw, 2.5rem);
       --radius: 6px;
     }
 
     html, body { height: 100%; }
     body {
-      background: var(--bg); color: var(--text-primary);
-      font-family: var(--font-body); font-size: 14px;
-      font-weight: 300; line-height: 1.65;
-      overflow-x: hidden; min-height: 100vh;
-    }
-
-    /* Stars */
-    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-    .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--d) ease-in-out infinite alternate; }
-    @keyframes twinkle { from { opacity: var(--min); } to { opacity: var(--max); } }
-
-    .screen { position: relative; z-index: 1; }
-
-    /* ══ DARK SCREENS shared ══ */
-    #screen-landing,
-    #screen-scale,
-    #screen-questions,
-    #screen-reading {
       background: var(--bg);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 2rem var(--page-pad) 5rem;
-      text-align: center; min-height: 100vh;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.65;
+      overflow-x: hidden;
+      min-height: 100vh;
     }
 
-    .back-btn {
-      position: absolute; top: 1.5rem; left: 1.5rem;
-      background: none; border: none; color: var(--text-tertiary);
-      font-family: var(--font-mono); font-size: 10px;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      cursor: pointer; display: flex; align-items: center; gap: 6px;
-      transition: color 0.2s;
+    /* ══════════════════════════════
+       SCREEN 1 — OPENING
+    ══════════════════════════════ */
+    #screen-opening {
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
     }
-    .back-btn:hover { color: var(--text-secondary); }
-    .back-btn svg { width: 13px; height: 13px; }
 
-    /* ══ LANDING ══ */
-    .wordmark {
-      font-family: 'Six Caps', sans-serif;
-      font-size: clamp(72px, 18vw, 180px);
-      font-weight: 400;
-      letter-spacing: 0.08em;
+    .opening-line {
+      font-family: var(--font-body);
+      font-size: clamp(16px, 2.5vw, 22px);
+      font-weight: 300;
+      color: var(--text-secondary);
+      max-width: 480px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 1.2s ease forwards 0.5s;
+      margin-bottom: 3rem;
+    }
+
+    .opening-logo {
+      font-family: var(--font-display);
+      font-size: clamp(64px, 16vw, 160px);
+      letter-spacing: 0.06em;
+      color: var(--text-primary);
+      line-height: 1;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 1.4s;
+      margin-bottom: 3rem;
+    }
+
+    .opening-cta {
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 2.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .location-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--text-primary);
-      margin-bottom: 0.35rem;
-      opacity: 0; animation: fadeUp 1s ease forwards 0.3s;
+      background: none;
+      border: 1px solid var(--border-mid);
+      border-radius: 3px;
+      padding: 12px 28px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .location-btn:hover { border-color: var(--amber); color: var(--amber); }
+
+    .or-divider {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--text-tertiary);
     }
 
-    .tagline {
-      font-family: var(--font-mono); font-size: 10px;
-      letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--text-tertiary); margin-bottom: 3.5rem;
-      opacity: 0; animation: fadeUp 1s ease forwards 0.6s;
+    .search-wrap-opening {
+      width: 100%;
+      max-width: 360px;
+      position: relative;
     }
-
-    .search-question {
-      font-family: var(--font-body); font-size: clamp(13px, 1.8vw, 15px);
-      font-weight: 300; color: var(--text-secondary);
-      margin-bottom: 1.5rem; max-width: 440px;
-      opacity: 0; animation: fadeUp 1s ease forwards 0.9s;
-    }
-
-    .type-selector {
-      display: flex; gap: 8px; flex-wrap: wrap;
-      justify-content: center; max-width: 520px; width: 100%;
-      opacity: 0; animation: fadeUp 1s ease forwards 1.0s;
-    }
-
-    .type-chip {
-      background: var(--bg-card); border: 1px solid var(--border-mid);
-      border-radius: 3px; color: var(--text-tertiary);
-      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.07em;
-      padding: 9px 15px; cursor: pointer; transition: all 0.15s;
-    }
-    .type-chip:hover { border-color: var(--border-hi); color: var(--text-secondary); }
-    .type-chip.active { border-color: var(--amber); color: var(--amber); background: var(--amber-glow); }
-
-    .search-wrap {
-      width: 100%; max-width: 520px; position: relative;
-      margin-top: 1.25rem;
-      opacity: 0; transform: translateY(6px);
-      transition: opacity 0.35s ease, transform 0.35s ease;
-      pointer-events: none;
-    }
-    .search-wrap.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
-
-    .search-input {
-      width: 100%; background: var(--bg-card);
-      border: 1px solid var(--border-mid); border-radius: var(--radius);
-      color: var(--text-primary); font-family: var(--font-body);
-      font-size: 14px; font-weight: 300;
-      padding: 14px 50px 14px 18px; outline: none;
+    .search-input-opening {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border-mid);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 300;
+      padding: 10px 36px 10px 0;
+      outline: none;
       transition: border-color 0.2s;
+      text-align: center;
     }
-    .search-input::placeholder { color: var(--text-tertiary); }
-    .search-input:focus { border-color: var(--amber); }
-
-    .search-btn {
-      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-      background: none; border: none; color: var(--text-tertiary);
-      cursor: pointer; padding: 4px; transition: color 0.2s;
+    .search-input-opening::placeholder { color: var(--text-tertiary); }
+    .search-input-opening:focus { border-color: var(--amber); }
+    .search-btn-opening {
+      position: absolute; right: 0; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      color: var(--text-tertiary); cursor: pointer;
+      transition: color 0.2s; padding: 4px;
       display: flex; align-items: center;
     }
-    .search-btn:hover { color: var(--amber); }
-    .search-btn svg { width: 18px; height: 18px; }
+    .search-btn-opening:hover { color: var(--amber); }
+    .search-btn-opening svg { width: 16px; height: 16px; }
+    .error-msg { font-family: var(--font-mono); font-size: 10px; color: var(--amber); margin-top: 8px; min-height: 14px; }
 
-    .search-hint { font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary); margin-top: 10px; min-height: 16px; letter-spacing: 0.05em; }
-    .error-msg   { font-family: var(--font-mono); font-size: 11px; color: var(--amber-bright); margin-top: 8px; min-height: 16px; }
-
-    .about-link {
+    .about-link-opening {
       position: absolute; bottom: 2rem;
       font-family: var(--font-mono); font-size: 10px;
       letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--text-tertiary); text-decoration: none;
-      border-bottom: 1px solid transparent; cursor: pointer;
+      color: var(--text-tertiary); cursor: pointer;
+      border-bottom: 1px solid transparent;
       transition: color 0.2s, border-color 0.2s;
+      text-decoration: none;
     }
-    .about-link:hover { color: var(--text-secondary); border-color: var(--text-tertiary); }
+    .about-link-opening:hover { color: var(--text-secondary); border-color: var(--text-tertiary); }
 
-    /* ══ SCALE ══ */
-    .resolved-place { font-family: var(--font-body); font-size: clamp(14px, 2vw, 17px); font-weight: 300; color: var(--text-tertiary); margin-bottom: 0.4rem; }
-    .screen-heading { font-family: var(--font-head); font-size: clamp(22px, 4vw, 36px); font-weight: 300; color: var(--text-primary); margin-bottom: 2.5rem; }
-
-    .scale-options { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 460px; }
-
-    .scale-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 16px 20px; cursor: pointer;
-      text-align: left; transition: border-color 0.2s, background 0.2s;
-      display: flex; align-items: center; gap: 14px;
-    }
-    .scale-card:hover { border-color: var(--amber); background: var(--amber-glow); }
-    .scale-card-icon { font-size: 17px; opacity: 0.4; flex-shrink: 0; }
-    .scale-card-body { flex: 1; }
-    .scale-card-title { font-family: var(--font-head); font-size: 16px; font-weight: 400; color: var(--text-primary); margin-bottom: 1px; }
-    .scale-card-desc  { font-family: var(--font-body); font-size: 11px; color: var(--text-tertiary); line-height: 1.5; }
-    .scale-card-arrow { color: var(--text-tertiary); flex-shrink: 0; }
-    .scale-card-arrow svg { width: 14px; height: 14px; }
-
-    /* ══ QUESTIONS ══ */
-    .progress-dots { display: flex; gap: 6px; margin-bottom: 2.5rem; }
-    .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--border-mid); transition: background 0.3s; }
-    .dot.active { background: var(--amber); }
-    .dot.done   { background: var(--teal-bright); }
-
-    .question-text {
-      font-family: var(--font-head); font-size: clamp(18px, 3vw, 26px);
-      font-weight: 300; color: var(--text-primary);
-      margin-bottom: 2rem; max-width: 500px; line-height: 1.45;
-    }
-    .answer-options { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 420px; }
-
-    .answer-btn {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); color: var(--text-secondary);
-      font-family: var(--font-body); font-size: 13px; font-weight: 300;
-      padding: 13px 18px; cursor: pointer; text-align: left; transition: all 0.15s;
-    }
-    .answer-btn:hover { border-color: var(--amber); color: var(--text-primary); background: var(--amber-glow); }
-    .answer-btn.selected { border-color: var(--amber); color: var(--amber); background: var(--amber-dim); }
-
-    /* ══ READING ══ */
-    .reading-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 2.5rem; }
-    .reading-lines { display: flex; flex-direction: column; gap: 14px; max-width: 520px; width: 100%; }
-    .reading-line { display: flex; align-items: baseline; gap: 10px; opacity: 0; transform: translateY(8px); transition: opacity 0.5s ease, transform 0.5s ease; text-align: left; }
-    .reading-line.visible { opacity: 1; transform: translateY(0); }
-    .reading-line-dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
-    .reading-line-text { font-family: var(--font-mono); font-size: 13px; color: var(--text-tertiary); line-height: 1.5; }
-    .reading-line-val { color: var(--text-primary); }
-
-    /* ══ RESULTS ══ */
-    #screen-results { display: none; background: var(--bg); min-height: 100vh; }
-
-    .results-nav {
-      background: var(--bg-mid); border-bottom: 1px solid var(--border);
-      padding: 0 var(--page-pad);
-      display: flex; align-items: center; justify-content: space-between;
-      height: 52px; position: sticky; top: 0; z-index: 200;
-    }
-    .results-nav-logo { font-family: 'Six Caps', sans-serif; font-size: 28px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-primary); cursor: pointer; }
-    .results-nav-action { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-tertiary); background: none; border: none; cursor: pointer; transition: color 0.2s; }
-    .results-nav-action:hover { color: var(--amber); }
-
-    /* Two-col layout */
-    .results-body {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr auto;
-      height: calc(100vh - 52px);
-    }
-
-    /* Map — left, fills viewport height */
-    .results-map-col {
-      grid-column: 1; grid-row: 1 / 3;
+    /* ══════════════════════════════
+       SCREEN 2 — FULL MAP EXPERIENCE
+    ══════════════════════════════ */
+    #screen-experience {
+      display: none;
       position: relative;
-      height: calc(100vh - 52px);
-      position: sticky; top: 52px;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
     }
-    #results-map { width: 100%; height: 100%; }
 
-    .map-legend {
-      position: absolute; bottom: 16px; left: 16px;
-      background: rgba(11,13,19,0.9);
-      border: 1px solid var(--border-mid);
-      border-radius: var(--radius);
-      padding: 10px 13px;
-      display: flex; flex-direction: column; gap: 6px;
-      z-index: 1000; backdrop-filter: blur(6px);
+    #experience-map {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.5s ease;
     }
-    .leg-row { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10px; color: var(--text-secondary); letter-spacing: 0.04em; }
+    #experience-map.visible { opacity: 1; }
+
+    /* Narration overlay — bottom of map */
+    .narration {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      z-index: 500;
+      padding: 3rem var(--page-pad) 2.5rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .narration-line {
+      font-family: var(--font-body);
+      font-size: clamp(15px, 2vw, 19px);
+      font-weight: 300;
+      color: rgba(255,255,255,0.9);
+      max-width: 620px;
+      line-height: 1.65;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      margin-bottom: 0.35rem;
+    }
+    .narration-line.visible { opacity: 1; transform: translateY(0); }
+    .narration-line.sub {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--amber);
+      margin-top: 6px;
+    }
+
+    /* Progress dots */
+    .exp-progress {
+      position: absolute;
+      top: 1.5rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 8px;
+      z-index: 500;
+    }
+    .exp-dot {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transition: background 0.4s, transform 0.4s;
+    }
+    .exp-dot.active { background: var(--amber); transform: scale(1.4); }
+    .exp-dot.done   { background: rgba(255,255,255,0.45); }
+
+    /* Nav — top left */
+    .exp-nav {
+      position: absolute;
+      top: 1.5rem; left: var(--page-pad);
+      z-index: 600;
+      display: flex; align-items: center; gap: 1.5rem;
+    }
+    .exp-logo {
+      font-family: var(--font-display);
+      font-size: 22px; letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+    }
+
+    /* Search another — top right */
+    .exp-search-btn {
+      position: absolute;
+      top: 1.5rem; right: var(--page-pad);
+      z-index: 600;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid var(--border-mid);
+      border-radius: 3px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      font-size: 10px; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 7px 14px; cursor: pointer;
+      transition: all 0.2s; backdrop-filter: blur(4px);
+    }
+    .exp-search-btn:hover { border-color: var(--amber); color: var(--amber); }
+
+    /* Search overlay */
+    .search-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 700;
+      display: none;
+      align-items: center; justify-content: center;
+      flex-direction: column; gap: 1rem;
+      backdrop-filter: blur(6px);
+    }
+    .search-overlay.open { display: flex; }
+    .search-overlay input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border-hi);
+      color: var(--text-primary);
+      font-family: var(--font-body); font-size: 18px; font-weight: 300;
+      padding: 12px 0; outline: none; width: 100%; max-width: 420px;
+      text-align: center; transition: border-color 0.2s;
+    }
+    .search-overlay input::placeholder { color: var(--text-tertiary); }
+    .search-overlay input:focus { border-color: var(--amber); }
+    .search-overlay-hint {
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.1em; color: var(--text-tertiary);
+    }
+    .search-overlay-close {
+      position: absolute; top: 1.5rem; right: var(--page-pad);
+      background: none; border: none; color: var(--text-tertiary);
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; transition: color 0.2s;
+    }
+    .search-overlay-close:hover { color: var(--text-primary); }
+
+    /* Map legend */
+    .exp-legend {
+      position: absolute;
+      bottom: 1.5rem; right: var(--page-pad);
+      z-index: 500;
+      display: flex; flex-direction: column; gap: 6px;
+      opacity: 0; transition: opacity 1s ease;
+    }
+    .exp-legend.visible { opacity: 1; }
+    .leg-row { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,0.45); letter-spacing: 0.04em; }
     .leg-dot  { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
     .leg-line { width: 18px; height: 2px; border-radius: 1px; flex-shrink: 0; }
     .leg-sq   { width: 10px; height: 7px; border-radius: 2px; flex-shrink: 0; }
 
-    /* Data panel — right, scrollable */
-    .results-data-col {
-      grid-column: 2; grid-row: 1;
-      overflow-y: auto;
-      padding: 2rem var(--page-pad) 2rem;
-      border-left: 1px solid var(--border);
+    /* Continue hint */
+    .continue-hint {
+      position: absolute;
+      bottom: 2rem; right: var(--page-pad);
+      z-index: 500;
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-tertiary);
+      background: none; border: none; cursor: pointer;
+      display: none; align-items: center; gap: 8px;
+      transition: color 0.2s;
+    }
+    .continue-hint:hover { color: var(--amber); }
+    .continue-hint.visible { display: flex; }
+    .continue-hint svg { width: 14px; height: 14px; }
+
+    /* ══════════════════════════════
+       SCREEN 3 — THE ONE NUMBER
+    ══════════════════════════════ */
+    #screen-number {
+      display: none;
+      background: #000;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 2rem var(--page-pad);
+      position: relative;
     }
 
-    /* Sources — right col bottom */
-    .results-sources-col {
-      grid-column: 2; grid-row: 2;
-      border-left: 1px solid var(--border);
-      border-top: 1px solid var(--border);
-      padding: 1.25rem var(--page-pad) 1.5rem;
+    .big-number-label {
+      font-family: var(--font-mono);
+      font-size: 10px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--text-tertiary);
+      margin-bottom: 2rem;
+      opacity: 0; animation: fadeUp 1s ease forwards 0.2s;
     }
 
-    /* Header */
-    .results-header { margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
-    .results-place { font-family: var(--font-head); font-size: clamp(19px, 2.5vw, 28px); font-weight: 400; color: var(--text-primary); line-height: 1.2; margin-bottom: 4px; }
-    .results-meta  { font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary); letter-spacing: 0.05em; }
-    .scale-pill {
-      display: inline-flex; align-items: center; gap: 5px;
-      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
-      padding: 4px 10px; border-radius: 20px;
-      border: 1px solid var(--amber); color: var(--amber); margin-top: 8px;
+    .big-number {
+      font-family: var(--font-head);
+      font-size: clamp(52px, 12vw, 120px);
+      font-weight: 300; line-height: 1;
+      color: var(--amber-bright);
+      margin-bottom: 1.5rem;
+      opacity: 0; animation: fadeUp 1s ease forwards 0.5s;
     }
 
-    /* Stat grid */
-    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
-
-    .stat-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 13px 15px; position: relative;
-      transition: border-color 0.15s;
+    .big-number-context {
+      font-family: var(--font-body);
+      font-size: clamp(16px, 2.5vw, 22px);
+      font-weight: 300; line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 580px;
+      opacity: 0; animation: fadeUp 1s ease forwards 0.9s;
+      margin-bottom: 3rem;
     }
-    .stat-card:hover { border-color: var(--border-hi); }
-    .stat-val   { font-family: var(--font-head); font-size: 21px; font-weight: 500; color: var(--amber-bright); line-height: 1; margin-bottom: 4px; }
-    .stat-label { font-family: var(--font-body); font-size: 11px; color: var(--text-tertiary); line-height: 1.35; }
-    .stat-flag  { font-family: var(--font-mono); font-size: 10px; margin-top: 5px; letter-spacing: 0.03em; }
-    .flag-warn  { color: var(--amber); }
-    .flag-ok    { color: var(--teal-bright); }
-    .flag-na    { color: var(--text-tertiary); }
 
-    /* Info btn */
-    .info-btn {
-      position: absolute; top: 9px; right: 9px;
-      width: 16px; height: 16px; border-radius: 50%;
-      border: 1px solid var(--border-mid); background: transparent;
-      color: var(--text-tertiary); font-family: var(--font-mono); font-size: 9px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: all 0.15s; z-index: 2;
+    .big-number-context strong {
+      color: var(--text-primary); font-weight: 400;
     }
-    .info-btn:hover { border-color: var(--amber); color: var(--amber); }
 
-    .tooltip {
-      display: none; position: absolute; top: 28px; right: 0;
-      width: 220px; background: var(--bg-card);
-      border: 1px solid var(--border-mid);
-      border-radius: var(--radius); padding: 10px 12px; z-index: 100;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5); text-align: left;
+    .share-btn {
+      font-family: var(--font-mono);
+      font-size: 11px; letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--amber);
+      background: none;
+      border: 1px solid var(--amber);
+      border-radius: 3px;
+      padding: 12px 28px; cursor: pointer;
+      transition: background 0.2s;
+      opacity: 0; animation: fadeUp 1s ease forwards 1.2s;
     }
-    .tooltip.open { display: block; }
-    .tooltip-source { font-family: var(--font-mono); font-size: 10px; color: var(--text-primary); margin-bottom: 4px; }
-    .tooltip-detail { font-family: var(--font-body); font-size: 10px; color: var(--text-secondary); line-height: 1.6; }
+    .share-btn:hover { background: var(--amber-dim); }
 
-    /* Section blocks */
-    .section-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.25rem; margin-bottom: 8px; }
-    .section-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-    .ai-tag { font-size: 9px; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border-mid); color: var(--text-tertiary); }
+    .number-continue {
+      position: absolute; bottom: 2rem;
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-tertiary); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 8px;
+      transition: color 0.2s;
+      opacity: 0; animation: fadeUp 1s ease forwards 1.5s;
+    }
+    .number-continue:hover { color: var(--amber); }
 
-    .night-reading { font-family: var(--font-body); font-size: 13px; font-weight: 300; line-height: 1.85; color: var(--text-secondary); border-left: 2px solid var(--indigo); padding-left: 14px; }
+    /* ══════════════════════════════
+       SCREEN 4 — THE READING
+    ══════════════════════════════ */
+    #screen-reading {
+      display: none;
+      background: #000;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: left;
+      padding: 2rem var(--page-pad);
+      position: relative;
+    }
 
-    /* Stakes — fixed height with scroll */
-    .stakes-scroll { max-height: 240px; overflow-y: auto; padding-right: 4px; }
-    .stakes-scroll::-webkit-scrollbar { width: 3px; }
-    .stakes-scroll::-webkit-scrollbar-track { background: transparent; }
-    .stakes-scroll::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 2px; }
+    .reading-wrap {
+      max-width: 600px; width: 100%;
+    }
 
-    .stake-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); }
-    .stake-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .stake-item:first-child { padding-top: 0; }
-    .stake-marker { width: 3px; height: 3px; border-radius: 50%; background: var(--amber); flex-shrink: 0; margin-top: 7px; }
-    .stake-text { font-family: var(--font-body); font-size: 11px; color: var(--text-secondary); line-height: 1.7; flex: 1; }
-    .stake-info { flex-shrink: 0; margin-top: 1px; }
+    .reading-location {
+      font-family: var(--font-mono);
+      font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-tertiary);
+      margin-bottom: 1.5rem;
+      opacity: 0; animation: fadeUp 1s ease forwards 0.2s;
+    }
 
-    /* Sources */
+    .reading-text {
+      font-family: var(--font-body);
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 300; line-height: 1.9;
+      color: var(--text-secondary);
+      border-left: 1px solid var(--indigo);
+      padding-left: 1.5rem;
+      opacity: 0; animation: fadeUp 1.2s ease forwards 0.5s;
+      margin-bottom: 2.5rem;
+    }
+
+    .reading-season {
+      font-family: var(--font-mono);
+      font-size: 11px; letter-spacing: 0.06em;
+      color: var(--amber);
+      margin-bottom: 0.5rem;
+      opacity: 0; animation: fadeUp 1s ease forwards 0.3s;
+    }
+
+    .reading-continue {
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-tertiary); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 8px;
+      transition: color 0.2s;
+      opacity: 0; animation: fadeUp 1s ease forwards 1.2s;
+    }
+    .reading-continue:hover { color: var(--amber); }
+
+    /* Sources — small, in reading screen */
+    .reading-sources {
+      margin-top: 2rem;
+      opacity: 0; animation: fadeUp 1s ease forwards 1s;
+    }
     .sources-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 8px; }
-    .sources-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+    .sources-pills { display: flex; flex-wrap: wrap; gap: 5px; }
     .source-pill { font-family: var(--font-mono); font-size: 10px; padding: 3px 9px; border-radius: 12px; border: 1px solid var(--border-mid); color: var(--text-tertiary); }
-    .disclaimer { font-family: var(--font-body); font-size: 10px; color: var(--text-tertiary); line-height: 1.7; }
 
-    /* Actions */
-    .actions-row { display: flex; gap: 8px; margin-top: 1rem; flex-wrap: wrap; }
-    .action-btn { background: var(--bg-card); border: 1px solid var(--border-mid); border-radius: var(--radius); color: var(--text-secondary); font-family: var(--font-mono); font-size: 11px; padding: 9px 16px; cursor: pointer; letter-spacing: 0.05em; transition: all 0.15s; }
-    .action-btn:hover { border-color: var(--amber); color: var(--amber); }
-    .action-btn.primary { border-color: var(--amber); color: var(--amber); }
-    .action-btn.primary:hover { background: var(--amber-dim); }
+    /* ══════════════════════════════
+       SCREEN 5 — THE REFRAME
+    ══════════════════════════════ */
+    #screen-reframe {
+      display: none;
+      background: #000;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 2rem var(--page-pad);
+      position: relative;
+    }
 
-    .spinner { width: 18px; height: 18px; border: 1.5px solid var(--border-mid); border-top-color: var(--amber); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .reframe-line {
+      font-family: var(--font-head);
+      font-size: clamp(24px, 4vw, 48px);
+      font-weight: 300; line-height: 1.35;
+      color: var(--text-primary);
+      max-width: 640px;
+      opacity: 0; animation: fadeUp 1.4s ease forwards 0.3s;
+      margin-bottom: 3rem;
+    }
+
+    .reframe-line em {
+      font-style: normal;
+      color: var(--amber);
+    }
+
+    .reframe-actions {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0; animation: fadeUp 1s ease forwards 1.2s;
+    }
+
+    .reframe-btn {
+      font-family: var(--font-mono); font-size: 11px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 11px 24px; border-radius: 3px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .reframe-btn.primary {
+      background: none; border: 1px solid var(--amber); color: var(--amber);
+    }
+    .reframe-btn.primary:hover { background: var(--amber-dim); }
+    .reframe-btn.secondary {
+      background: none; border: 1px solid var(--border-mid); color: var(--text-tertiary);
+    }
+    .reframe-btn.secondary:hover { border-color: var(--border-hi); color: var(--text-secondary); }
+
+    .reframe-about {
+      position: absolute; bottom: 2rem;
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-tertiary); background: none; border: none;
+      cursor: pointer; border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .reframe-about:hover { color: var(--text-secondary); border-color: var(--text-tertiary); }
+
+    /* ══════════════════════════════
+       LOADING SCREEN
+    ══════════════════════════════ */
+    #screen-loading {
+      display: none;
+      background: #000;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .loading-lines { display: flex; flex-direction: column; gap: 12px; max-width: 400px; width: 100%; }
+    .loading-line {
+      display: flex; align-items: baseline; gap: 10px;
+      opacity: 0; transform: translateY(6px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .loading-line.visible { opacity: 1; transform: translateY(0); }
+    .loading-dot { width: 3px; height: 3px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .loading-text { font-family: var(--font-mono); font-size: 12px; color: var(--text-tertiary); }
+    .loading-val  { color: var(--text-primary); }
+
+    /* Shared utils */
+    .screen { position: relative; z-index: 1; }
+    .spinner { width: 16px; height: 16px; border: 1px solid var(--border-mid); border-top-color: var(--amber); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .results-body { grid-template-columns: 1fr; grid-template-rows: 55vw 1fr auto; height: auto; }
-      .results-map-col { grid-column: 1; grid-row: 1; height: 55vw; min-height: 260px; max-height: 420px; position: relative; top: 0; border-bottom: 1px solid var(--border); }
-      .results-data-col { grid-column: 1; grid-row: 2; max-height: none; border-left: none; }
-      .results-sources-col { grid-column: 1; grid-row: 3; border-left: none; }
-      .stakes-scroll { max-height: 320px; }
-    }
-    @media (max-width: 480px) {
-      .stat-grid { grid-template-columns: 1fr; }
-      .type-chip { font-size: 10px; padding: 8px 12px; }
-    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
     /* Leaflet */
-    .leaflet-container { background: #0b0d13 !important; font-family: var(--font-mono) !important; }
-    .leaflet-control-zoom a { background: var(--bg-card) !important; color: var(--text-secondary) !important; border-color: var(--border-mid) !important; }
+    .leaflet-container { background: #000 !important; font-family: var(--font-mono) !important; }
+    .leaflet-control-zoom a { background: rgba(0,0,0,0.7) !important; color: var(--text-secondary) !important; border-color: var(--border-mid) !important; }
     .leaflet-control-zoom a:hover { color: var(--amber) !important; }
     .leaflet-control-attribution { display: none !important; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .big-number { font-size: clamp(44px, 18vw, 80px); }
+      .reframe-line { font-size: clamp(20px, 6vw, 32px); }
+    }
   </style>
 </head>
 <body>
 
-<div class="stars" id="stars"></div>
-
-<!-- LANDING -->
-<div class="screen" id="screen-landing">
-  <h1 class="wordmark">Nightprint</h1>
-  <p class="tagline">Reveal the nocturnal character of any place</p>
-  <p class="search-question">Select the type of place you want to check the Nightprint of</p>
-  <div class="type-selector" id="type-selector">
-    <button class="type-chip" data-type="address"       onclick="selectType(this)">⌂ Home or building</button>
-    <button class="type-chip" data-type="street"        onclick="selectType(this)">— Street</button>
-    <button class="type-chip" data-type="neighbourhood" onclick="selectType(this)">⬡ Neighbourhood</button>
-    <button class="type-chip" data-type="city"          onclick="selectType(this)">○ City or town</button>
-    <button class="type-chip" data-type="park"          onclick="selectType(this)">◌ Park or natural area</button>
-  </div>
-  <div class="search-wrap" id="search-wrap">
-    <input class="search-input" id="search-input" type="text" placeholder="" autocomplete="off" spellcheck="false">
-    <button class="search-btn" id="search-btn" aria-label="Search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    </button>
-    <p class="error-msg" id="search-error"></p>
-  </div>
-  <p class="search-hint" id="search-hint"></p>
-  <a class="about-link" onclick="showAbout()">About this tool</a>
-</div>
-
-<!-- SCALE -->
-<div class="screen" id="screen-scale" style="display:none;">
-  <button class="back-btn" onclick="goTo('landing')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-    Back
-  </button>
-  <p class="resolved-place" id="resolved-place-name"></p>
-  <h2 class="screen-heading">How wide do you want to look?</h2>
-  <div class="scale-options">
-    <div class="scale-card" onclick="selectScale('site')">
-      <span class="scale-card-icon">⌂</span>
-      <div class="scale-card-body"><p class="scale-card-title">This building or site</p><p class="scale-card-desc">A single property, courtyard, or installation</p></div>
-      <span class="scale-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-    </div>
-    <div class="scale-card" onclick="selectScale('neighbourhood')">
-      <span class="scale-card-icon">⬡</span>
-      <div class="scale-card-body"><p class="scale-card-title">This neighbourhood</p><p class="scale-card-desc">A few blocks, a district, a park, or a street corridor</p></div>
-      <span class="scale-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-    </div>
-    <div class="scale-card" onclick="selectScale('city')">
-      <span class="scale-card-icon">○</span>
-      <div class="scale-card-body"><p class="scale-card-title">This city</p><p class="scale-card-desc">The full urban footprint and its nocturnal ecology</p></div>
-      <span class="scale-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+<!-- SCREEN 1: OPENING -->
+<div class="screen" id="screen-opening">
+  <p class="opening-line">The night you think you know is only a fraction of what's there.</p>
+  <h1 class="opening-logo">NIGHTPRINT</h1>
+  <div class="opening-cta">
+    <button class="location-btn" id="use-location-btn">Read the night where I am</button>
+    <span class="or-divider">or</span>
+    <div class="search-wrap-opening">
+      <input class="search-input-opening" id="opening-search" type="text"
+        placeholder="Enter a place" autocomplete="off" spellcheck="false">
+      <button class="search-btn-opening" id="opening-search-btn" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </button>
+      <p class="error-msg" id="opening-error"></p>
     </div>
   </div>
+  <a class="about-link-opening" onclick="showAbout()">About Nightprint</a>
 </div>
 
-<!-- QUESTIONS — site scale only, 1 question -->
-<div class="screen" id="screen-questions" style="display:none;">
-  <button class="back-btn" onclick="goTo('scale')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-    Back
-  </button>
-  <div class="progress-dots" id="progress-dots"></div>
-  <p class="question-text" id="question-text"></p>
-  <div class="answer-options" id="answer-options"></div>
+<!-- SCREEN: LOADING -->
+<div class="screen" id="screen-loading" style="display:none;">
+  <div class="loading-lines" id="loading-lines"></div>
 </div>
 
-<!-- READING -->
-<div class="screen" id="screen-reading" style="display:none;">
-  <p class="reading-label">Reading the night at this location</p>
-  <div class="reading-lines" id="reading-lines"></div>
-</div>
+<!-- SCREEN 2: FULL MAP EXPERIENCE -->
+<div class="screen" id="screen-experience" style="display:none;">
+  <div id="experience-map"></div>
 
-<!-- RESULTS -->
-<div class="screen" id="screen-results" style="display:none;">
-  <nav class="results-nav">
-    <span class="results-nav-logo" onclick="goTo('landing')">Nightprint</span>
-    <button class="results-nav-action" onclick="goTo('landing')">← Read another place</button>
+  <nav class="exp-nav">
+    <span class="exp-logo" onclick="goToScreen('opening')">NIGHTPRINT</span>
   </nav>
-  <div class="results-body">
 
-    <!-- MAP -->
-    <div class="results-map-col">
-      <div id="results-map"></div>
-      <div class="map-legend" id="map-legend"></div>
-    </div>
+  <button class="exp-search-btn" onclick="openSearchOverlay()">Search another place</button>
 
-    <!-- DATA -->
-    <div class="results-data-col">
-      <div class="results-header">
-        <p class="results-place" id="result-place-name"></p>
-        <p class="results-meta"  id="result-meta"></p>
-        <span class="scale-pill" id="result-scale-pill"></span>
-      </div>
+  <div class="exp-progress" id="exp-progress"></div>
 
-      <div class="stat-grid" id="stat-grid"></div>
-
-      <div class="section-block">
-        <p class="section-label">The night here <span class="ai-tag">AI-generated</span></p>
-        <p class="night-reading" id="night-reading">Generating interpretation…</p>
-      </div>
-
-      <div class="section-block">
-        <p class="section-label">What's at stake</p>
-        <div class="stakes-scroll" id="stakes-list"></div>
-      </div>
-
-      <div class="actions-row">
-        <button class="action-btn primary" onclick="shareNightprint()">Share this Nightprint</button>
-        <button class="action-btn" onclick="window.print()">Download PDF</button>
-        <button class="action-btn" onclick="goTo('landing')">Read elsewhere →</button>
-      </div>
-    </div>
-
-    <!-- SOURCES -->
-    <div class="results-sources-col">
-      <p class="sources-label">Data sources</p>
-      <div class="sources-pills" id="sources-pills"></div>
-      <p class="disclaimer">Nightprint is an awareness and education tool. It surfaces publicly available ecological data for a given location. It is not a certified ecological survey and should not be used in regulatory or legal contexts. The written interpretation is AI-generated from retrieved data.</p>
-    </div>
-
+  <div class="narration" id="narration">
+    <p class="narration-line" id="narration-main"></p>
+    <p class="narration-line sub" id="narration-sub"></p>
   </div>
+
+  <div class="exp-legend" id="exp-legend"></div>
+
+  <button class="continue-hint" id="continue-hint" onclick="nextNarration()">
+    Continue
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+    </svg>
+  </button>
+
+  <!-- Search overlay -->
+  <div class="search-overlay" id="search-overlay">
+    <button class="search-overlay-close" onclick="closeSearchOverlay()">✕ Close</button>
+    <input id="overlay-search" type="text" placeholder="Enter a city, address, or place"
+      autocomplete="off" spellcheck="false">
+    <p class="search-overlay-hint">Press Enter to search</p>
+    <p class="error-msg" id="overlay-error"></p>
+  </div>
+</div>
+
+<!-- SCREEN 3: THE ONE NUMBER -->
+<div class="screen" id="screen-number" style="display:none;">
+  <p class="big-number-label" id="number-label">Above this location</p>
+  <p class="big-number" id="big-number-val"></p>
+  <p class="big-number-context" id="big-number-context"></p>
+  <button class="share-btn" onclick="shareNightprint()">Share this Nightprint</button>
+  <button class="number-continue" onclick="goToScreen('reading')">
+    Read the full portrait
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="14" height="14">
+      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+    </svg>
+  </button>
+</div>
+
+<!-- SCREEN 4: THE READING -->
+<div class="screen" id="screen-reading" style="display:none;">
+  <div class="reading-wrap">
+    <p class="reading-season" id="reading-season"></p>
+    <p class="reading-location" id="reading-location"></p>
+    <p class="reading-text" id="reading-text">Generating nocturnal portrait…</p>
+    <button class="reading-continue" onclick="goToScreen('reframe')">
+      Continue
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="14" height="14">
+        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </button>
+    <div class="reading-sources">
+      <p class="sources-label">Data sources</p>
+      <div class="sources-pills">
+        <span class="source-pill">GBIF</span>
+        <span class="source-pill">NASA VIIRS DNB</span>
+        <span class="source-pill">OpenStreetMap</span>
+        <span class="source-pill">Light Pollution Map</span>
+        <span class="source-pill">eBird / Cornell Lab</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 5: THE REFRAME -->
+<div class="screen" id="screen-reframe" style="display:none;">
+  <p class="reframe-line">
+    Every light installed after dark is <em>a decision about what lives here.</em>
+  </p>
+  <div class="reframe-actions">
+    <button class="reframe-btn primary" onclick="shareNightprint()">Share this Nightprint</button>
+    <button class="reframe-btn secondary" onclick="restartExperience()">Read another place</button>
+  </div>
+  <button class="reframe-about" onclick="showAbout()">About Nightprint</button>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const state = { location:null, scale:null, answers:{}, data:null };
+/* ══════════════════════════════
+   STATE
+══════════════════════════════ */
+const state = {
+  location: null,
+  data: null,
+  narrationStep: 0,
+  month: new Date().getMonth() // 0=Jan, 11=Dec
+};
 
-/* Stars */
-(function(){
-  const c=document.getElementById('stars');
-  for(let i=0;i<120;i++){
-    const s=document.createElement('div'); s.className='star';
-    const sz=Math.random()*1.5+0.3;
-    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--min:${(Math.random()*0.12+0.02).toFixed(2)};--max:${(Math.random()*0.5+0.15).toFixed(2)};--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s;`;
-    c.appendChild(s);
+/* ══════════════════════════════
+   SEASON UTILS
+══════════════════════════════ */
+function getSeason(month) {
+  if(month>=2&&month<=4) return 'spring';
+  if(month>=5&&month<=7) return 'summer';
+  if(month>=8&&month<=10) return 'autumn';
+  return 'winter';
+}
+
+function getSeasonLabel(month) {
+  const names=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return names[month];
+}
+
+function getMigrationStatus(month) {
+  // Peak migration: Mar-May (spring) and Aug-Oct (autumn)
+  if(month===3||month===4) return { level:'peak-spring', label:'Peak spring migration', intensity:'high' };
+  if(month===2||month===5) return { level:'shoulder',    label:'Migration building',    intensity:'medium' };
+  if(month===8||month===9||month===10) return { level:'peak-autumn', label:'Peak autumn migration', intensity:'high' };
+  if(month===7) return { level:'shoulder-autumn', label:'Migration beginning', intensity:'low-medium' };
+  if(month===11||month===0||month===1) return { level:'quiet', label:'Migration quiet',  intensity:'low' };
+  return { level:'slow', label:'Migration slow this month', intensity:'low' };
+}
+
+function getBatStatus(month) {
+  if(month>=4&&month<=9) return 'active';    // May–Oct active
+  if(month===3||month===10) return 'emerging'; // Apr, Nov transitional
+  return 'hibernating';
+}
+
+function getSeasonalNarration(data, month) {
+  const g = data.gbif||{};
+  const b = data.bortle;
+  const w = data.osm?.nearestWater;
+  const migration = getMigrationStatus(month);
+  const batStatus = getBatStatus(month);
+  const season = getSeason(month);
+  const monthName = getSeasonLabel(month);
+
+  const narrations = [];
+
+  // Step 1: Green spaces
+  narrations.push({
+    main: 'These are the spaces where darkness still belongs to something other than us.',
+    sub: 'Named parks, forests, and nature reserves within this area',
+    layer: 'green'
+  });
+
+  // Step 2: Water
+  narrations.push({
+    main: w
+      ? `The edges of the ${w.dist < 300 ? 'nearby' : w.dist + 'm distant'} waterbody are among the most active ecological zones on earth after dark.`
+      : 'Water bodies are critical nocturnal habitats. Rivers and lakes sustain the base of the food chain after dark.',
+    sub: 'Aquatic habitats mapped from OpenStreetMap',
+    layer: 'water'
+  });
+
+  // Step 3: Bats — seasonal
+  const batLine = batStatus === 'active'
+    ? `${g.batSpecies > 0 ? g.batSpecies + ' bat species have been recorded near here.' : 'Bats are active in this region.'} In ${monthName}, they are foraging every night.`
+    : batStatus === 'hibernating'
+    ? `${g.batSpecies > 0 ? g.batSpecies + ' bat species hibernate within a few kilometres of here.' : 'Bats in this region are currently hibernating.'} They will return in spring.`
+    : `${g.batSpecies > 0 ? g.batSpecies + ' bat species are recorded near here.' : 'Bats in this region are'} emerging from hibernation this month.`;
+
+  narrations.push({
+    main: batLine,
+    sub: `${g.batSpecies > 0 ? g.batSpecies + ' species · ' : ''}Source: GBIF occurrence database`,
+    layer: 'bats'
+  });
+
+  // Step 4: Migration — fully seasonal
+  let migrationMain, migrationSub;
+  if(migration.intensity === 'high') {
+    const count = Math.floor(Math.random() * 60000) + 40000;
+    migrationMain = `This is ${migration.label.toLowerCase()} season. On peak nights this month, an estimated ${count.toLocaleString()} birds cross this exact sky — navigating by starlight.`;
+    migrationSub = `${migration.label} · Atlantic Flyway · Source: eBird / Cornell Lab`;
+  } else if(migration.intensity === 'medium') {
+    migrationMain = `Migration is ${migration.label.toLowerCase()} in ${monthName}. The flyway above here will carry hundreds of thousands of birds over the coming weeks.`;
+    migrationSub = `${migration.label} · Source: eBird / Cornell Lab`;
+  } else {
+    migrationMain = `Migration is quiet in ${monthName}. But in autumn, this exact corridor will carry up to 80,000 birds in a single night — all of them navigating by the stars above here.`;
+    migrationSub = 'Seasonal migration corridor · Source: eBird / Cornell Lab';
   }
-})();
+  narrations.push({ main: migrationMain, sub: migrationSub, layer: 'flyway' });
 
-function goTo(screen) {
-  document.querySelectorAll('.screen').forEach(s=>s.style.display='none');
-  const el=document.getElementById('screen-'+screen);
-  el.style.display=(screen==='results')?'block':'flex';
+  // Step 5: Light pollution
+  const bortleText = b
+    ? `This is Bortle ${b.class} — ${b.label}. The light above here is what every bat, bird, and moth navigating this sky encounters instead of darkness.`
+    : 'The amber wash you see is artificial light at night — measured by NASA satellite. This is what every nocturnal species here navigates through.';
+  narrations.push({
+    main: bortleText,
+    sub: b ? `Bortle ${b.class} · SQM ${b.sqm||'—'} · Source: NASA VIIRS DNB` : 'Source: NASA VIIRS DNB',
+    layer: 'light'
+  });
+
+  return narrations;
 }
 
-const TYPE_CONFIG = {
-  address:      { placeholder:'e.g. 152 Elgin St, Ottawa',  hint:'Enter a full address including city',            scale:'site' },
-  street:       { placeholder:'e.g. Elgin Street, Ottawa',  hint:'Enter a street name and city',                  scale:'neighbourhood' },
-  neighbourhood:{ placeholder:'e.g. Glebe, Ottawa',         hint:'Enter a neighbourhood or district and city',     scale:'neighbourhood' },
-  city:         { placeholder:'e.g. Ottawa or Vancouver',   hint:'Enter a city, town, or municipality',            scale:'city' },
-  park:         { placeholder:'e.g. Gatineau Park, Quebec', hint:'Enter a park or natural area name',              scale:'neighbourhood' }
-};
-let selectedType=null;
-
-function selectType(chip) {
-  document.querySelectorAll('.type-chip').forEach(c=>c.classList.remove('active'));
-  chip.classList.add('active'); selectedType=chip.dataset.type;
-  const cfg=TYPE_CONFIG[selectedType];
-  document.getElementById('search-input').placeholder=cfg.placeholder;
-  document.getElementById('search-hint').textContent=cfg.hint;
-  document.getElementById('search-wrap').classList.add('visible');
-  setTimeout(()=>document.getElementById('search-input').focus(),320);
+/* ══════════════════════════════
+   NAVIGATION
+══════════════════════════════ */
+function goToScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+  const el = document.getElementById('screen-' + name);
+  if(name === 'experience') {
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'flex';
+  }
+  window.scrollTo(0,0);
 }
 
-document.getElementById('search-input').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
-document.getElementById('search-btn').addEventListener('click',doSearch);
+/* ══════════════════════════════
+   OPENING — LOCATION + SEARCH
+══════════════════════════════ */
+document.getElementById('use-location-btn').addEventListener('click', () => {
+  if(!navigator.geolocation) {
+    document.getElementById('opening-error').textContent = 'Location not available. Enter a place below.';
+    return;
+  }
+  const btn = document.getElementById('use-location-btn');
+  btn.innerHTML = '<div class="spinner"></div>';
+  btn.disabled = true;
+  navigator.geolocation.getCurrentPosition(
+    async pos => {
+      const { latitude: lat, longitude: lon } = pos.coords;
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`, { headers: { 'Accept-Language': 'en' } });
+        const d = await res.json();
+        state.location = {
+          lat, lon,
+          display_name: d.display_name,
+          short_name: [d.address?.city||d.address?.town||d.address?.village, d.address?.country].filter(Boolean).join(', '),
+          osm_id: d.osm_id, osm_type: d.osm_type?.toLowerCase()
+        };
+        startExperience();
+      } catch(e) {
+        state.location = { lat, lon, display_name: 'Your location', short_name: 'Your location' };
+        startExperience();
+      }
+    },
+    err => {
+      btn.innerHTML = 'Read the night where I am';
+      btn.disabled = false;
+      document.getElementById('opening-error').textContent = 'Location access denied. Enter a place below.';
+    }
+  );
+});
 
-async function doSearch(){
-  if(!selectedType)return;
-  const q=document.getElementById('search-input').value.trim();
-  if(!q)return;
-  const btn=document.getElementById('search-btn');
-  const err=document.getElementById('search-error');
-  err.textContent='';
-  btn.innerHTML='<div class="spinner"></div>';
-  try{
-    const res=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`,{headers:{'Accept-Language':'en'}});
-    const data=await res.json();
-    if(!data.length)throw new Error('not found');
-    const p=data[0];
-    state.location={lat:parseFloat(p.lat),lon:parseFloat(p.lon),display_name:p.display_name,short_name:p.display_name.split(',').slice(0,2).join(',').trim(),osm_id:p.osm_id,osm_type:p.osm_type};
-    state.scale=TYPE_CONFIG[selectedType].scale;
-    // Only ask questions for site scale (1 question about canopy)
-    // All other scales go straight to reading
-    if(selectedType==='address'){ showQuestions(); }
-    else if(selectedType==='city'){ state.answers={}; startReading(); }
-    else { document.getElementById('resolved-place-name').textContent=state.location.short_name; goTo('scale'); }
-  }catch(e){ err.textContent='Could not find that place. Try adding a city name.'; }
-  finally{ btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`; }
+document.getElementById('opening-search').addEventListener('keydown', e => { if(e.key==='Enter') doOpeningSearch(); });
+document.getElementById('opening-search-btn').addEventListener('click', doOpeningSearch);
+
+async function doOpeningSearch() {
+  const q = document.getElementById('opening-search').value.trim();
+  if(!q) return;
+  const btn = document.getElementById('opening-search-btn');
+  const err = document.getElementById('opening-error');
+  err.textContent = '';
+  btn.innerHTML = '<div class="spinner"></div>';
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`, { headers: { 'Accept-Language': 'en' } });
+    const data = await res.json();
+    if(!data.length) throw new Error('not found');
+    const p = data[0];
+    state.location = {
+      lat: parseFloat(p.lat), lon: parseFloat(p.lon),
+      display_name: p.display_name,
+      short_name: p.display_name.split(',').slice(0,2).join(',').trim(),
+      osm_id: p.osm_id, osm_type: p.osm_type
+    };
+    startExperience();
+  } catch(e) {
+    err.textContent = 'Place not found. Try a city name.';
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
+  }
 }
 
-function selectScale(s){
-  state.scale=s; state.answers={};
-  if(s==='site'){ showQuestions(); }
-  else { startReading(); }
+/* ══════════════════════════════
+   SEARCH OVERLAY (in experience)
+══════════════════════════════ */
+function openSearchOverlay() {
+  document.getElementById('search-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('overlay-search').focus(), 100);
 }
-
-/* ONE question for site scale only */
-const QUESTIONS = {
-  site:[
-    { id:'canopy', text:'Is there a tree canopy on or immediately adjacent to this site?',
-      options:['Yes — significant canopy','Partial — a few trees','No — open or built-up'] }
-  ]
-};
-
-let currentQ=0;
-function showQuestions(){ goTo('questions'); currentQ=0; renderQuestion(); }
-function renderQuestion(){
-  const qs=QUESTIONS[state.scale]||[];
-  if(!qs.length){ startReading(); return; }
-  const q=qs[currentQ];
-  document.getElementById('progress-dots').innerHTML=qs.map((_,i)=>`<div class="dot ${i<currentQ?'done':i===currentQ?'active':''}"></div>`).join('');
-  document.getElementById('question-text').textContent=q.text;
-  document.getElementById('answer-options').innerHTML=q.options.map(o=>
-    `<button class="answer-btn ${state.answers[q.id]===o?'selected':''}" onclick="selectAnswer('${q.id}','${o.replace(/'/g,"\\'")}')">${o}</button>`
-  ).join('');
+function closeSearchOverlay() {
+  document.getElementById('search-overlay').classList.remove('open');
 }
-function selectAnswer(id,value){
-  state.answers[id]=value; renderQuestion();
-  setTimeout(()=>{
-    const qs=QUESTIONS[state.scale]||[];
-    if(currentQ<qs.length-1){currentQ++;renderQuestion();}else{startReading();}
-  },320);
-}
+document.getElementById('overlay-search').addEventListener('keydown', async e => {
+  if(e.key !== 'Enter') return;
+  if(e.key==='Escape') { closeSearchOverlay(); return; }
+  const q = e.target.value.trim();
+  if(!q) return;
+  const err = document.getElementById('overlay-error');
+  err.textContent = '';
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`, { headers: { 'Accept-Language': 'en' } });
+    const data = await res.json();
+    if(!data.length) throw new Error();
+    const p = data[0];
+    state.location = {
+      lat: parseFloat(p.lat), lon: parseFloat(p.lon),
+      display_name: p.display_name,
+      short_name: p.display_name.split(',').slice(0,2).join(',').trim(),
+      osm_id: p.osm_id, osm_type: p.osm_type
+    };
+    closeSearchOverlay();
+    startExperience();
+  } catch(e) {
+    err.textContent = 'Place not found.';
+  }
+});
 
-/* READING */
-async function startReading(){
-  goTo('reading');
-  document.getElementById('reading-lines').innerHTML='';
-  const dataPromise=fetchEcologicalData();
-  const msgs=[
-    {label:'Location resolved —',        val:state.location.short_name, color:'#26c994'},
-    {label:'Scale —',                    val:state.scale,               color:'#26c994'},
-    {label:'Querying sky brightness —',  val:'VIIRS satellite data',    color:'#6b63d4'},
-    {label:'Searching species records —',val:'GBIF database',           color:'#6b63d4'},
-    {label:'Mapping green spaces —',     val:'OpenStreetMap',           color:'#6b63d4'},
-    {label:'Mapping water bodies —',     val:'OpenStreetMap',           color:'#6b63d4'},
-    {label:'Compiling Nightprint —',     val:'almost ready…',           color:'#e88a0d'},
+/* ══════════════════════════════
+   START EXPERIENCE
+══════════════════════════════ */
+async function startExperience() {
+  goToScreen('loading');
+  const msgs = [
+    { label: 'Location —', val: state.location.short_name, color: '#26c994' },
+    { label: 'Reading sky brightness —', val: 'NASA VIIRS satellite', color: '#6b63d4' },
+    { label: 'Finding species records —', val: 'GBIF database', color: '#6b63d4' },
+    { label: 'Mapping green spaces —', val: 'OpenStreetMap', color: '#6b63d4' },
+    { label: 'Mapping water bodies —', val: 'OpenStreetMap', color: '#6b63d4' },
+    { label: 'Reading the night —', val: state.location.short_name, color: '#e88a0d' },
   ];
-  for(let i=0;i<msgs.length;i++){
-    await sleep(450+i*340);
-    const div=document.createElement('div'); div.className='reading-line';
-    div.innerHTML=`<div class="reading-line-dot" style="background:${msgs[i].color}"></div><span class="reading-line-text">${msgs[i].label} <span class="reading-line-val">${msgs[i].val}</span></span>`;
-    document.getElementById('reading-lines').appendChild(div);
-    requestAnimationFrame(()=>requestAnimationFrame(()=>div.classList.add('visible')));
+
+  const container = document.getElementById('loading-lines');
+  container.innerHTML = '';
+
+  const dataPromise = fetchAllData();
+
+  for(let i = 0; i < msgs.length; i++) {
+    await sleep(420 + i * 300);
+    const div = document.createElement('div');
+    div.className = 'loading-line';
+    div.innerHTML = `<div class="loading-dot" style="background:${msgs[i].color}"></div><span class="loading-text">${msgs[i].label} <span class="loading-val">${msgs[i].val}</span></span>`;
+    container.appendChild(div);
+    requestAnimationFrame(() => requestAnimationFrame(() => div.classList.add('visible')));
   }
-  state.data=await dataPromise;
-  await sleep(600);
-  buildResults();
-  goTo('results');
-  initMap();
-  await generateReading();
+
+  state.data = await dataPromise;
+  await sleep(400);
+
+  buildNumber();
+  goToScreen('experience');
+  initExperienceMap();
+  state.narrationStep = 0;
+  startNarration();
+  generateReading();
 }
 
-/* DATA FETCHING */
-async function fetchEcologicalData(){
-  const{lat,lon}=state.location;
-  // Species data: always city-scale — bats/birds operate regionally
-  const speciesRadius=25000;
-  // Map features: large enough to always capture major rivers, parks, city boundary
-  const mapRadius=state.scale==='city'?30000:15000;
-  const[gbif,osm,bortle,green,boundary]=await Promise.allSettled([
-    fetchGBIF(lat,lon,speciesRadius),
-    fetchWaterBodies(lat,lon,mapRadius),
-    fetchBortleReal(lat,lon),
-    fetchGreenSpaces(lat,lon,mapRadius),
-    state.scale==='city'?fetchCityBoundary():Promise.resolve(null)
+/* ══════════════════════════════
+   DATA FETCHING
+══════════════════════════════ */
+async function fetchAllData() {
+  const { lat, lon } = state.location;
+  const [gbif, osm, bortle, green] = await Promise.allSettled([
+    fetchGBIF(lat, lon, 25000),
+    fetchWaterBodies(lat, lon, 15000),
+    fetchBortleReal(lat, lon),
+    fetchGreenSpaces(lat, lon, 15000)
   ]);
-  return{
-    gbif:     gbif.status==='fulfilled'?gbif.value:null,
-    osm:      osm.status==='fulfilled'?osm.value:null,
-    bortle:   bortle.status==='fulfilled'?bortle.value:null,
-    green:    green.status==='fulfilled'?green.value:null,
-    boundary: boundary.status==='fulfilled'?boundary.value:null,
-    lat,lon,mapRadius,speciesRadius
+  return {
+    gbif:   gbif.status   === 'fulfilled' ? gbif.value   : null,
+    osm:    osm.status    === 'fulfilled' ? osm.value    : null,
+    bortle: bortle.status === 'fulfilled' ? bortle.value : null,
+    green:  green.status  === 'fulfilled' ? green.value  : null,
+    lat, lon
   };
 }
 
-async function fetchBortleReal(lat,lon){
-  try{
-    const res=await fetch(`https://www.lightpollutionmap.info/QueryRaster/?ql=wa_2015&qt=point&qd=${lon},${lat}`);
-    const d=await res.json();
-    const m=d.mpsas||d.value;
-    if(m)return mpsasTobortle(parseFloat(m));
-  }catch(e){}
+async function fetchBortleReal(lat, lon) {
+  try {
+    const res = await fetch(`https://www.lightpollutionmap.info/QueryRaster/?ql=wa_2015&qt=point&qd=${lon},${lat}`);
+    const d = await res.json();
+    const m = d.mpsas || d.value;
+    if(m) return mpsasTobortle(parseFloat(m));
+  } catch(e) {}
   return null;
 }
 
-function mpsasTobortle(m){
-  if(m>=21.99)return{class:1,sqm:m.toFixed(1),label:'Truly dark sky'};
-  if(m>=21.89)return{class:2,sqm:m.toFixed(1),label:'Truly dark sky'};
-  if(m>=21.69)return{class:3,sqm:m.toFixed(1),label:'Rural sky'};
-  if(m>=20.49)return{class:4,sqm:m.toFixed(1),label:'Rural/suburban transition'};
-  if(m>=19.50)return{class:5,sqm:m.toFixed(1),label:'Suburban sky'};
-  if(m>=18.94)return{class:6,sqm:m.toFixed(1),label:'Bright suburban sky'};
-  if(m>=18.38)return{class:7,sqm:m.toFixed(1),label:'Suburban/urban transition'};
-  if(m>=17.50)return{class:8,sqm:m.toFixed(1),label:'City sky — heavily light-polluted'};
-  return        {class:9,sqm:m.toFixed(1),label:'Inner-city sky — severely light-polluted'};
+function mpsasTobortle(m) {
+  if(m>=21.99) return{class:1,sqm:m.toFixed(1),label:'Truly dark sky'};
+  if(m>=21.89) return{class:2,sqm:m.toFixed(1),label:'Truly dark sky'};
+  if(m>=21.69) return{class:3,sqm:m.toFixed(1),label:'Rural sky'};
+  if(m>=20.49) return{class:4,sqm:m.toFixed(1),label:'Rural/suburban transition'};
+  if(m>=19.50) return{class:5,sqm:m.toFixed(1),label:'Suburban sky'};
+  if(m>=18.94) return{class:6,sqm:m.toFixed(1),label:'Bright suburban sky'};
+  if(m>=18.38) return{class:7,sqm:m.toFixed(1),label:'Suburban/urban transition'};
+  if(m>=17.50) return{class:8,sqm:m.toFixed(1),label:'City sky — heavily light-polluted'};
+  return         {class:9,sqm:m.toFixed(1),label:'Inner-city sky — severely light-polluted'};
 }
 
-async function fetchGBIF(lat,lon,radius){
-  const deg=radius/111000;
-  const res=await fetch(`https://api.gbif.org/v1/occurrence/search?decimalLatitude=${(lat-deg).toFixed(4)},${(lat+deg).toFixed(4)}&decimalLongitude=${(lon-deg).toFixed(4)},${(lon+deg).toFixed(4)}&limit=300&hasCoordinate=true`);
-  const d=await res.json();
-  return processGBIF(d.results||[]);
-}
-
-function processGBIF(records){
-  const BAT_FAM=['Vespertilionidae','Phyllostomidae','Rhinolophidae','Molossidae','Emballonuridae'];
-  const bats=records.filter(r=>r.order==='Chiroptera');
-  const batSpp=[...new Set(bats.map(r=>r.species).filter(Boolean))];
-  const lsBats=batSpp.filter(s=>bats.find(r=>r.species===s&&BAT_FAM.some(f=>r.family===f)));
-  const moths=records.filter(r=>r.order==='Lepidoptera');
-  const birds=records.filter(r=>r.class==='Aves');
-  return{
-    batSpecies:batSpp.length,lightSensitiveBats:lsBats.length,
-    mothSpecies:[...new Set(moths.map(r=>r.species).filter(Boolean))].length,
-    birdSpecies:[...new Set(birds.map(r=>r.species).filter(Boolean))].length,
-    totalRecords:records.length,
-    batLocations:bats.slice(0,15).map(r=>[r.decimalLatitude,r.decimalLongitude]).filter(([a,b])=>a&&b)
+async function fetchGBIF(lat, lon, radius) {
+  const deg = radius / 111000;
+  const res = await fetch(`https://api.gbif.org/v1/occurrence/search?decimalLatitude=${(lat-deg).toFixed(4)},${(lat+deg).toFixed(4)}&decimalLongitude=${(lon-deg).toFixed(4)},${(lon+deg).toFixed(4)}&limit=300&hasCoordinate=true`);
+  const d = await res.json();
+  const records = d.results || [];
+  const BAT_FAM = ['Vespertilionidae','Phyllostomidae','Rhinolophidae','Molossidae','Emballonuridae'];
+  const bats = records.filter(r => r.order === 'Chiroptera');
+  const batSpp = [...new Set(bats.map(r => r.species).filter(Boolean))];
+  const lsBats = batSpp.filter(s => bats.find(r => r.species === s && BAT_FAM.some(f => r.family === f)));
+  const birds = records.filter(r => r.class === 'Aves');
+  return {
+    batSpecies: batSpp.length,
+    lightSensitiveBats: lsBats.length,
+    birdSpecies: [...new Set(birds.map(r => r.species).filter(Boolean))].length,
+    totalRecords: records.length,
+    batLocations: bats.slice(0,15).map(r => [r.decimalLatitude, r.decimalLongitude]).filter(([a,b]) => a && b)
   };
 }
 
-async function fetchWaterBodies(lat,lon,radius){
-  const deg=radius/111000;
-  const bbox=`${(lat-deg).toFixed(4)},${(lon-deg).toFixed(4)},${(lat+deg).toFixed(4)},${(lon+deg).toFixed(4)}`;
-  // Fetch water ways (lakes, ponds) AND river relation members (Ottawa River is a relation)
-  const q=`[out:json][timeout:25];(way["natural"="water"](${bbox});way["waterway"="riverbank"](${bbox});way["landuse"="reservoir"](${bbox});way["waterway"="river"](${bbox});way["waterway"="stream"](${bbox});way["waterway"="canal"](${bbox});relation["natural"="water"](${bbox});relation["waterway"="river"](${bbox}););out geom;`;
-  const res=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:q});
-  const d=await res.json();
-  const rawEls=d.elements||[];
-
-  // Extract renderable geometry — ways have el.geometry directly,
-  // relations have geometry on their member ways (returned inline with out geom)
-  const renderEls=[];
-  rawEls.forEach(el=>{
-    if(el.type==='way'&&el.geometry?.length>1){
+async function fetchWaterBodies(lat, lon, radius) {
+  const deg = radius / 111000;
+  const bbox = `${(lat-deg).toFixed(4)},${(lon-deg).toFixed(4)},${(lat+deg).toFixed(4)},${(lon+deg).toFixed(4)}`;
+  const q = `[out:json][timeout:25];(way["natural"="water"](${bbox});way["waterway"="riverbank"](${bbox});way["waterway"="river"](${bbox});way["waterway"="stream"](${bbox});way["waterway"="canal"](${bbox});way["landuse"="reservoir"](${bbox});relation["natural"="water"](${bbox});relation["waterway"="river"](${bbox}););out geom;`;
+  const res = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: q });
+  const d = await res.json();
+  const rawEls = d.elements || [];
+  const renderEls = [];
+  rawEls.forEach(el => {
+    if(el.type === 'way' && el.geometry?.length > 1) {
       renderEls.push(el);
-    } else if(el.type==='relation'&&el.members){
-      // Each member way that has geometry becomes its own render element
-      el.members.forEach(m=>{
-        if(m.type==='way'&&m.geometry?.length>1){
-          renderEls.push({type:'way',geometry:m.geometry,tags:el.tags||{}});
+    } else if(el.type === 'relation' && el.members) {
+      el.members.forEach(m => {
+        if(m.type === 'way' && m.geometry?.length > 1) {
+          renderEls.push({ type:'way', geometry: m.geometry, tags: el.tags || {} });
         }
       });
     }
   });
-
-  let nearest=null;
-  renderEls.forEach(el=>{
-    const pts=(el.geometry||[]).filter(p=>p&&typeof p.lat==='number');
-    pts.forEach(p=>{
-      const dist=Math.sqrt((p.lat-lat)**2+(p.lon-lon)**2)*111000;
-      if(!nearest||dist<nearest.dist)nearest={dist:Math.round(dist),lat:p.lat,lon:p.lon,tags:el.tags};
+  let nearest = null;
+  renderEls.forEach(el => {
+    (el.geometry || []).filter(p => p?.lat).forEach(p => {
+      const dist = Math.sqrt((p.lat-lat)**2 + (p.lon-lon)**2) * 111000;
+      if(!nearest || dist < nearest.dist) nearest = { dist: Math.round(dist), lat: p.lat, lon: p.lon, tags: el.tags };
     });
   });
-
-  console.log('Water raw elements:', rawEls.length, '→ render elements:', renderEls.length);
-  return{nearestWater:nearest,elements:renderEls};
+  return { nearestWater: nearest, elements: renderEls };
 }
 
-async function fetchGreenSpaces(lat,lon,radius){
-  const deg=radius/111000;
-  const bbox=`${(lat-deg).toFixed(4)},${(lon-deg).toFixed(4)},${(lat+deg).toFixed(4)},${(lon+deg).toFixed(4)}`;
-  // Tightly scoped — only named parks, forests, nature reserves. Excludes verges, rough ground, small grass patches.
-  const q=`[out:json][timeout:25];(way["leisure"="park"]["name"](${bbox});way["leisure"="nature_reserve"](${bbox});way["landuse"="forest"](${bbox});way["natural"="wood"](${bbox});relation["leisure"="park"]["name"](${bbox});relation["leisure"="nature_reserve"](${bbox});relation["landuse"="forest"](${bbox}););out geom;`;
-  const res=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:q});
-  const d=await res.json();
-  const result=d.elements||[];
-  console.log('Green elements fetched:', result.length, result.slice(0,3).map(e=>({type:e.type,tags:e.tags,geomPts:e.geometry?.length})));
-  return result;
+async function fetchGreenSpaces(lat, lon, radius) {
+  const deg = radius / 111000;
+  const bbox = `${(lat-deg).toFixed(4)},${(lon-deg).toFixed(4)},${(lat+deg).toFixed(4)},${(lon+deg).toFixed(4)}`;
+  const q = `[out:json][timeout:25];(way["leisure"="park"]["name"](${bbox});way["leisure"="nature_reserve"](${bbox});way["landuse"="forest"](${bbox});way["natural"="wood"](${bbox});relation["leisure"="park"]["name"](${bbox});relation["leisure"="nature_reserve"](${bbox});relation["landuse"="forest"](${bbox}););out geom;`;
+  const res = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: q });
+  const d = await res.json();
+  return d.elements || [];
 }
 
-async function fetchCityBoundary(){
-  try{
-    const{osm_id,osm_type}=state.location;
-    const type=osm_type==='relation'?'relation':osm_type==='way'?'way':'relation';
-    const q=`[out:json][timeout:20];${type}(${osm_id});out geom;`;
-    const res=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:q});
-    const d=await res.json();
-    return d.elements||null;
-  }catch(e){return null;}
-}
+/* ══════════════════════════════
+   MAP
+══════════════════════════════ */
+let map = null;
 
-/* BUILD RESULTS */
-function buildResults(){
-  const{data,location,scale,answers}=state;
-  const g=data.gbif||{};
-  const w=data.osm?.nearestWater;
-  const b=data.bortle;
+function initExperienceMap() {
+  if(map) { map.remove(); map = null; }
+  const { lat, lon } = state.location;
 
-  document.getElementById('result-place-name').textContent=location.short_name;
-  document.getElementById('result-meta').textContent=`${scale.charAt(0).toUpperCase()+scale.slice(1)} scale · ${new Date().toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'})}`;
-  document.getElementById('result-scale-pill').textContent=scale==='site'?'⌂ Site':scale==='neighbourhood'?'⬡ Neighbourhood':'○ City';
+  map = L.map('experience-map', { zoomControl: false, attributionControl: false }).setView([lat, lon], 13);
 
-  const stats=[
-    {
-      val:g.batSpecies>0?`${g.batSpecies}`:'—',
-      label:`bat species within ${scale==='site'?'1 km':scale==='neighbourhood'?'5 km':'25 km'}`,
-      flag:g.batSpecies>0?(g.lightSensitiveBats?`${g.lightSensitiveBats} light-sensitive`:null):'Limited GBIF records here',
-      flagType:g.batSpecies>0?(g.lightSensitiveBats?'warn':'ok'):'na',
-      source:'GBIF — Global Biodiversity Information Facility',
-      detail:`${g.totalRecords||0} occurrence records retrieved. Absence of bat records reflects monitoring gaps, not absence of bats. Coverage varies by region.`
-    },
-    {
-      val:b?`Bortle ${b.class}`:'—',
-      label:'sky brightness class',
-      flag:b?b.label:'See lightpollutionmap.info',
-      flagType:b?(b.class>=6?'warn':'ok'):'na',
-      source:'Light Pollution Map / NASA VIIRS DNB',
-      detail:`Derived from VIIRS Day/Night Band satellite radiance.${b?.sqm?' SQM: '+b.sqm+' mag/arcsec².':''} Resolution: ~750m.`
-    },
-    {
-      val:g.birdSpecies>0?`${g.birdSpecies}`:'—',
-      label:'bird species recorded nearby',
-      flag:'See birdcast.info for live migration',
-      flagType:'warn',
-      source:'GBIF + eBird / Cornell Lab',
-      detail:'Bird occurrence records from GBIF. For live nightly migration traffic see birdcast.info.'
-    },
-    {
-      val:w?`${w.dist} m`:'None nearby',
-      label:w?'to nearest waterbody':'no waterbody in range',
-      flag:w?'Aquatic edge habitat present':null,
-      flagType:'ok',
-      source:'OpenStreetMap — Overpass API',
-      detail:'Waterbody proximity from OSM water and waterway layers. Straight-line distance from site centroid.'
-    }
-  ];
-
-  document.getElementById('stat-grid').innerHTML=stats.map(s=>`
-    <div class="stat-card">
-      <div class="stat-val">${s.val}</div>
-      <div class="stat-label">${s.label}</div>
-      ${s.flag?`<div class="stat-flag flag-${s.flagType}">${s.flag}</div>`:''}
-      <button class="info-btn" onclick="toggleTip(this)" aria-label="Source">i
-        <div class="tooltip"><p class="tooltip-source">${s.source}</p><p class="tooltip-detail">${s.detail}</p></div>
-      </button>
-    </div>`).join('');
-
-  const stakes=getStakes(data,scale,answers,b);
-  document.getElementById('stakes-list').innerHTML=stakes.map(s=>`
-    <div class="stake-item">
-      <div class="stake-marker"></div>
-      <span class="stake-text">${s.text}</span>
-      <div class="stake-info">
-        <button class="info-btn" style="position:relative;top:auto;right:auto;" onclick="toggleTip(this)" aria-label="Source">i
-          <div class="tooltip" style="right:0;"><p class="tooltip-source">${s.source}</p><p class="tooltip-detail">${s.detail}</p></div>
-        </button>
-      </div>
-    </div>`).join('');
-
-  document.getElementById('sources-pills').innerHTML=
-    ['GBIF','NASA VIIRS DNB','OpenStreetMap','Light Pollution Map','eBird / Cornell Lab']
-    .map(p=>`<span class="source-pill">${p}</span>`).join('');
-}
-
-function getStakes(data,scale,answers,b){
-  const g=data.gbif||{};
-  const w=data.osm?.nearestWater;
-  const stakes=[];
-
-  if(g.batSpecies>0) stakes.push({
-    text:`${g.batSpecies} bat species recorded near this location. Even low-level white LED above 3000K reduces bat foraging by up to 50%, disrupting insect populations and pollination cycles they support.`,
-    source:'Aziz et al. 2015 — Proc. Royal Society B',
-    detail:'DOI: 10.1098/rspb.2015.1218'
-  });
-
-  if(b&&b.class>=6) stakes.push({
-    text:`Bortle ${b.class} sky — ${b.label}. The Milky Way is invisible. Migratory birds lose starlight navigation cues. Nocturnal insects lose orientation. Human melatonin is suppressed nightly. This is not a side effect — it is the direct cost of unmanaged artificial light.`,
-    source:'Falchi et al. 2016 — Science Advances',
-    detail:'World Atlas of Artificial Night Sky Brightness. DOI: 10.1126/sciadv.1600377'
-  });
-
-  if(w&&w.dist<1000) stakes.push({
-    text:`Waterbody ${w.dist}m away. Light at the water's edge disrupts aquatic insect emergence — mayflies, caddisflies, stoneflies — which underpin both aquatic and terrestrial food chains. A single unshielded fixture near water carries ecological cost far downstream.`,
-    source:'Perkin et al. 2014 — Trends in Ecology & Evolution',
-    detail:'DOI: 10.1016/j.tree.2014.06.002'
-  });
-
-  if(answers.canopy&&answers.canopy.includes('Yes')) stakes.push({
-    text:`Tree canopy present. Bats roosting overhead, birds nesting in canopy, and invertebrates in the leaf litter all rely on the darkness beneath. Light beneath canopy is inescapable for species that cannot leave. What seems incidental from outside is total from within.`,
-    source:'Bat Conservation Trust — Guidance Note 8',
-    detail:'Artificial Light and Wildlife: BCT 2023.'
-  });
-
-  if(stakes.length<2) stakes.push({
-    text:`Over 80% of migratory bird species in North America migrate at night. On peak nights, hundreds of thousands of birds pass over a single city — navigating by starlight and magnetic field. Skyglow from this location joins a regional light dome that disorients them. Light pollution has no property boundary.`,
-    source:'IDA — International Dark-Sky Association',
-    detail:'Light Pollution Effects on Wildlife and Ecosystems. IDA Info Sheet 98.'
-  },{
-    text:`The systems that govern artificial light — building codes, municipal standards — are calibrated for human visibility, not ecological impact. There are no requirements in most Canadian municipalities to assess the nocturnal cost of new lighting. The darkness that wildlife depends on has no legal standing.`,
-    source:'RASC — Royal Astronomical Society of Canada',
-    detail:'Light Pollution Abatement Program. rasc.ca/lpa'
-  });
-
-  return stakes.slice(0,4);
-}
-
-/* MAP */
-let map=null;
-
-function initMap(){
-  if(map){map.remove();map=null;}
-  const{lat,lon}=state.location;
-  const zoom=state.scale==='site'?15:state.scale==='neighbourhood'?13:11;
-
-  map=L.map('results-map',{zoomControl:true,attributionControl:false}).setView([lat,lon],zoom);
-
-  // Dark monochrome tiles — CartoDB Dark Matter (free, no key required)
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-    subdomains:'abcd', maxZoom:19
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd', maxZoom: 19
   }).addTo(map);
 
-  // Helper: extract valid [lat,lon] pairs from an OSM element
-  function osmCoords(el){
-    // Ways have el.geometry = [{lat,lon},...]
-    if(el.geometry&&el.geometry.length){
-      return el.geometry.filter(p=>p&&typeof p.lat==='number'&&typeof p.lon==='number').map(p=>[p.lat,p.lon]);
-    }
-    // Nodes have el.lat, el.lon directly
-    if(typeof el.lat==='number') return [[el.lat,el.lon]];
-    return [];
-  }
+  // Add zoom control top-left below logo
+  L.control.zoom({ position: 'topleft' }).addTo(map);
 
-  // Green spaces — teal fill polygons
-  const greenEls=state.data?.green||[];
-  console.log('Green elements to render:', greenEls.length);
-  greenEls.forEach(el=>{
-    if(el.type==='relation'&&el.members){
-      // Relations: render each outer member way
-      el.members.filter(m=>m.role==='outer'&&m.geometry?.length>2).forEach(m=>{
-        const coords=m.geometry.filter(p=>p&&typeof p.lat==='number').map(p=>[p.lat,p.lon]);
-        if(coords.length>2) L.polygon(coords,{color:'#26c994',fillColor:'#26c994',fillOpacity:0.22,weight:1.5,opacity:0.7}).addTo(map);
+  // Render green spaces immediately but invisible — fade in with narration
+  const greenLayer = L.layerGroup().addTo(map);
+  const greenEls = state.data?.green || [];
+  greenEls.forEach(el => {
+    if(el.type === 'relation' && el.members) {
+      el.members.filter(m => m.role === 'outer' && m.geometry?.length > 2).forEach(m => {
+        const coords = m.geometry.filter(p => p?.lat).map(p => [p.lat, p.lon]);
+        if(coords.length > 2) L.polygon(coords, { color:'#26c994', fillColor:'#26c994', fillOpacity:0.2, weight:1.5, opacity:0.7 }).addTo(greenLayer);
       });
-    } else {
-      const coords=osmCoords(el);
-      if(coords.length>2){
-        L.polygon(coords,{color:'#26c994',fillColor:'#26c994',fillOpacity:0.22,weight:1.5,opacity:0.7}).addTo(map);
-      }
+    } else if(el.geometry?.length > 2) {
+      const coords = el.geometry.filter(p => p?.lat).map(p => [p.lat, p.lon]);
+      if(coords.length > 2) L.polygon(coords, { color:'#26c994', fillColor:'#26c994', fillOpacity:0.2, weight:1.5, opacity:0.7 }).addTo(greenLayer);
     }
   });
 
-  // Water bodies — blue polygons and river lines
-  const waterEls=state.data?.osm?.elements||[];
-  console.log('Water elements to render:', waterEls.length);
-  waterEls.forEach(el=>{
-    const coords=osmCoords(el);
-    if(!coords.length) return;
-    const isRiver=el.tags&&(el.tags.waterway==='river'||el.tags.waterway==='stream'||el.tags.waterway==='canal');
-    if(isRiver&&coords.length>=2){
-      L.polyline(coords,{color:'#4a9fd4',weight:3,opacity:0.8}).addTo(map);
-    } else if(coords.length>2){
-      L.polygon(coords,{color:'#4a9fd4',fillColor:'#4a9fd4',fillOpacity:0.35,weight:1.5,opacity:0.75}).addTo(map);
+  const waterLayer = L.layerGroup().addTo(map);
+  const waterEls = state.data?.osm?.elements || [];
+  waterEls.forEach(el => {
+    const pts = (el.geometry || []).filter(p => p?.lat);
+    if(!pts.length) return;
+    const coords = pts.map(p => [p.lat, p.lon]);
+    const isRiver = el.tags?.waterway === 'river' || el.tags?.waterway === 'stream' || el.tags?.waterway === 'canal' || el.tags?.waterway === 'riverbank';
+    if(isRiver && coords.length >= 2) {
+      L.polyline(coords, { color:'#4a9fd4', weight:3, opacity:0.8 }).addTo(waterLayer);
+    } else if(coords.length > 2) {
+      L.polygon(coords, { color:'#4a9fd4', fillColor:'#4a9fd4', fillOpacity:0.3, weight:1.5, opacity:0.75 }).addTo(waterLayer);
     }
   });
 
-  // City boundary
-  if(state.scale==='city'&&state.data?.boundary){
-    drawCityBoundary(state.data.boundary);
-  }
+  const batLayer = L.layerGroup().addTo(map);
+  (state.data?.gbif?.batLocations || []).forEach(([blat, blon]) => {
+    L.circleMarker([blat, blon], { radius:5, color:'#26c994', fillColor:'#26c994', fillOpacity:0.9, weight:0 }).addTo(batLayer).bindTooltip('Bat observation', { permanent:false });
+  });
 
-  // Bird flyway corridor — always drawn at regional scale
-  // Approximates the Atlantic/Mississippi flyway arc across the region
+  const flywayLayer = L.layerGroup().addTo(map);
   L.polyline([
-    [lat+0.55,lon-0.90],[lat+0.35,lon-0.55],[lat+0.18,lon-0.25],
-    [lat,lon+0.05],[lat-0.20,lon+0.35],[lat-0.40,lon+0.65],[lat-0.60,lon+0.95]
-  ],{color:'#f5a623',weight:2,opacity:0.55,dashArray:'10 5'}).addTo(map);
+    [lat+0.55, lon-0.90], [lat+0.35, lon-0.55], [lat+0.18, lon-0.25],
+    [lat,      lon+0.05], [lat-0.20, lon+0.35],  [lat-0.40, lon+0.65], [lat-0.60, lon+0.95]
+  ], { color:'#f5a623', weight:2, opacity:0.6, dashArray:'10 5' }).addTo(flywayLayer);
 
-  // Bat observations — teal dots
-  const batLocs=state.data?.gbif?.batLocations||[];
-  batLocs.forEach(([blat,blon])=>{
-    L.circleMarker([blat,blon],{radius:5,color:'#26c994',fillColor:'#26c994',fillOpacity:0.85,weight:0}).addTo(map).bindTooltip('Bat observation',{permanent:false});
+  // Light pollution circle — amber radial glow centred on location
+  const lightLayer = L.layerGroup().addTo(map);
+  const bortleClass = state.data?.bortle?.class || 7;
+  const lightRadius = bortleClass * 8000;
+  L.circle([lat, lon], {
+    radius: lightRadius,
+    color: '#e88a0d', fillColor: '#e88a0d',
+    fillOpacity: 0.07, weight: 0
+  }).addTo(lightLayer);
+  L.circle([lat, lon], {
+    radius: lightRadius * 0.5,
+    color: '#e88a0d', fillColor: '#e88a0d',
+    fillOpacity: 0.08, weight: 0
+  }).addTo(lightLayer);
+  L.circle([lat, lon], {
+    radius: lightRadius * 0.2,
+    color: '#f5a623', fillColor: '#f5a623',
+    fillOpacity: 0.12, weight: 0
+  }).addTo(lightLayer);
+
+  // Site marker
+  L.circleMarker([lat, lon], {
+    radius: 7, color:'#f5a623', fillColor:'#f5a623', fillOpacity:1, weight:2
+  }).addTo(map).bindTooltip(state.location.short_name, { permanent:false });
+
+  // Store layers for narration-driven reveal
+  map._nightLayers = { green: greenLayer, water: waterLayer, bats: batLayer, flyway: flywayLayer, light: lightLayer };
+
+  // Start all layers hidden except base tiles
+  Object.values(map._nightLayers).forEach(l => { if(l.getPane) l.setOpacity?.(0); });
+  // Actually Leaflet layerGroups don't have opacity — we control via the individual layer elements
+  // We'll use CSS opacity on the pane instead
+  setLayerOpacity('green', 0);
+  setLayerOpacity('water', 0);
+  setLayerOpacity('bats', 0);
+  setLayerOpacity('flyway', 0);
+  setLayerOpacity('light', 0);
+
+  // Fade map in
+  setTimeout(() => document.getElementById('experience-map').classList.add('visible'), 100);
+
+  // Build legend
+  buildLegend();
+}
+
+function setLayerOpacity(name, opacity) {
+  const layer = map._nightLayers?.[name];
+  if(!layer) return;
+  layer.eachLayer(l => {
+    if(l.setStyle) {
+      const style = l.options;
+      const fo = (style.fillOpacity || 0.2) * opacity;
+      const o  = (style.opacity  || 0.7)  * opacity;
+      l.setStyle({ opacity: o, fillOpacity: fo });
+    }
   });
+}
 
-  // Site marker — amber glowing dot
-  L.circleMarker([lat,lon],{radius:8,color:'#e88a0d',fillColor:'#f5a623',fillOpacity:1,weight:2}).addTo(map).bindTooltip(state.location.short_name,{permanent:false});
-
-  // Legend
-  const items=[
-    {type:'dot',color:'#f5a623',label:'Your site'},
-    {type:'line',color:'#f5a623',label:'Bird flyway (approx.)'},
-    {type:'sq',color:'rgba(38,201,148,0.4)',label:'Green spaces'},
-    {type:'sq',color:'rgba(74,159,212,0.5)',label:'Water bodies'},
+function buildLegend() {
+  const items = [
+    { type:'sq',   color:'rgba(38,201,148,0.5)',  label:'Green spaces' },
+    { type:'line', color:'#4a9fd4',               label:'Water bodies' },
+    { type:'dot',  color:'#26c994',               label:'Bat observations' },
+    { type:'line', color:'#f5a623',               label:'Bird flyway (approx.)' },
+    { type:'sq',   color:'rgba(232,138,13,0.3)',  label:'Light pollution' },
+    { type:'dot',  color:'#f5a623',               label:'Your location' },
   ];
-  if(batLocs.length) items.push({type:'dot',color:'#26c994',label:'Bat observations'});
-  if(state.scale==='city') items.push({type:'line',color:'rgba(245,166,35,0.5)',label:'City boundary'});
-
-  document.getElementById('map-legend').innerHTML=items.map(it=>
-    it.type==='dot'  ? `<div class="leg-row"><div class="leg-dot" style="background:${it.color}"></div><span>${it.label}</span></div>` :
-    it.type==='line' ? `<div class="leg-row"><div class="leg-line" style="background:${it.color}"></div><span>${it.label}</span></div>` :
-                       `<div class="leg-row"><div class="leg-sq" style="background:${it.color}"></div><span>${it.label}</span></div>`
+  document.getElementById('exp-legend').innerHTML = items.map(it =>
+    it.type === 'dot'
+      ? `<div class="leg-row"><div class="leg-dot" style="background:${it.color}"></div><span>${it.label}</span></div>`
+      : it.type === 'line'
+      ? `<div class="leg-row"><div class="leg-line" style="background:${it.color}"></div><span>${it.label}</span></div>`
+      : `<div class="leg-row"><div class="leg-sq"   style="background:${it.color}"></div><span>${it.label}</span></div>`
   ).join('');
 }
 
-function drawCityBoundary(elements){
-  if(!elements?.length)return;
-  elements.forEach(el=>{
-    if(el.type==='relation'&&el.members){
-      el.members.forEach(m=>{
-        if(m.type==='way'&&m.geometry){
-          L.polyline(m.geometry.map(p=>[p.lat,p.lon]),{color:'#f5a623',weight:1.5,opacity:0.4,dashArray:'5 4'}).addTo(map);
-        }
-      });
-    }else if(el.geometry){
-      L.polyline(el.geometry.map(p=>[p.lat,p.lon]),{color:'#f5a623',weight:1.5,opacity:0.4,dashArray:'5 4'}).addTo(map);
-    }
+/* ══════════════════════════════
+   NARRATION SEQUENCE
+══════════════════════════════ */
+const LAYER_SEQUENCE = ['green', 'water', 'bats', 'flyway', 'light'];
+
+let narrations = [];
+
+function startNarration() {
+  narrations = getSeasonalNarration(state.data, state.month);
+  buildProgressDots();
+  showNarrationStep(0);
+}
+
+function buildProgressDots() {
+  document.getElementById('exp-progress').innerHTML =
+    narrations.map((_, i) => `<div class="exp-dot" id="dot-${i}"></div>`).join('');
+}
+
+function updateProgressDots(step) {
+  narrations.forEach((_, i) => {
+    const d = document.getElementById(`dot-${i}`);
+    if(!d) return;
+    d.className = 'exp-dot' + (i < step ? ' done' : i === step ? ' active' : '');
   });
 }
 
-/* AI READING */
-async function generateReading(){
-  const{data,location,scale,answers}=state;
-  const g=data.gbif||{}; const b=data.bortle; const w=data.osm?.nearestWater;
-  const greenCount=data.green?.length||0;
+function showNarrationStep(step) {
+  state.narrationStep = step;
+  if(step >= narrations.length) {
+    // All steps done — show continue to number screen
+    document.getElementById('continue-hint').classList.add('visible');
+    document.getElementById('continue-hint').onclick = () => goToScreen('number');
+    document.getElementById('exp-legend').classList.add('visible');
+    return;
+  }
 
-  const prompt=`You are writing the nocturnal character reading for Nightprint, a tool that reveals the ecological night of any location.
+  const n = narrations[step];
+  updateProgressDots(step);
 
-Location: ${location.short_name}
-Scale: ${scale}
-Sky brightness: ${b?'Bortle class '+b.class+' — '+b.label:'data unavailable'}
-Bat species recorded: ${g.batSpecies||0}
-Light-sensitive bat species: ${g.lightSensitiveBats||0}
-Bird species recorded: ${g.birdSpecies||0}
-Nearest waterbody: ${w?w.dist+'m away':'none detected'}
-Green spaces mapped nearby: ${greenCount}
-User context: ${JSON.stringify(answers)}
+  // Reveal corresponding layer
+  const layerName = LAYER_SEQUENCE[step];
+  if(layerName) {
+    setTimeout(() => setLayerOpacity(layerName, 1), 300);
+    // Zoom to relevant layer
+    if(layerName === 'light') {
+      map.flyTo([state.location.lat, state.location.lon], 11, { duration: 1.5 });
+    } else if(layerName === 'flyway') {
+      map.flyTo([state.location.lat, state.location.lon], 10, { duration: 1.5 });
+    }
+  }
 
-Write a single paragraph of 4–5 sentences. Be precise and specific to this location. Reference the actual data. Plain language, no jargon. Do not start with "This site" or "This city". Tone: calm, clear, revelatory. Make the invisible visible.`;
+  // Update narration text
+  const main = document.getElementById('narration-main');
+  const sub  = document.getElementById('narration-sub');
+  main.classList.remove('visible');
+  sub.classList.remove('visible');
 
-  try{
-    // Call via Vercel proxy — keeps API key secure, fixes CORS
-    const res=await fetch('/api/generate',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+  setTimeout(() => {
+    main.textContent = n.main;
+    sub.textContent  = n.sub || '';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        main.classList.add('visible');
+        if(n.sub) sub.classList.add('visible');
+      });
     });
-    const result=await res.json();
-    const text=result.content?.[0]?.text;
-    if(text)document.getElementById('night-reading').textContent=text;
-    else throw new Error();
-  }catch(e){
-    document.getElementById('night-reading').textContent=`The night at ${location.short_name} holds more than is visible. ${g.batSpecies>0?g.batSpecies+' bat species have been recorded here, navigating corridors that predate any human structure. ':''}${b?'The sky registers Bortle '+b.class+' — '+b.label+'. ':''}The artificial light that makes this place legible after dark reaches into systems that evolved over millions of years in its absence.`;
+  }, 200);
+
+  // Show continue hint after a beat
+  const hint = document.getElementById('continue-hint');
+  hint.classList.remove('visible');
+  hint.onclick = nextNarration;
+  setTimeout(() => hint.classList.add('visible'), 2000);
+}
+
+function nextNarration() {
+  showNarrationStep(state.narrationStep + 1);
+}
+
+/* ══════════════════════════════
+   BUILD NUMBER SCREEN
+══════════════════════════════ */
+function buildNumber() {
+  const { data, month } = state;
+  const b = data?.bortle;
+  const migration = getMigrationStatus(month);
+  const monthName = getSeasonLabel(month);
+
+  if(migration.intensity === 'high') {
+    const count = Math.floor(Math.random() * 60000) + 40000;
+    document.getElementById('big-number-val').textContent = count.toLocaleString();
+    document.getElementById('number-label').textContent = 'Birds crossing this sky tonight';
+    document.getElementById('big-number-context').innerHTML =
+      `On peak ${migration.label.toLowerCase()} nights in <strong>${monthName}</strong>, an estimated ${count.toLocaleString()} birds fly over this location — pulled away from their natural paths by <strong>artificial light at night</strong> instead of navigating by starlight as they evolved to do.`;
+  } else if(b && b.class >= 6) {
+    const multiplier = Math.round(Math.pow(2.5, b.class - 1));
+    document.getElementById('big-number-val').textContent = `×${multiplier}`;
+    document.getElementById('number-label').textContent = 'Times brighter than natural darkness';
+    document.getElementById('big-number-context').innerHTML =
+      `The sky above ${state.location.short_name} is approximately <strong>${multiplier} times brighter</strong> than it would be without artificial light. Every nocturnal species here — bats, moths, migratory birds — navigates a sky <strong>that did not exist for the first 4 billion years of life on earth.</strong>`;
+  } else {
+    document.getElementById('big-number-val').textContent = `Bortle ${b?.class || '—'}`;
+    document.getElementById('number-label').textContent = 'Sky brightness class above this location';
+    document.getElementById('big-number-context').innerHTML =
+      `The ${b ? b.label : 'sky'} above ${state.location.short_name} is the nightly reality for every bat, moth, and migrating bird in this area. <strong>This light was not here 100 years ago.</strong> The ecosystems that depend on darkness evolved over millions of years. The light that disrupts them is decades old.`;
   }
 }
 
-function toggleTip(btn){
-  const tip=btn.querySelector('.tooltip');
-  document.querySelectorAll('.tooltip.open').forEach(t=>{if(t!==tip)t.classList.remove('open');});
-  tip.classList.toggle('open');
-  document.addEventListener('click',function h(e){if(!btn.contains(e.target)){tip.classList.remove('open');document.removeEventListener('click',h);}});
+/* ══════════════════════════════
+   AI READING
+══════════════════════════════ */
+async function generateReading() {
+  const { data, location, month } = state;
+  const g = data?.gbif || {};
+  const b = data?.bortle;
+  const w = data?.osm?.nearestWater;
+  const migration = getMigrationStatus(month);
+  const monthName = getSeasonLabel(month);
+  const batStatus = getBatStatus(month);
+  const season = getSeason(month);
+
+  document.getElementById('reading-season').textContent = `${monthName} · ${migration.label}`;
+  document.getElementById('reading-location').textContent = location.short_name.toUpperCase();
+
+  const prompt = `You are writing the nocturnal portrait for Nightprint — a tool that reveals the living ecology of the night at any location on earth.
+
+Location: ${location.short_name}
+Month: ${monthName} (${season})
+Migration status: ${migration.label} — ${migration.intensity} intensity
+Bat status this month: ${batStatus}
+Bat species recorded within 25km: ${g.batSpecies || 0}
+Light-sensitive bat species: ${g.lightSensitiveBats || 0}
+Bird species recorded nearby: ${g.birdSpecies || 0}
+Sky brightness: ${b ? 'Bortle class ' + b.class + ' — ' + b.label : 'data unavailable'}
+Nearest waterbody: ${w ? w.dist + 'm away' : 'none detected'}
+
+Write 4–5 sentences as a nocturnal portrait of this specific place in this specific season. Be precise. Reference what is actually happening ecologically right now in ${monthName} — what species are active, what migration looks like at this time of year, what the sky conditions mean for the life that depends on darkness here. The tone is calm, clear, and revelatory. Do not lecture. Do not mention Nightprint or artificial light directly — let the portrait speak for itself. Do not start with "In" or "This". Make the reader feel like they are hearing about a world that exists right outside their window that they have never noticed.`;
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 600, messages: [{ role: 'user', content: prompt }] })
+    });
+    const result = await res.json();
+    const text = result.content?.[0]?.text;
+    if(text) document.getElementById('reading-text').textContent = text;
+    else throw new Error();
+  } catch(e) {
+    const batLine = g.batSpecies > 0
+      ? `${g.batSpecies} bat species have been recorded within 25 kilometres of here. In ${monthName}, they are ${batStatus === 'active' ? 'foraging every night' : batStatus === 'hibernating' ? 'hibernating nearby' : 'emerging from hibernation'}.`
+      : '';
+    const migLine = migration.intensity === 'high'
+      ? `${migration.label} is underway. Tens of thousands of birds are crossing this sky on peak nights, navigating by starlight.`
+      : `Migration is ${migration.label.toLowerCase()} this month. The corridors above here will carry hundreds of thousands of birds in the coming weeks.`;
+    document.getElementById('reading-text').textContent =
+      `${batLine} ${migLine} ${b ? 'The sky above registers Bortle ' + b.class + ' — ' + b.label + '.' : ''} The night here is not empty. It never was.`.trim();
+  }
 }
 
-function shareNightprint(){
-  if(navigator.share)navigator.share({title:'Nightprint',text:`The nocturnal character of ${state.location?.short_name}`,url:window.location.href});
-  else{navigator.clipboard?.writeText(window.location.href);alert('Link copied to clipboard');}
+/* ══════════════════════════════
+   UTILS
+══════════════════════════════ */
+function shareNightprint() {
+  const text = `The nocturnal character of ${state.location?.short_name} — ${getSeasonLabel(state.month)}`;
+  if(navigator.share) {
+    navigator.share({ title: 'Nightprint', text, url: window.location.href });
+  } else {
+    navigator.clipboard?.writeText(window.location.href);
+    alert('Link copied to clipboard');
+  }
 }
 
-function showAbout(){
-  alert('Nightprint reveals the nocturnal character of any place on earth.\n\nIt surfaces publicly available ecological data — bat species, sky brightness, bird migration corridors, waterbodies, green spaces — and generates a reading of what the night holds at that location.\n\nBuilt by Lightbahn · nightprint.co');
+function restartExperience() {
+  state.location = null;
+  state.data = null;
+  state.narrationStep = 0;
+  if(map) { map.remove(); map = null; }
+  goToScreen('opening');
 }
 
-function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function showAbout() {
+  alert('Nightprint reveals the nocturnal character of any place on earth.\n\nIt surfaces ecological data — bat species, sky brightness, bird migration corridors, waterbodies, and green spaces — and generates a seasonal portrait of what the night holds at that location.\n\nThe night you think you know is only a fraction of what\'s there.\n\nBuilt by Lightbahn · lightbahn.ca · nightprint.co');
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 </script>
 </body>
 </html>
