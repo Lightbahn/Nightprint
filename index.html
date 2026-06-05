@@ -107,8 +107,10 @@
     /* ── PANELS (full size inside content) ── */
     .panel { position:absolute; inset:0; display:none; overflow-y:auto; background:var(--bg); }
     .panel.on { display:block; }
-    #p-land.on { display:flex; flex-direction:column; align-items:center; justify-content:center; }
-    #p-num.on, #p-read.on, #p-reframe.on, #p-nload.on { display:flex; }
+    /* Panels that need flex layout */
+    #p-land.on, #p-tabs.on, #p-num.on, #p-read.on, #p-reframe.on, #p-nload.on {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+    }
     /* Experience panel — no scroll */
     .panel.noscroll { overflow:hidden; }
 
@@ -116,13 +118,10 @@
        PANEL: LANDING
     ══════════════════════════════ */
     #p-land {
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      min-height: 100%;
       padding: 2rem 3rem 5rem;
       text-align: center;
+      min-height: 100%;
     }
-    #p-land.on { display: flex; }
 
     .land-logo { font-family:var(--fd); font-size:clamp(72px,12vw,148px); letter-spacing:.05em; line-height:.9; margin-bottom:1rem; }
     .land-tag  { font-family:var(--fb); font-size:clamp(14px,1.5vw,18px); font-weight:300; color:var(--t2); max-width:380px; line-height:1.7; margin-bottom:3rem; }
@@ -150,6 +149,19 @@
     .err { font-family:var(--fm); font-size:10px; color:var(--amber); margin-top:8px; min-height:14px; }
 
     .land-about { position:absolute; bottom:1.75rem; font-family:var(--fm); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--t3); cursor:pointer; background:none; border:none; border-bottom:1px solid transparent; transition:color .2s, border-color .2s; }
+    .land-about:hover { color:var(--t2); border-bottom-color:var(--t3); }
+
+    /* Tab selector */
+    .tabs-heading { font-family:var(--fh); font-size:clamp(22px,3vw,32px); font-weight:300; color:var(--t1); margin-bottom:2rem; }
+    .tab-choices { display:flex; flex-direction:column; gap:12px; width:100%; max-width:520px; }
+    .tab-choice { background:var(--bg1); border:1px solid var(--bo); border-radius:var(--r); padding:1.4rem 1.75rem; cursor:pointer; display:flex; align-items:center; gap:16px; transition:border-color .2s, background .2s; }
+    .tab-choice:hover { border-color:var(--bm); background:var(--bg2); }
+    .tab-choice:first-child:hover { border-color:var(--amber); }
+    .tab-choice:last-child:hover  { border-color:var(--teal); }
+    .tci { font-size:26px; flex-shrink:0; }
+    .tcb { flex:1; }
+    .tct { font-family:var(--fh); font-size:17px; font-weight:500; color:var(--t1); margin-bottom:4px; }
+    .tcd { font-family:var(--fb); font-size:13px; font-weight:300; color:var(--t3); line-height:1.5; }
     .land-about:hover { color:var(--t2); border-bottom-color:var(--t3); }
 
     /* spinner */
@@ -334,12 +346,7 @@
     /* ══════════════════════════════
        PANEL: NIGHT LOADING
     ══════════════════════════════ */
-    #p-nload {
-      display:flex; flex-direction:column;
-      align-items:center; justify-content:center;
-      gap:1.5rem; text-align:center; padding:2rem;
-    }
-    #p-nload.on { display:flex; }
+    #p-nload { gap:1.5rem; text-align:center; padding:2rem; }
     .nload-ring { width:52px; height:52px; border:1px solid var(--bm); border-top-color:var(--teal); border-radius:50%; animation:spin 1s linear infinite; }
     .nload-line { font-family:var(--fb); font-size:17px; font-weight:300; color:var(--t2); max-width:260px; line-height:1.65; animation:pulse 2s ease-in-out infinite; }
     .nload-line strong { color:var(--t1); font-weight:400; }
@@ -399,7 +406,7 @@
     /* ══════════════════════════════
        PANEL: NUMBER
     ══════════════════════════════ */
-    #p-num { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem 4rem; position:relative; min-height:100%; }
+    #p-num { text-align:center; padding:2rem 4rem; position:relative; min-height:100%; }
     #p-num.on { display:flex; }
     .num-lbl { font-family:var(--fm); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--t3); margin-bottom:1.5rem; opacity:0; animation:fadeUp 1s ease forwards .2s; }
     .num-val { font-family:var(--fh); font-size:clamp(56px,10vw,110px); font-weight:300; color:var(--ab); line-height:1; margin-bottom:1.25rem; opacity:0; animation:fadeUp 1s ease forwards .5s; }
@@ -412,7 +419,7 @@
     /* ══════════════════════════════
        PANEL: READING
     ══════════════════════════════ */
-    #p-read { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem 4rem 5rem; min-height:100%; }
+    #p-read { padding:2rem 4rem 5rem; min-height:100%; }
     #p-read.on { display:flex; }
     .read-wrap { max-width:680px; width:100%; }
     .read-kicker { font-family:var(--fm); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--teal); margin-bottom:.4rem; opacity:0; animation:fadeUp 1s ease forwards .2s; }
@@ -423,7 +430,7 @@
     /* ══════════════════════════════
        PANEL: REFRAME
     ══════════════════════════════ */
-    #p-reframe { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem 4rem; min-height:100%; position:relative; }
+    #p-reframe { text-align:center; padding:2rem 4rem; min-height:100%; position:relative; }
     #p-reframe.on { display:flex; }
     .reframe-line { font-family:var(--fh); font-size:clamp(24px,3.5vw,44px); font-weight:300; line-height:1.4; color:var(--t1); max-width:640px; margin-bottom:3rem; opacity:0; animation:fadeUp 1.4s ease forwards .3s; }
     .reframe-line em { font-style:normal; color:var(--amber); }
@@ -463,12 +470,12 @@
   <!-- ── CONTENT ── -->
   <div id="content">
 
-    <!-- LANDING -->
+    <!-- LANDING — address only -->
     <div class="panel on" id="p-land">
       <p class="lbl a1" style="margin-bottom:1rem;">The mark your light leaves on the night</p>
       <h1 class="land-logo a2">NIGHTPRINT</h1>
       <p class="land-tag a3">Understand and protect the natural night.</p>
-      <div class="land-addr-wrap a4">
+      <div class="land-addr-wrap a3">
         <input class="land-addr-input" id="land-input" type="text"
           placeholder="Enter a city, address, or postcode"
           autocomplete="off" spellcheck="false">
@@ -481,6 +488,30 @@
       </div>
       <p class="land-hint a4">Try "Ottawa" or "152 Elgin St, Ottawa" or "Banff National Park"</p>
       <button class="land-about" onclick="showAbout()">About Nightprint</button>
+    </div>
+
+    <!-- TAB SELECTOR — shown after location confirmed -->
+    <div class="panel" id="p-tabs">
+      <p class="lbl" style="margin-bottom:.5rem;" id="tabs-loc-label"></p>
+      <h2 class="tabs-heading">What do you want to do?</h2>
+      <div class="tab-choices">
+        <div class="tab-choice" onclick="switchTab('check')">
+          <span class="tci">💡</span>
+          <div class="tcb">
+            <p class="tct">Check your light</p>
+            <p class="tcd">Is your outdoor fixture dark sky compliant? Get a verdict and exactly what to change.</p>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="15" height="15" style="color:var(--t3);flex-shrink:0;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+        <div class="tab-choice" onclick="switchTab('night')">
+          <span class="tci">🌙</span>
+          <div class="tcb">
+            <p class="tct">Read the night</p>
+            <p class="tcd">Discover what lives in the dark at this location — what's there, what's at risk, and what light is doing to it.</p>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="15" height="15" style="color:var(--t3);flex-shrink:0;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+      </div>
     </div>
 
     <!-- CHECK YOUR LIGHT -->
@@ -683,11 +714,12 @@ async function doLandSearch() {
     LOC.display_name = p.display_name;
     LOC.short_name = p.display_name.split(',').slice(0,2).join(',').trim();
     LOC.osm_id = p.osm_id; LOC.osm_type = p.osm_type;
-    // Show header
+    // Show header with location
     $('hdr-loc-name').textContent = LOC.short_name.split(',')[0];
     $('hdr').classList.add('show');
-    // Default to check tab
-    switchTab('check');
+    // Show tab selector
+    $('tabs-loc-label').textContent = LOC.short_name;
+    showPanel('p-tabs');
   } catch(e) {
     $('land-err').textContent = 'Place not found. Try a city name or postcode.';
     $('land-btn').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
