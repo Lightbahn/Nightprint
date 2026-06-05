@@ -107,6 +107,8 @@
     /* ── PANELS (full size inside content) ── */
     .panel { position:absolute; inset:0; display:none; overflow-y:auto; background:var(--bg); }
     .panel.on { display:block; }
+    #p-land.on { display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    #p-num.on, #p-read.on, #p-reframe.on, #p-nload.on { display:flex; }
     /* Experience panel — no scroll */
     .panel.noscroll { overflow:hidden; }
 
@@ -465,7 +467,7 @@
     <div class="panel on" id="p-land">
       <p class="lbl a1" style="margin-bottom:1rem;">The mark your light leaves on the night</p>
       <h1 class="land-logo a2">NIGHTPRINT</h1>
-      <p class="land-tag a3">Enter a location to check your light's impact and read the night.</p>
+      <p class="land-tag a3">Understand and protect the natural night.</p>
       <div class="land-addr-wrap a4">
         <input class="land-addr-input" id="land-input" type="text"
           placeholder="Enter a city, address, or postcode"
@@ -621,20 +623,10 @@
         <p class="read-kicker" id="read-kicker"></p>
         <p class="read-loc"    id="read-loc"></p>
         <p class="read-text"   id="read-text">Generating nocturnal portrait…</p>
-        <div class="read-sources">
-          <p class="lbl" style="margin-bottom:8px;">Data sources</p>
-          <div class="src-row"><span class="src-pill">GBIF</span><span class="src-pill">NASA VIIRS DNB</span><span class="src-pill">OpenStreetMap</span><span class="src-pill">Light Pollution Map</span><span class="src-pill">eBird / Cornell Lab</span></div>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-ghost" onclick="showPanel('p-num')" style="font-size:11px;padding:11px 18px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="12" height="12"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-            Back
-          </button>
-          <button class="btn btn-amber" onclick="showPanel('p-reframe')">
-            Continue
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </button>
-        </div>
+        <button class="btn btn-amber" onclick="showPanel('p-reframe')" style="margin-top:.5rem;">
+          Continue
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
       </div>
     </div>
 
