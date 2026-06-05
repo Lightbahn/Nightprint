@@ -527,8 +527,10 @@
       <div class="land-addr-wrap">
         <input class="land-addr-input" id="land-input" type="text"
           placeholder="Enter a city, address, or postcode"
-          autocomplete="off" spellcheck="false" autocorrect="off">
-        <button class="land-addr-btn" id="land-btn" type="button" aria-label="Search">
+          autocomplete="off" spellcheck="false" autocorrect="off"
+          onkeydown="if(event.key==='Enter')doLandSearch()">
+        <button class="land-addr-btn" id="land-btn" type="button" aria-label="Search"
+          onclick="doLandSearch()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
@@ -796,11 +798,12 @@ function goLanding() {
 }
 
 /* ══ LANDING SEARCH ══ */
-document.addEventListener('DOMContentLoaded', () => {
-  $('land-input').addEventListener('keydown', e=>{ if(e.key==='Enter') doLandSearch(); });
-  $('land-btn').addEventListener('click', doLandSearch);
-  $('file-input').addEventListener('change', handleFileChange);
-  $('srch-input').addEventListener('keydown', handleSrchKey);
+// File input and search overlay — registered after DOM ready
+window.addEventListener('load', () => {
+  const fi = $('file-input');
+  if(fi) fi.addEventListener('change', handleFileChange);
+  const si = $('srch-input');
+  if(si) si.addEventListener('keydown', handleSrchKey);
 });
 
 async function doLandSearch() {
@@ -823,6 +826,7 @@ async function doLandSearch() {
     $('tabs-loc-label').textContent = LOC.short_name;
     showPanel('p-tabs');
   } catch(e) {
+    console.error('Search error:', e);
     $('land-err').textContent = 'Place not found. Try a city name or postcode.';
     $('land-btn').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
   }
