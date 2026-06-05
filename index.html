@@ -290,11 +290,19 @@
       font-size: 10px;
       color: var(--text-tertiary);
       letter-spacing: 0.04em;
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.75rem;
       opacity: 0;
       transition: opacity 0.7s ease 0.4s;
     }
     .narration-source.visible { opacity: 1; }
+
+    .narration-species {
+      max-width: 480px;
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      transition: opacity 0.7s ease 0.5s;
+    }
+    .narration-species.visible { opacity: 1; }
 
     /* Progress bars */
     .progress-bars {
@@ -325,8 +333,8 @@
     .narration-btn-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+      justify-content: flex-end;
+      gap: 8px;
       margin-top: 0.25rem;
     }
 
@@ -369,7 +377,6 @@
       transition: background 0.2s, opacity 0.3s;
       opacity: 0;
       pointer-events: none;
-      margin-left: auto;
     }
     .continue-btn.visible { opacity: 1; pointer-events: all; }
     .continue-btn:hover { background: #ffb830; }
@@ -742,6 +749,7 @@
     <p class="narration-body"    id="narration-body"></p>
     <p class="narration-nudge"   id="narration-nudge"></p>
     <p class="narration-source"  id="narration-source"></p>
+    <div class="narration-species" id="narration-species"></div>
     <div class="narration-btn-row">
       <button class="back-narration-btn" id="back-narration-btn" onclick="prevNarration()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
@@ -790,12 +798,18 @@
         <button class="action-btn primary"   onclick="shareNightprint()">Share this Nightprint</button>
         <button class="action-btn secondary" onclick="restartExperience()">Read another place</button>
       </div>
-      <button class="number-continue" onclick="goToScreen('reading')" style="margin-top:1.5rem;">
-        Read the nocturnal portrait
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="14" height="14">
-          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-        </svg>
-      </button>
+      <div style="display:flex;gap:10px;margin-top:1.5rem;flex-wrap:wrap;">
+        <button class="action-btn secondary" onclick="goToScreen('experience')" style="display:inline-flex;align-items:center;gap:8px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back
+        </button>
+        <button class="number-continue" onclick="goToScreen('reading')">
+          Read the nocturnal portrait
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="14" height="14">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </button>
+      </div>
     </div>
 
   </div>
@@ -817,12 +831,18 @@
         <span class="source-pill">eBird / Cornell Lab</span>
       </div>
     </div>
-    <button class="reading-continue" onclick="goToScreen('reframe')">
-      Continue
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="14" height="14">
-        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-      </svg>
-    </button>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="action-btn secondary" onclick="goToScreen('number')" style="display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back
+      </button>
+      <button class="reading-continue" onclick="goToScreen('reframe')">
+        Continue
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="14" height="14">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -832,6 +852,10 @@
     Every light installed after dark is <em>a decision about what lives here.</em>
   </p>
   <div class="reframe-actions">
+    <button class="action-btn secondary" onclick="goToScreen('reading')" style="display:inline-flex;align-items:center;gap:8px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back
+    </button>
     <button class="action-btn primary"   onclick="shareNightprint()">Share this Nightprint</button>
     <button class="action-btn secondary" onclick="restartExperience()">Read another place</button>
   </div>
@@ -876,6 +900,7 @@ function buildNarrations(data, month) {
   const monthName = getMonthName(month);
   const season = getSeason(month);
   const loc = state.location.short_name;
+  const greenCount = (data.green || []).length;
 
   return [
     // 1 — Water
@@ -886,27 +911,34 @@ function buildNarrations(data, month) {
         : `Water bodies — rivers, lakes, wetlands — are critical nocturnal habitats. Aquatic insects emerge after dark in their millions, forming the base of the food chain for bats, birds, and fish. Their activity is governed entirely by darkness.`,
       nudge: `→ Avoid lighting near water edges. Even a single unshielded fixture disrupts aquatic insect emergence and can collapse local food webs over time.`,
       source: 'Source: Perkin et al. 2014 — Trends in Ecology & Evolution · DOI: 10.1016/j.tree.2014.06.002',
-      layer: 'water'
+      layer: 'water',
+      speciesList: null
     },
-    // 2 — Bats
+    // 2 — Green spaces
+    {
+      heading: greenCount > 0 ? `${greenCount} green space${greenCount > 1 ? 's' : ''} hold the dark` : 'Green spaces hold the dark',
+      body: `Parks, forests, and nature reserves are nocturnal refuges — places where the food chains that depend on darkness can still function. In ${monthName}, ${season === 'winter' ? 'the canopy is bare but the ground layer remains active — small mammals, owls, and overwintering insects depend on these corridors.' : season === 'summer' ? 'the canopy is at its densest. Bats roost in tree hollows, moths navigate between flowering plants, and the leaf litter teems with invertebrate life that forms the base of everything above it.' : season === 'spring' ? 'these spaces are filling with nesting birds and emerging insects. The first warm nights bring out moths and beetles that have waited through winter.' : 'these spaces are transitioning. Migrants are passing through. Resident species are preparing for winter. The green corridors are at their most dynamic.'}`,
+      nudge: `→ Green spaces surrounded by artificial light become ecological islands. Lighting at their edges interrupts the movement of species between them. Buffer zones of darkness around parks and forests cost nothing to maintain.`,
+      source: 'Source: Gaston et al. 2015 — Philosophical Transactions of the Royal Society B · DOI: 10.1098/rstb.2014.0458',
+      layer: 'water',  // green is rendered on same layer as water
+      speciesList: null
+    },
+    // 3 — Bats
     {
       heading: batStatus === 'active'
         ? `Bats are foraging here tonight`
         : batStatus === 'transitional'
         ? `Bats are ${month < 6 ? 'emerging' : 'entering hibernation'} this month`
         : `Bats are hibernating nearby`,
-      body: batStatus === 'active'
-        ? `${g.batSpecies > 0 ? g.batSpecies + ' bat species have been recorded within 25km of here.' : 'Bats are active in this region.'} In ${monthName}, they forage every night — each bat consuming thousands of insects per hour. They navigate by echolocation but rely on darkness to locate foraging corridors and roost safely. ${g.lightSensitiveBats > 0 ? g.lightSensitiveBats + ' of the recorded species here are classified as light-sensitive.' : ''}`
-        : batStatus === 'transitional'
-        ? `${g.batSpecies > 0 ? g.batSpecies + ' bat species have been recorded within 25km of here.' : 'Bats in this region are'} ${month < 6 ? 'emerging from hibernation' : 'preparing to hibernate'} in ${monthName}. They are at their most vulnerable to disruption during these transitional months.`
-        : `${g.batSpecies > 0 ? g.batSpecies + ' bat species hibernate within a few kilometres of here.' : 'Bats in this region are hibernating.'} They will emerge in spring. Their hibernation sites — old buildings, trees, caves — depend on undisturbed darkness through winter.`,
+      body: null,  // replaced by AI-generated species detail
       nudge: batStatus === 'active'
         ? `→ Turn off outdoor lights between dusk and dawn during ${season} months. Even low-level white LED above 3000K reduces bat foraging activity by up to 50%.`
-        : `→ Avoid disturbing known roost sites. Lighting near hibernation sites can cause bats to wake prematurely, depleting critical fat reserves.`,
-      source: 'Source: Aziz et al. 2015 — Proceedings of the Royal Society B · DOI: 10.1098/rspb.2015.1218',
-      layer: 'bats'
+        : `→ Avoid disturbing known roost sites. Lighting near hibernation sites can cause bats to wake prematurely, depleting critical fat reserves before spring.`,
+      source: 'Source: Aziz et al. 2015 — Proceedings of the Royal Society B · DOI: 10.1098/rspb.2015.1218 · GBIF occurrence database',
+      layer: 'bats',
+      speciesList: g.batList || []
     },
-    // 3 — Migration
+    // 4 — Migration
     {
       heading: migration.intensity === 'high'
         ? `${migration.label} is happening above here now`
@@ -914,23 +946,25 @@ function buildNarrations(data, month) {
         ? `Migration is building above ${loc}`
         : `The migration corridor above ${loc}`,
       body: migration.intensity === 'high'
-        ? `It is ${migration.label.toLowerCase()} season. On peak nights this month, tens of thousands of birds cross this exact sky heading ${migration.direction} — navigating by starlight and the Earth's magnetic field, following corridors their ancestors have used for thousands of years. Most of them have never been studied. Many species are declining.`
+        ? `It is ${migration.label.toLowerCase()} season. On peak nights this month, tens of thousands of birds cross this exact sky heading ${migration.direction} — navigating by starlight and the Earth's magnetic field, following corridors their ancestors have used for thousands of years.`
         : migration.intensity === 'medium'
         ? `Migration is building in ${monthName}. The flyway above here will carry hundreds of thousands of birds over the coming weeks heading ${migration.direction}. Many will travel thousands of kilometres without stopping.`
         : `This corridor carries up to 80,000 birds on peak migration nights in spring and autumn. In ${monthName} migration is quiet — but the corridor above here is one of the most significant in North America.`,
       nudge: `→ Turn off non-essential lighting during ${migration.intensity === 'high' ? 'peak migration nights this month' : 'spring and autumn migration seasons'}. Skyglow disorients migrating birds, pulling them off course and into fatal building collisions. A dark building saves lives.`,
-      source: 'Source: Loss et al. 2014 — The Condor · Fatal Light Awareness Program (FLAP Canada)',
-      layer: 'flyway'
+      source: 'Source: Loss et al. 2014 — The Condor · Fatal Light Awareness Program (FLAP Canada) · eBird / Cornell Lab',
+      layer: 'flyway',
+      speciesList: null
     },
-    // 4 — Light pollution
+    // 5 — Light pollution
     {
-      heading: b ? `The sky above here is Bortle ${b.class}` : `The sky above here is heavily light-polluted`,
+      heading: b ? `The sky above here is Bortle ${b.class}` : `The sky above here is light-polluted`,
       body: b
         ? `${b.label}. The amber wash on this map is measured by NASA satellite — it shows the radiance of artificial light at night as experienced by every bat, moth, and migrating bird navigating this sky. ${b.class >= 7 ? 'At this level, the Milky Way is completely invisible and the sky never reaches true darkness.' : b.class >= 5 ? 'The Milky Way is faint or invisible. The sky reaches only a fraction of its natural darkness.' : 'The sky retains some natural darkness, but light pollution is measurable and growing.'}`
         : `The amber wash on this map is artificial light at night, measured by NASA VIIRS satellite. It shows what every bat, moth, and migrating bird above here navigates through instead of natural darkness. This light did not exist 100 years ago.`,
-      nudge: `→ The most impactful change is shielding: directing light downward, reducing intensity after midnight, and switching to warm-spectrum sources below 3000K. These changes cost nothing structurally and benefit every nocturnal species in the area.`,
+      nudge: `→ The most impactful changes: shield fixtures to direct light downward, reduce intensity after midnight, and switch to warm-spectrum sources below 3000K. These benefit every nocturnal species in the area.`,
       source: `Source: Falchi et al. 2016 — Science Advances · DOI: 10.1126/sciadv.1600377 · NASA VIIRS DNB`,
-      layer: 'light'
+      layer: 'light',
+      speciesList: null
     }
   ];
 }
@@ -1079,16 +1113,42 @@ async function fetchGBIF(lat, lon, radius) {
   const r = await fetch(`https://api.gbif.org/v1/occurrence/search?decimalLatitude=${(lat-deg).toFixed(4)},${(lat+deg).toFixed(4)}&decimalLongitude=${(lon-deg).toFixed(4)},${(lon+deg).toFixed(4)}&limit=300&hasCoordinate=true`);
   const d = await r.json();
   const recs = d.results || [];
-  const BAT = ['Vespertilionidae','Phyllostomidae','Rhinolophidae','Molossidae','Emballonuridae'];
+
+  const BAT_FAM = ['Vespertilionidae','Phyllostomidae','Rhinolophidae','Molossidae','Emballonuridae'];
+  // Known long-distance migratory bat species
+  const MIGRATORY_BATS = ['Lasiurus cinereus','Lasiurus borealis','Lasionycteris noctivagans','Tadarida brasiliensis','Miniopterus schreibersii'];
+
   const bats = recs.filter(x => x.order === 'Chiroptera');
-  const batSpp = [...new Set(bats.map(x => x.species).filter(Boolean))];
-  const lsBats = batSpp.filter(s => bats.find(x => x.species === s && BAT.some(f => x.family === f)));
+  const batSppMap = {};
+  bats.forEach(x => {
+    if(!x.species) return;
+    if(!batSppMap[x.species]) batSppMap[x.species] = {
+      species: x.species,
+      commonName: x.vernacularName || null,
+      family: x.family || null,
+      genus: x.genus || null,
+      migratory: MIGRATORY_BATS.includes(x.species),
+      lightSensitive: BAT_FAM.includes(x.family),
+      count: 0,
+      locations: []
+    };
+    batSppMap[x.species].count++;
+    if(x.decimalLatitude && x.decimalLongitude)
+      batSppMap[x.species].locations.push([x.decimalLatitude, x.decimalLongitude]);
+  });
+  const batList = Object.values(batSppMap).sort((a,b) => b.count - a.count);
+
   const birds = recs.filter(x => x.class === 'Aves');
+  const birdSpp = [...new Set(birds.map(x => x.species).filter(Boolean))];
+
   return {
-    batSpecies: batSpp.length,
-    lightSensitiveBats: lsBats.length,
-    birdSpecies: [...new Set(birds.map(x => x.species).filter(Boolean))].length,
-    batLocations: bats.slice(0,15).map(x => [x.decimalLatitude, x.decimalLongitude]).filter(([a,b]) => a && b)
+    batSpecies: batList.length,
+    batList,                          // full species list with metadata
+    lightSensitiveBats: batList.filter(b => b.lightSensitive).length,
+    migratoryBats: batList.filter(b => b.migratory),
+    birdSpecies: birdSpp.length,
+    birdList: birdSpp.slice(0,20),    // top 20 bird species
+    batLocations: batList.flatMap(b => b.locations.slice(0,3)).slice(0,15)
   };
 }
 
@@ -1354,7 +1414,8 @@ function buildProgressBars() {
   ).join('');
 }
 
-const LAYER_MAP = ['water', 'bats', 'flyway', 'light'];
+const LAYER_MAP = ['water', 'water', 'bats', 'flyway', 'light'];
+// Step 0=water, 1=green(same layer), 2=bats, 3=flyway, 4=light
 
 function showStep(step) {
   state.narrationStep = step;
@@ -1380,26 +1441,48 @@ function showStep(step) {
   if(layerKey) {
     setTimeout(() => {
       setOpacity(layerKey, 1);
-      if(layerKey === 'light') map.flyTo([state.location.lat, state.location.lon], 10, { duration: 1.5 });
-      else if(layerKey === 'flyway') map.flyTo([state.location.lat, state.location.lon], 9, { duration: 1.5 });
+      // No automatic zoom — user controls map position
     }, 300);
   }
 
   // Animate text
-  ['narration-heading','narration-body','narration-nudge','narration-source'].forEach(id => {
+  ['narration-heading','narration-body','narration-nudge','narration-source','narration-species'].forEach(id => {
     const el = document.getElementById(id);
-    el.classList.remove('visible');
+    if(el) el.classList.remove('visible');
   });
 
-  setTimeout(() => {
+  setTimeout(async () => {
     document.getElementById('narration-heading').textContent = n.heading;
-    document.getElementById('narration-body').textContent    = n.body;
     document.getElementById('narration-nudge').textContent   = n.nudge;
     document.getElementById('narration-source').textContent  = n.source;
+
+    // Bat step: AI-generated species detail
+    const bodyEl = document.getElementById('narration-body');
+    const speciesEl = document.getElementById('narration-species');
+
+    if(n.speciesList !== null && n.speciesList.length > 0) {
+      // Show loading state for bat body
+      bodyEl.textContent = 'Loading species detail…';
+      // Render species list
+      speciesEl.innerHTML = renderSpeciesList(n.speciesList);
+      // Fetch AI bat detail
+      generateBatDetail(n.speciesList, state.location, state.month).then(detail => {
+        if(detail) bodyEl.textContent = detail;
+        else bodyEl.textContent = `${n.speciesList.length} bat species recorded within 25km. ${n.speciesList.filter(b=>b.migratory).length > 0 ? n.speciesList.filter(b=>b.migratory).map(b=>b.species).join(' and ') + (n.speciesList.filter(b=>b.migratory).length === 1 ? ' is' : ' are') + ' long-distance migrants passing through this region.' : 'All recorded species are resident to this region.'}`;
+      });
+    } else if(n.speciesList !== null && n.speciesList.length === 0) {
+      bodyEl.textContent = `No bat occurrence records in GBIF for this area. Bats are almost certainly present — monitoring data is sparse across most of Canada and the northern US. The absence of records reflects a gap in citizen science coverage, not an absence of bats.`;
+      if(speciesEl) speciesEl.innerHTML = '';
+    } else {
+      bodyEl.textContent = n.body || '';
+      if(speciesEl) speciesEl.innerHTML = '';
+    }
+
     requestAnimationFrame(() => requestAnimationFrame(() => {
       ['narration-heading','narration-body','narration-nudge','narration-source'].forEach(id =>
-        document.getElementById(id).classList.add('visible')
+        document.getElementById(id)?.classList.add('visible')
       );
+      if(n.speciesList && n.speciesList.length > 0) speciesEl?.classList.add('visible');
     }));
   }, 150);
 
@@ -1418,6 +1501,25 @@ function showStep(step) {
     btn.innerHTML = `Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
   }
   setTimeout(() => btn.classList.add('visible'), 1800);
+}
+
+function renderSpeciesList(batList) {
+  if(!batList || !batList.length) return '';
+  const items = batList.slice(0, 8).map(b => {
+    const tag = b.migratory ? `<span style="color:var(--amber);font-size:9px;letter-spacing:0.06em;">MIGRATORY</span>`
+              : b.lightSensitive ? `<span style="color:rgba(38,201,148,0.8);font-size:9px;letter-spacing:0.06em;">LIGHT-SENSITIVE</span>`
+              : `<span style="color:var(--text-tertiary);font-size:9px;letter-spacing:0.06em;">RESIDENT</span>`;
+    const name = b.commonName || b.species;
+    const sci  = b.commonName ? `<em style="color:var(--text-tertiary);font-size:10px;">${b.species}</em>` : '';
+    return `<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+      <div>
+        <span style="font-family:var(--font-body);font-size:12px;color:var(--text-secondary);">${name}</span>
+        ${sci ? '<br>' + sci : ''}
+      </div>
+      ${tag}
+    </div>`;
+  }).join('');
+  return `<div style="margin-top:0.75rem;">${items}</div>`;
 }
 
 function nextNarration() { showStep(state.narrationStep + 1); }
@@ -1443,6 +1545,36 @@ function buildNumber() {
     document.getElementById('number-caption').innerHTML =
       `The sky above ${state.location.short_name} is approximately <strong>${multiplier.toLocaleString()} times brighter</strong> than it was before electric light. The photograph above shows what the night sky looked like to humans — and to every bat, bird, and moth — just 100 years ago. <strong>That sky still exists. It is being erased.</strong>`;
   }
+}
+
+/* ── AI BAT DETAIL ── */
+async function generateBatDetail(batList, location, month) {
+  if(!batList || batList.length === 0) return null;
+  const monthName = getMonthName(month);
+  const batStatus = getBatStatus(month);
+  const topSpecies = batList.slice(0, 6).map(b =>
+    `${b.species}${b.commonName ? ' (' + b.commonName + ')' : ''}${b.migratory ? ' [long-distance migrant]' : ' [resident]'}${b.lightSensitive ? ' [light-sensitive]' : ''}`
+  ).join(', ');
+
+  const prompt = `You are writing the bat ecology section for Nightprint — a tool revealing the nocturnal character of any location.
+
+Location: ${location.short_name}
+Month: ${monthName}
+Bat status this month: ${batStatus}
+Species recorded within 25km: ${topSpecies}
+Total bat species recorded: ${batList.length}
+Migratory species present: ${batList.filter(b=>b.migratory).map(b=>b.species).join(', ') || 'none recorded'}
+
+Write 3 sentences of specific ecological detail about the bats of this place. Name specific species and what makes them ecologically distinctive or interesting in this region and this season. Mention if any are long-distance migrants, what they hunt, what roost conditions they need, or any remarkable behaviour. Be specific to ${location.short_name} — not generic bat facts. Tone: calm, precise, revelatory. No jargon. Do not start with "In" or "Bats are".`;
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:300, messages:[{role:'user',content:prompt}] })
+    });
+    const result = await res.json();
+    return result.content?.[0]?.text || null;
+  } catch(e) { return null; }
 }
 
 /* ── AI READING ── */
