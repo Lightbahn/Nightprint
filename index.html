@@ -496,7 +496,7 @@
       <p class="lbl a1" style="margin-bottom:1rem;">The mark your light leaves on the night</p>
       <h1 class="land-logo a2">NIGHTPRINT</h1>
       <p class="land-tag a3">Understand and protect the natural night.</p>
-      <div class="land-addr-wrap a3">
+      <div class="land-addr-wrap">
         <input class="land-addr-input" id="land-input" type="text"
           placeholder="Enter a city, address, or postcode"
           autocomplete="off" spellcheck="false">
@@ -507,7 +507,7 @@
         </button>
         <p class="err" id="land-err"></p>
       </div>
-      <p class="land-hint a4">Try "Ottawa" or "152 Elgin St, Ottawa" or "Banff National Park"</p>
+      <p class="land-hint">Try "Ottawa" or "152 Elgin St, Ottawa" or "Banff National Park"</p>
       <button class="land-about" onclick="showAbout()">About Nightprint</button>
     </div>
 
@@ -762,7 +762,6 @@ document.addEventListener('DOMContentLoaded', () => {
   $('land-input').addEventListener('keydown', e=>{ if(e.key==='Enter') doLandSearch(); });
   $('land-btn').addEventListener('click', doLandSearch);
   $('file-input').addEventListener('change', handleFileChange);
-  $('addr-btn') && $('addr-btn').addEventListener('click', ()=>runCheck());
   $('srch-input').addEventListener('keydown', handleSrchKey);
 });
 
