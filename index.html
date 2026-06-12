@@ -203,31 +203,37 @@
     .nload-line strong { color:var(--t1); font-weight:400; }
 
     /* ══ READ THE NIGHT (split) ══ */
-    #scr-night.on { display:grid; grid-template-columns:360px 1fr; height:calc(100vh - 54px); }
-    .night-left { padding:2.25rem 2rem; display:flex; flex-direction:column; overflow-y:auto; }
-    .night-kicker { font-family:var(--fm); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--t3); margin-bottom:4px; }
-    .night-place { font-family:var(--fh); font-size:22px; font-weight:500; color:var(--t1); margin-bottom:1.25rem; }
-    .month-strip { display:grid; grid-template-columns:repeat(6,1fr); gap:2px; margin-bottom:.25rem; }
-    .mo { cursor:pointer; font-family:var(--fm); font-size:10px; letter-spacing:.03em; color:var(--t3); padding:6px 0; text-align:center; background:none; border:none; border-bottom:1.5px solid transparent; transition:all .15s; }
-    .mo:hover { color:var(--t2); }
-    .mo.sel { color:var(--rose); border-bottom-color:var(--rose); }
-    .night-hint { font-family:var(--fm); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--t3); margin-bottom:.5rem; }
-    .night-premise { font-family:var(--fb); font-size:13px; font-weight:300; color:var(--t2); line-height:1.6; margin:.75rem 0 .25rem; }
+    #scr-night.on { display:grid; grid-template-columns:400px 1fr; height:calc(100vh - 54px); transition:grid-template-columns .35s ease; }
+    #scr-night.on.expanded { grid-template-columns:50% 1fr; }
+    .night-left { padding:2.5rem 2.5rem; display:flex; flex-direction:column; overflow-y:auto; background:#faf8f3; color:#1c1b18; position:relative; }
+    .night-expand { position:absolute; top:1.5rem; right:1.5rem; background:none; border:1px solid rgba(0,0,0,.15); border-radius:5px; color:#8a8578; cursor:pointer; padding:6px; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+    .night-expand:hover { border-color:rgba(0,0,0,.4); color:#1c1b18; }
+    .night-expand svg { width:15px; height:15px; }
+    .night-kicker { font-family:var(--fm); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#a8a294; margin-bottom:5px; }
+    .night-place { font-family:var(--fh); font-size:26px; font-weight:500; color:#1c1b18; margin-bottom:1.5rem; padding-right:2.5rem; }
+    .month-strip { display:grid; grid-template-columns:repeat(6,1fr); gap:2px; margin-bottom:.4rem; }
+    .mo { cursor:pointer; font-family:var(--fm); font-size:11px; letter-spacing:.03em; color:#8a8578; padding:7px 0; text-align:center; background:none; border:none; border-bottom:1.5px solid transparent; transition:all .15s; }
+    .mo:hover { color:#1c1b18; }
+    .mo.sel { color:#b8455f; border-bottom-color:#b8455f; }
+    .night-hint { font-family:var(--fm); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:#b0aa9c; margin-bottom:.75rem; }
+    .night-premise { font-family:var(--fb); font-size:15px; font-weight:300; color:#4a4842; line-height:1.65; margin:.75rem 0 .5rem; }
     .cast { display:flex; flex-direction:column; }
-    .cr { cursor:pointer; display:flex; align-items:flex-start; gap:11px; padding:13px 0; border-bottom:1px solid var(--bo); transition:opacity .15s; }
-    .cr-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+    .cr { cursor:pointer; display:flex; align-items:flex-start; gap:13px; padding:15px 0; border-bottom:1px solid rgba(0,0,0,.08); transition:opacity .15s; }
+    .cr-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; margin-top:6px; }
     .cr-b { flex:1; min-width:0; }
     .cr-top { display:flex; align-items:baseline; justify-content:space-between; gap:8px; }
-    .cr-nm { font-family:var(--fh); font-size:15px; font-weight:500; color:var(--t1); }
-    .cr-tag { font-family:var(--fm); font-size:9px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; }
-    .cr-note { font-family:var(--fb); font-size:12px; font-weight:300; color:var(--t2); line-height:1.5; margin:2px 0 0; }
-    .cr-cnt { font-family:var(--fm); font-size:9px; letter-spacing:.05em; color:var(--t3); margin:3px 0 0; }
-    .night-close { margin-top:auto; padding-top:1.25rem; border-top:1px solid var(--bo); }
-    .night-close-head { font-family:var(--fh); font-size:15px; font-weight:500; color:var(--t1); margin-bottom:5px; line-height:1.35; }
-    .night-close-sub { font-family:var(--fb); font-size:12px; font-weight:300; color:var(--t2); line-height:1.55; margin-bottom:12px; }
-    .night-bridge { font-family:var(--fm); font-size:10px; letter-spacing:.09em; text-transform:uppercase; background:none; color:var(--gold); border:1px solid rgba(246,183,60,.4); border-radius:4px; padding:10px 14px; cursor:pointer; transition:all .2s; }
-    .night-bridge:hover { border-color:var(--gold); background:rgba(246,183,60,.08); }
-    .night-right { position:relative; border-left:1px solid var(--bo); overflow:hidden; }
+    .cr-nm { font-family:var(--fh); font-size:17px; font-weight:500; color:#1c1b18; }
+    .cr-tag { font-family:var(--fm); font-size:10px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; }
+    .cr-note { font-family:var(--fb); font-size:13px; font-weight:300; color:#5c5a52; line-height:1.55; margin:3px 0 0; }
+    .cr-cnt { font-family:var(--fm); font-size:10px; letter-spacing:.05em; color:#a8a294; margin:4px 0 0; }
+    .night-close { margin-top:auto; padding-top:1.5rem; border-top:1px solid rgba(0,0,0,.1); }
+    .night-close-head { font-family:var(--fh); font-size:17px; font-weight:500; color:#1c1b18; margin-bottom:7px; line-height:1.35; }
+    .night-close-sub { font-family:var(--fb); font-size:13px; font-weight:300; color:#4a4842; line-height:1.6; margin-bottom:1.25rem; }
+    .night-nudge { display:flex; flex-direction:column; gap:10px; align-items:flex-start; }
+    .night-nudge-q { font-family:var(--fb); font-size:13px; font-weight:400; color:#1c1b18; }
+    .night-bridge { font-family:var(--fm); font-size:10px; letter-spacing:.09em; text-transform:uppercase; background:var(--ab); color:#1c1b18; border:none; border-radius:5px; padding:12px 18px; cursor:pointer; transition:background .2s; }
+    .night-bridge:hover { background:#ffc04d; }
+    .night-right { position:relative; border-left:1px solid rgba(0,0,0,.12); overflow:hidden; }
     #night-map { position:absolute; inset:0; width:100%; height:100%; background:#070605; }
     .night-map-cap { position:absolute; top:1rem; left:1.25rem; z-index:500; font-family:var(--fm); font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:rgba(237,233,224,.45); background:rgba(0,0,0,.4); padding:4px 8px; border-radius:3px; }
     .night-legend { position:absolute; bottom:1.25rem; left:1.25rem; z-index:500; display:flex; flex-direction:column; gap:5px; }
@@ -263,8 +269,8 @@
     <button class="hdr-loc-change" onclick="goLanding()">Change</button>
   </div>
   <div class="hdr-tabs">
-    <button class="hdr-tab" id="tab-check" onclick="switchTab('check')"><span>💡</span> Check your light</button>
     <button class="hdr-tab" id="tab-night" onclick="switchTab('night')"><span>🌙</span> Read the night</button>
+    <button class="hdr-tab" id="tab-check" onclick="switchTab('check')"><span>💡</span> Check your light</button>
   </div>
 </header>
 
@@ -293,14 +299,14 @@
   <p class="tabs-place" id="tabs-place"></p>
   <h2 class="tabs-heading">What do you want to do?</h2>
   <div class="tab-choices">
-    <div class="tab-choice amber" onclick="switchTab('check')">
-      <span class="tci">💡</span>
-      <div class="tcb"><p class="tct">Check your light</p><p class="tcd">Is your outdoor fixture dark sky compliant? Get a verdict and exactly what to change.</p></div>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="15" height="15" style="color:var(--t3);flex-shrink:0;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-    </div>
     <div class="tab-choice teal" onclick="switchTab('night')">
       <span class="tci">🌙</span>
       <div class="tcb"><p class="tct">Read the night</p><p class="tcd">Discover what lives in the dark at this location, and how it changes through the year.</p></div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="15" height="15" style="color:var(--t3);flex-shrink:0;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </div>
+    <div class="tab-choice amber" onclick="switchTab('check')">
+      <span class="tci">💡</span>
+      <div class="tcb"><p class="tct">Check your light</p><p class="tcd">Is your outdoor fixture dark sky compliant? Get a verdict and exactly what to change.</p></div>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="15" height="15" style="color:var(--t3);flex-shrink:0;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </div>
   </div>
@@ -402,6 +408,9 @@
 <!-- READ THE NIGHT (split) -->
 <div class="scr" id="scr-night">
   <div class="night-left">
+    <button class="night-expand" id="night-expand" onclick="toggleExpand()" aria-label="Expand panel" title="Expand panel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+    </button>
     <p class="night-kicker">The night around</p>
     <p class="night-place" id="night-place"></p>
     <div class="month-strip" id="month-strip"></div>
@@ -409,9 +418,12 @@
     <p class="night-premise">Step back, and the night fills with life. Most of it carries on whether or not we are here.</p>
     <div class="cast" id="cast"></div>
     <div class="night-close">
-      <p class="night-close-head">We share this night, we don't own it.</p>
-      <p class="night-close-sub">Our light, our torches, even our presence reach into it. We can choose to take up less room.</p>
-      <button class="night-bridge" onclick="switchTab('check')">See how your light reaches in →</button>
+      <p class="night-close-head">Light is the biggest change we bring to the night.</p>
+      <p class="night-close-sub">It unsettles the insects first, then the bats, owls and birds that feed on them, and the whole web they hold together. That web reaches us too, in our sleep, our health, and the living world we depend on.</p>
+      <div class="night-nudge">
+        <span class="night-nudge-q">Curious what your own outdoor lights do here?</span>
+        <button class="night-bridge" onclick="switchTab('check')">Check your light →</button>
+      </div>
     </div>
   </div>
   <div class="night-right">
@@ -660,6 +672,7 @@ async function genExpertVoice(){
 
 /* ── READ THE NIGHT ── */
 const NCOL={insects:'#f6b73c',bats:'#ef8f3c',owls:'#e2683c',birds:'#8a78e0'};
+const NCOLD={insects:'#a9760f',bats:'#c2611c',owls:'#bd4524',birds:'#5e49bf'};
 let nightMap=null, nightPts={}, nightSel=new Date().getMonth(), nightHL=null;
 
 function nSeason(i){return (i===11||i<2)?'winter':i<5?'spring':i<8?'summer':'autumn';}
@@ -725,17 +738,22 @@ function activeMap(){const s=nSeason(nightSel),o={};castData().forEach(c=>o[c.ke
 function renderCast(){
   const s=nSeason(nightSel);
   $('cast').innerHTML=castData().map(c=>{
-    const x=c.st[s],on=x.on,col=NCOL[c.key];
+    const x=c.st[s],on=x.on,dotc=NCOL[c.key],tagc=NCOLD[c.key];
     const cnt=c.count>0?`${c.count} species recorded nearby`:'recorded nearby';
-    return `<div class="cr" data-type="${c.key}" style="opacity:${on?1:.5}" onmouseenter="hlPts('${c.key}')" onmouseleave="hlPts(null)">
-      <span class="cr-dot" style="background:${on?col:'rgba(237,233,224,.22)'};${on?'box-shadow:0 0 6px '+col+'66':''}"></span>
+    return `<div class="cr" data-type="${c.key}" style="opacity:${on?1:.45}" onmouseenter="hlPts('${c.key}')" onmouseleave="hlPts(null)">
+      <span class="cr-dot" style="background:${on?dotc:'rgba(0,0,0,.18)'}"></span>
       <div class="cr-b">
-        <div class="cr-top"><span class="cr-nm">${c.name}</span><span class="cr-tag" style="color:${on?col:'rgba(237,233,224,.4)'}">${x.tag}</span></div>
+        <div class="cr-top"><span class="cr-nm">${c.name}</span><span class="cr-tag" style="color:${on?tagc:'#b0aa9c'}">${x.tag}</span></div>
         <p class="cr-note">${x.note}</p>
         <p class="cr-cnt">${cnt}</p>
       </div>
     </div>`;
   }).join('');
+}
+
+function toggleExpand(){
+  $('scr-night').classList.toggle('expanded');
+  setTimeout(()=>{try{nightMap.invalidateSize();}catch(e){}},380);
 }
 
 function initNightMap(){
