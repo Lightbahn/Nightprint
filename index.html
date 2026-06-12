@@ -16,10 +16,12 @@
       --bo:rgba(255,255,255,0.07); --bm:rgba(255,255,255,0.13); --bh:rgba(255,255,255,0.22);
       --t1:#ede9e0; --t2:rgba(237,233,224,0.55); --t3:rgba(237,233,224,0.28);
       --amber:#e88a0d; --ab:#f5a623; --adim:rgba(232,138,13,0.12);
-      --teal:#26c994; --tdim:rgba(38,201,148,0.10);
+      /* sunset ramp */
+      --gold:#f6b73c; --coral:#e2683c; --rose:#cf5a6f; --violet:#8a78e0;
+      --teal:#cf5a6f; --tdim:rgba(207,90,111,0.10);
       --red:#e05252; --rdim:rgba(224,82,82,0.10);
       --green:#3db87a; --gdim:rgba(61,184,122,0.10);
-      --ind:#6b63d4;
+      --ind:#8a78e0;
       --fh:'Urbanist',sans-serif; --fb:'Poppins',sans-serif;
       --fm:'Share Tech Mono',monospace; --fd:'Six Caps',sans-serif;
       --r:8px;
@@ -30,53 +32,39 @@
     @keyframes spin { to{transform:rotate(360deg)} }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
 
-    /* ── SCREENS — simple show/hide, no absolute stacking ── */
     .scr { display:none; }
     .scr.on { display:flex; flex-direction:column; }
 
-    /* Landing takes full viewport */
     #scr-land {
-      min-height:100vh;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:2rem 2rem 5rem;
-      position:relative;
+      min-height:100vh; align-items:center; justify-content:center;
+      text-align:center; padding:2rem 2rem 5rem; position:relative;
     }
     #scr-land.on { display:flex; }
 
-    /* ── PERSISTENT HEADER ── */
     #hdr {
-      display:none;
-      align-items:center;
-      justify-content:space-between;
-      padding:0 2.5rem;
-      height:54px;
-      background:var(--bg);
-      border-bottom:1px solid var(--bo);
-      flex-shrink:0;
+      display:none; align-items:center; justify-content:space-between;
+      padding:0 2.5rem; height:54px; background:var(--bg);
+      border-bottom:1px solid var(--bo); flex-shrink:0;
       position:sticky; top:0; z-index:200;
     }
     #hdr.show { display:flex; }
     .hdr-logo { font-family:var(--fd); font-size:22px; letter-spacing:.05em; color:var(--t1); cursor:pointer; }
     .hdr-loc { display:flex; align-items:center; gap:8px; font-family:var(--fm); font-size:11px; letter-spacing:.06em; color:var(--t2); }
-    .hdr-loc-dot { width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 6px rgba(38,201,148,.5); }
+    .hdr-loc-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 6px rgba(246,183,60,.5); }
     .hdr-loc-change { background:none; border:none; font-family:var(--fm); font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--t3); cursor:pointer; margin-left:4px; transition:color .2s; }
     .hdr-loc-change:hover { color:var(--t2); }
     .hdr-tabs { position:absolute; left:50%; transform:translateX(-50%); display:flex; }
     .hdr-tab { display:flex; align-items:center; gap:7px; font-family:var(--fm); font-size:10px; letter-spacing:.1em; text-transform:uppercase; padding:0 20px; height:54px; cursor:pointer; transition:all .2s; background:none; border:none; border-bottom:2px solid transparent; color:var(--t3); margin-top:2px; }
     .hdr-tab:hover { color:var(--t2); }
     .hdr-tab.active { color:var(--t1); border-bottom-color:var(--t1); }
+    #tab-check.active { border-bottom-color:var(--gold); }
+    #tab-night.active { border-bottom-color:var(--rose); }
 
-    /* ── CONTENT AREA (below header) ── */
-    #content { flex:1; }
-
-    /* ── SHARED ── */
     .lbl { font-family:var(--fm); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--t3); }
     .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--fm); font-size:11px; letter-spacing:.12em; text-transform:uppercase; border-radius:4px; padding:12px 22px; cursor:pointer; transition:all .2s; border:none; }
     .btn svg { width:13px; height:13px; flex-shrink:0; }
     .btn-amber { background:var(--ab); color:#000; } .btn-amber:hover { background:#ffb830; }
-    .btn-teal  { background:var(--teal); color:#000; } .btn-teal:hover { background:#2fdea2; }
+    .btn-teal  { background:var(--rose); color:#000; } .btn-teal:hover { background:#dd6e82; }
     .btn-ghost { background:none; border:1px solid var(--bm); color:var(--t2); } .btn-ghost:hover { border-color:var(--bh); color:var(--t1); }
     .spinner { width:18px; height:18px; border:1.5px solid var(--bo); border-top-color:var(--amber); border-radius:50%; animation:spin .8s linear infinite; display:inline-block; }
     .err { font-family:var(--fm); font-size:10px; color:var(--amber); margin-top:8px; min-height:14px; }
@@ -105,13 +93,13 @@
 
     /* ══ TAB SELECTOR ══ */
     #scr-tabs { min-height:calc(100vh - 54px); align-items:center; justify-content:center; padding:2rem; text-align:center; }
-    .tabs-place { font-family:var(--fm); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--teal); margin-bottom:.5rem; }
+    .tabs-place { font-family:var(--fm); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--rose); margin-bottom:.5rem; }
     .tabs-heading { font-family:var(--fh); font-size:clamp(22px,3vw,32px); font-weight:300; color:var(--t1); margin-bottom:2rem; }
     .tab-choices { display:flex; flex-direction:column; gap:12px; width:100%; max-width:520px; }
     .tab-choice { background:var(--bg1); border:1px solid var(--bo); border-radius:var(--r); padding:1.4rem 1.75rem; cursor:pointer; display:flex; align-items:center; gap:16px; transition:border-color .2s, background .2s; text-align:left; }
     .tab-choice:hover { border-color:var(--bm); background:var(--bg2); }
-    .tab-choice.amber:hover { border-color:var(--amber); }
-    .tab-choice.teal:hover  { border-color:var(--teal); }
+    .tab-choice.amber:hover { border-color:var(--gold); }
+    .tab-choice.teal:hover  { border-color:var(--rose); }
     .tci { font-size:26px; flex-shrink:0; }
     .tcb { flex:1; }
     .tct { font-family:var(--fh); font-size:17px; font-weight:500; color:var(--t1); margin-bottom:4px; }
@@ -135,7 +123,6 @@
     .or-row { display:flex; align-items:center; gap:10px; margin-bottom:1rem; }
     .or-line { flex:1; height:1px; background:var(--bo); }
     .or-text { font-family:var(--fm); font-size:10px; letter-spacing:.1em; color:var(--t3); }
-    /* Manual form */
     .manual-form { width:100%; display:flex; flex-direction:column; gap:1rem; }
     .mf-field { display:flex; flex-direction:column; gap:6px; }
     .mf-label { font-family:var(--fb); font-size:12px; font-weight:400; color:var(--t1); }
@@ -148,7 +135,6 @@
     .check-go.ready { opacity:1; pointer-events:all; }
     .check-go:hover { background:#ffb830; }
     .check-go svg { width:13px; height:13px; }
-    /* Result */
     .result-empty { height:100%; min-height:300px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:3rem; border:1px dashed var(--bo); border-radius:var(--r); }
     .result-empty-icon { font-size:36px; margin-bottom:1rem; opacity:.3; }
     .result-empty-text { font-family:var(--fb); font-size:13px; color:var(--t3); max-width:240px; line-height:1.65; }
@@ -183,9 +169,9 @@
     .rec-specs { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px; }
     .rs { font-family:var(--fm); font-size:10px; letter-spacing:.05em; padding:3px 9px; border-radius:10px; }
     .rsa { background:var(--adim); color:var(--ab); border:1px solid rgba(232,138,13,.2); }
-    .rst { background:var(--tdim); color:var(--teal); border:1px solid rgba(38,201,148,.2); }
+    .rst { background:var(--tdim); color:var(--rose); border:1px solid rgba(207,90,111,.2); }
     .rsg { background:transparent; color:var(--t3); border:1px solid var(--bm); }
-    .rec-impact { font-family:var(--fm); font-size:10px; color:var(--teal); letter-spacing:.05em; }
+    .rec-impact { font-family:var(--fm); font-size:10px; color:var(--rose); letter-spacing:.05em; }
     .eco-hdr { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--bg1); border:1px solid var(--bo); border-radius:var(--r); cursor:pointer; transition:border-color .2s; user-select:none; }
     .eco-hdr:hover { border-color:var(--bm); } .eco-hdr.open { border-radius:var(--r) var(--r) 0 0; }
     .eco-hdr-l { display:flex; align-items:center; gap:10px; }
@@ -202,7 +188,7 @@
     .sp-row { display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding:4px 0; border-bottom:1px solid var(--bo); font-size:11px; }
     .sp-row:last-child { border-bottom:none; }
     .sp-nm { font-family:var(--fb); color:var(--t2); } .sp-sc { font-family:var(--fb); font-size:10px; font-style:italic; color:var(--t3); } .sp-tg { font-family:var(--fm); font-size:9px; letter-spacing:.06em; white-space:nowrap; }
-    .sp-mig { color:var(--ab); } .sp-ls { color:var(--teal); } .sp-re { color:var(--t3); }
+    .sp-mig { color:var(--ab); } .sp-ls { color:var(--rose); } .sp-re { color:var(--t3); }
     .act-row { display:flex; gap:8px; margin-bottom:2rem; }
     .closing { border-top:1px solid var(--bo); padding-top:1.25rem; margin-bottom:.5rem; }
     .closing-line { font-family:var(--fh); font-size:clamp(15px,2vw,19px); font-weight:300; line-height:1.5; color:var(--t2); margin-bottom:.75rem; }
@@ -212,82 +198,63 @@
 
     /* ══ NIGHT LOADING ══ */
     #scr-nload { min-height:calc(100vh - 54px); align-items:center; justify-content:center; gap:1.5rem; text-align:center; padding:2rem; }
-    .nload-ring { width:52px; height:52px; border:1px solid var(--bm); border-top-color:var(--teal); border-radius:50%; animation:spin 1s linear infinite; }
+    .nload-ring { width:52px; height:52px; border:1px solid var(--bm); border-top-color:var(--rose); border-radius:50%; animation:spin 1s linear infinite; }
     .nload-line { font-family:var(--fb); font-size:17px; font-weight:300; color:var(--t2); max-width:260px; line-height:1.65; animation:pulse 2s ease-in-out infinite; }
     .nload-line strong { color:var(--t1); font-weight:400; }
 
-    /* ══ EXPERIENCE ══ */
-    #scr-exp { position:relative; height:calc(100vh - 54px); overflow:hidden; }
-    #exp-map { position:absolute; inset:0; width:100%; height:100%; opacity:0; transition:opacity 1.5s ease; }
-    #exp-map.vis { opacity:1; }
+    /* ══ READ THE NIGHT (split) ══ */
+    #scr-night.on { display:grid; grid-template-columns:360px 1fr; height:calc(100vh - 54px); }
+    .night-left { padding:2.25rem 2rem; display:flex; flex-direction:column; overflow-y:auto; }
+    .night-kicker { font-family:var(--fm); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--t3); margin-bottom:4px; }
+    .night-place { font-family:var(--fh); font-size:22px; font-weight:500; color:var(--t1); margin-bottom:1.25rem; }
+    .month-strip { display:grid; grid-template-columns:repeat(6,1fr); gap:2px; margin-bottom:.25rem; }
+    .mo { cursor:pointer; font-family:var(--fm); font-size:10px; letter-spacing:.03em; color:var(--t3); padding:6px 0; text-align:center; background:none; border:none; border-bottom:1.5px solid transparent; transition:all .15s; }
+    .mo:hover { color:var(--t2); }
+    .mo.sel { color:var(--rose); border-bottom-color:var(--rose); }
+    .night-hint { font-family:var(--fm); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--t3); margin-bottom:.5rem; }
+    .night-premise { font-family:var(--fb); font-size:13px; font-weight:300; color:var(--t2); line-height:1.6; margin:.75rem 0 .25rem; }
+    .cast { display:flex; flex-direction:column; }
+    .cr { cursor:pointer; display:flex; align-items:flex-start; gap:11px; padding:13px 0; border-bottom:1px solid var(--bo); transition:opacity .15s; }
+    .cr-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+    .cr-b { flex:1; min-width:0; }
+    .cr-top { display:flex; align-items:baseline; justify-content:space-between; gap:8px; }
+    .cr-nm { font-family:var(--fh); font-size:15px; font-weight:500; color:var(--t1); }
+    .cr-tag { font-family:var(--fm); font-size:9px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; }
+    .cr-note { font-family:var(--fb); font-size:12px; font-weight:300; color:var(--t2); line-height:1.5; margin:2px 0 0; }
+    .cr-cnt { font-family:var(--fm); font-size:9px; letter-spacing:.05em; color:var(--t3); margin:3px 0 0; }
+    .night-close { margin-top:auto; padding-top:1.25rem; border-top:1px solid var(--bo); }
+    .night-close-head { font-family:var(--fh); font-size:15px; font-weight:500; color:var(--t1); margin-bottom:5px; line-height:1.35; }
+    .night-close-sub { font-family:var(--fb); font-size:12px; font-weight:300; color:var(--t2); line-height:1.55; margin-bottom:12px; }
+    .night-bridge { font-family:var(--fm); font-size:10px; letter-spacing:.09em; text-transform:uppercase; background:none; color:var(--gold); border:1px solid rgba(246,183,60,.4); border-radius:4px; padding:10px 14px; cursor:pointer; transition:all .2s; }
+    .night-bridge:hover { border-color:var(--gold); background:rgba(246,183,60,.08); }
+    .night-right { position:relative; border-left:1px solid var(--bo); overflow:hidden; }
+    #night-map { position:absolute; inset:0; width:100%; height:100%; background:#070605; }
+    .night-map-cap { position:absolute; top:1rem; left:1.25rem; z-index:500; font-family:var(--fm); font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:rgba(237,233,224,.45); background:rgba(0,0,0,.4); padding:4px 8px; border-radius:3px; }
+    .night-legend { position:absolute; bottom:1.25rem; left:1.25rem; z-index:500; display:flex; flex-direction:column; gap:5px; }
+    .lg { display:flex; align-items:center; gap:7px; font-family:var(--fm); font-size:10px; letter-spacing:.04em; color:rgba(237,233,224,.5); }
+    .lg-d { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
     .exp-srch-btn { position:absolute; top:1rem; right:1.5rem; z-index:600; background:rgba(0,0,0,.55); border:1px solid var(--bm); border-radius:3px; color:var(--t3); font-family:var(--fm); font-size:10px; letter-spacing:.1em; text-transform:uppercase; padding:7px 13px; cursor:pointer; transition:all .2s; backdrop-filter:blur(4px); }
-    .exp-srch-btn:hover { border-color:var(--teal); color:var(--teal); }
+    .exp-srch-btn:hover { border-color:var(--rose); color:var(--rose); }
     .srch-overlay { position:absolute; inset:0; background:rgba(0,0,0,.88); z-index:700; display:none; align-items:center; justify-content:center; flex-direction:column; gap:1rem; backdrop-filter:blur(8px); }
     .srch-overlay.open { display:flex; }
     .srch-overlay input { background:transparent; border:none; border-bottom:1px solid var(--bh); color:var(--t1); font-family:var(--fb); font-size:18px; font-weight:300; padding:12px 0; outline:none; width:100%; max-width:400px; text-align:center; transition:border-color .2s; }
     .srch-overlay input::placeholder { color:var(--t3); }
-    .srch-overlay input:focus { border-color:var(--teal); }
+    .srch-overlay input:focus { border-color:var(--rose); }
     .srch-hint { font-family:var(--fm); font-size:10px; letter-spacing:.1em; color:var(--t3); }
     .srch-close { position:absolute; top:1rem; right:1.5rem; background:none; border:none; color:var(--t3); font-family:var(--fm); font-size:10px; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:color .2s; }
     .srch-close:hover { color:var(--t1); }
-    .prog { display:flex; gap:5px; margin-bottom:.75rem; }
-    .pb { height:2px; flex:1; background:rgba(255,255,255,.1); border-radius:2px; position:relative; overflow:hidden; }
-    .pb-f { position:absolute; left:0; top:0; bottom:0; background:var(--teal); border-radius:2px; width:0; transition:width .4s ease; }
-    .pb.done .pb-f { width:100%; } .pb.active .pb-f { width:100%; transition:width 2.5s linear; }
-    .narr { position:absolute; bottom:0; left:0; right:0; z-index:500; padding:4rem 3rem 2rem; background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.65) 55%,transparent 100%); }
-    .nh { font-family:var(--fh); font-size:clamp(18px,2vw,26px); font-weight:400; color:var(--t1); margin-bottom:.5rem; opacity:0; transform:translateY(7px); transition:opacity .7s ease, transform .7s ease; }
-    .nb { font-family:var(--fb); font-size:clamp(13px,1.3vw,15px); font-weight:300; color:var(--t2); max-width:640px; line-height:1.75; margin-bottom:.6rem; opacity:0; transform:translateY(7px); transition:opacity .7s ease .15s, transform .7s ease .15s; }
-    .nn { font-family:var(--fm); font-size:11px; letter-spacing:.04em; color:var(--amber); max-width:580px; line-height:1.6; margin-bottom:.5rem; opacity:0; transform:translateY(7px); transition:opacity .7s ease .3s, transform .7s ease .3s; }
-    .ns { font-family:var(--fm); font-size:10px; color:var(--t3); letter-spacing:.04em; margin-bottom:1rem; opacity:0; transition:opacity .7s ease .4s; }
-    .nsp { max-width:480px; margin-bottom:1rem; opacity:0; transition:opacity .7s ease .5s; }
-    .nh.vis,.nb.vis,.nn.vis,.ns.vis,.nsp.vis { opacity:1; transform:none; }
-    .narr-btns { display:flex; align-items:center; justify-content:flex-end; gap:8px; }
-    .nb-back { display:inline-flex; align-items:center; gap:7px; font-family:var(--fm); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.3); background:none; border:1px solid rgba(255,255,255,.1); border-radius:3px; padding:11px 18px; cursor:pointer; transition:all .2s; opacity:0; pointer-events:none; }
-    .nb-back.vis { opacity:1; pointer-events:all; } .nb-back:hover { color:rgba(255,255,255,.6); border-color:rgba(255,255,255,.25); }
-    .nb-back svg { width:12px; height:12px; }
-    .nb-cont { display:inline-flex; align-items:center; gap:8px; font-family:var(--fm); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#000; background:var(--teal); border:none; border-radius:3px; padding:12px 22px; cursor:pointer; transition:background .2s, opacity .3s; opacity:0; pointer-events:none; margin-left:auto; }
-    .nb-cont.vis { opacity:1; pointer-events:all; } .nb-cont:hover { background:#2fdea2; } .nb-cont svg { width:13px; height:13px; }
-    .exp-legend { position:absolute; bottom:200px; right:2rem; z-index:500; display:flex; flex-direction:column; gap:5px; opacity:0; transition:opacity 1s; pointer-events:none; }
-    .exp-legend.vis { opacity:1; }
-    .leg-row { display:flex; align-items:center; gap:7px; font-family:var(--fm); font-size:10px; color:rgba(255,255,255,.4); letter-spacing:.04em; }
-    .leg-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; } .leg-line { width:17px; height:2px; border-radius:1px; flex-shrink:0; } .leg-sq { width:10px; height:6px; border-radius:2px; flex-shrink:0; }
-
-    /* ══ NUMBER ══ */
-    #scr-num { min-height:calc(100vh - 54px); align-items:center; justify-content:center; text-align:center; padding:2rem 4rem; position:relative; }
-    .num-lbl { font-family:var(--fm); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--t3); margin-bottom:1.5rem; opacity:0; animation:fadeUp 1s ease forwards .2s; }
-    .num-val { font-family:var(--fh); font-size:clamp(56px,10vw,110px); font-weight:300; color:var(--ab); line-height:1; margin-bottom:1.25rem; opacity:0; animation:fadeUp 1s ease forwards .5s; }
-    .num-cap { font-family:var(--fb); font-size:clamp(14px,1.6vw,18px); font-weight:300; line-height:1.8; color:var(--t2); max-width:560px; margin-bottom:2rem; opacity:0; animation:fadeUp 1s ease forwards .8s; }
-    .num-cap strong { color:var(--t1); font-weight:400; }
-    .num-acts { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; opacity:0; animation:fadeUp 1s ease forwards 1s; }
-    .num-cont { position:absolute; bottom:2rem; display:inline-flex; align-items:center; gap:8px; font-family:var(--fm); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#000; background:var(--teal); border:none; border-radius:3px; padding:12px 22px; cursor:pointer; transition:background .2s; opacity:0; animation:fadeUp 1s ease forwards 1.2s; }
-    .num-cont:hover { background:#2fdea2; }
-
-    /* ══ READING ══ */
-    #scr-read { min-height:calc(100vh - 54px); align-items:center; justify-content:center; padding:2rem 4rem 5rem; }
-    .read-wrap { max-width:680px; width:100%; }
-    .read-kicker { font-family:var(--fm); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--teal); margin-bottom:.4rem; opacity:0; animation:fadeUp 1s ease forwards .2s; }
-    .read-loc { font-family:var(--fm); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--t3); margin-bottom:1.5rem; opacity:0; animation:fadeUp 1s ease forwards .3s; }
-    .read-text { font-family:var(--fb); font-size:clamp(15px,1.6vw,18px); font-weight:300; line-height:1.95; color:var(--t2); border-left:1px solid var(--ind); padding-left:1.5rem; margin-bottom:2.5rem; opacity:0; animation:fadeUp 1.2s ease forwards .5s; }
-
-    /* ══ REFRAME ══ */
-    #scr-reframe { min-height:calc(100vh - 54px); align-items:center; justify-content:center; text-align:center; padding:2rem 4rem; position:relative; }
-    .reframe-line { font-family:var(--fh); font-size:clamp(24px,3.5vw,44px); font-weight:300; line-height:1.4; color:var(--t1); max-width:640px; margin-bottom:3rem; opacity:0; animation:fadeUp 1.4s ease forwards .3s; }
-    .reframe-line em { font-style:normal; color:var(--amber); }
-    .reframe-acts { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; opacity:0; animation:fadeUp 1s ease forwards 1.2s; }
-    .reframe-about { position:absolute; bottom:2rem; font-family:var(--fm); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--t3); background:none; border:none; cursor:pointer; border-bottom:1px solid transparent; transition:color .2s, border-color .2s; opacity:0; animation:fadeUp 1s ease forwards 1.4s; }
-    .reframe-about:hover { color:var(--t2); border-bottom-color:var(--t3); }
 
     /* Leaflet */
     .leaflet-container { background:#000 !important; font-family:var(--fm) !important; }
     .leaflet-control-zoom { margin-top:10px !important; }
     .leaflet-control-zoom a { background:rgba(0,0,0,.7) !important; color:rgba(255,255,255,.5) !important; border-color:var(--bm) !important; }
-    .leaflet-control-zoom a:hover { color:var(--teal) !important; }
+    .leaflet-control-zoom a:hover { color:var(--rose) !important; }
     .leaflet-control-attribution { display:none !important; }
   </style>
 </head>
 <body>
 
-<!-- HEADER — sticky, shown after location set -->
+<!-- HEADER -->
 <header id="hdr">
   <span class="hdr-logo" onclick="goLanding()">NIGHTPRINT</span>
   <div class="hdr-loc">
@@ -333,7 +300,7 @@
     </div>
     <div class="tab-choice teal" onclick="switchTab('night')">
       <span class="tci">🌙</span>
-      <div class="tcb"><p class="tct">Read the night</p><p class="tcd">Discover what lives in the dark at this location — what's there, what's at risk, what light is doing to it.</p></div>
+      <div class="tcb"><p class="tct">Read the night</p><p class="tcd">Discover what lives in the dark at this location, and how it changes through the year.</p></div>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="15" height="15" style="color:var(--t3);flex-shrink:0;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </div>
   </div>
@@ -432,55 +399,33 @@
   <p class="nload-line">Reading the night at <strong id="nload-place"></strong>…</p>
 </div>
 
-<!-- EXPERIENCE -->
-<div class="scr" id="scr-exp" style="display:none;">
-  <div id="exp-map"></div>
-  <button class="exp-srch-btn" onclick="openSrch()">Search another place</button>
-  <div class="exp-legend" id="exp-legend"></div>
-  <div class="narr">
-    <div class="prog" id="prog"></div>
-    <p class="nh" id="nh"></p><p class="nb" id="nb"></p><p class="nn" id="nn"></p><p class="ns" id="ns"></p>
-    <div class="nsp" id="nsp"></div>
-    <div class="narr-btns">
-      <button class="nb-back" id="nb-back" onclick="prevStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Back</button>
-      <button class="nb-cont" id="nb-cont" onclick="nextStep()">Continue<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+<!-- READ THE NIGHT (split) -->
+<div class="scr" id="scr-night">
+  <div class="night-left">
+    <p class="night-kicker">The night around</p>
+    <p class="night-place" id="night-place"></p>
+    <div class="month-strip" id="month-strip"></div>
+    <p class="night-hint">Tap a month to move through the year</p>
+    <p class="night-premise">Step back, and the night fills with life. Most of it carries on whether or not we are here.</p>
+    <div class="cast" id="cast"></div>
+    <div class="night-close">
+      <p class="night-close-head">We share this night, we don't own it.</p>
+      <p class="night-close-sub">Our light, our torches, even our presence reach into it. We can choose to take up less room.</p>
+      <button class="night-bridge" onclick="switchTab('check')">See how your light reaches in →</button>
     </div>
   </div>
-  <div class="srch-overlay" id="srch-overlay">
-    <button class="srch-close" onclick="closeSrch()">✕ Close</button>
-    <input id="srch-input" type="text" placeholder="Enter a city, address, or place" autocomplete="off">
-    <p class="srch-hint">Press Enter to search</p>
-    <p class="err" id="srch-err"></p>
+  <div class="night-right">
+    <div id="night-map"></div>
+    <p class="night-map-cap">Each point is a real wildlife record nearby</p>
+    <div class="night-legend" id="night-legend"></div>
+    <button class="exp-srch-btn" onclick="openSrch()">Search another place</button>
+    <div class="srch-overlay" id="srch-overlay">
+      <button class="srch-close" onclick="closeSrch()">✕ Close</button>
+      <input id="srch-input" type="text" placeholder="Enter a city, address, or place" autocomplete="off">
+      <p class="srch-hint">Press Enter to search</p>
+      <p class="err" id="srch-err"></p>
+    </div>
   </div>
-</div>
-
-<!-- NUMBER -->
-<div class="scr" id="scr-num">
-  <p class="num-lbl" id="num-lbl"></p>
-  <p class="num-val" id="num-val"></p>
-  <p class="num-cap" id="num-cap"></p>
-  <div class="num-acts"><button class="btn btn-amber" onclick="shareIt()">Share this Nightprint</button><button class="btn btn-ghost" onclick="switchTab('night')">Read another place</button></div>
-  <button class="num-cont" onclick="goScr('scr-read')">Read the nocturnal portrait<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-</div>
-
-<!-- READING -->
-<div class="scr" id="scr-read">
-  <div class="read-wrap">
-    <p class="read-kicker" id="read-kicker"></p>
-    <p class="read-loc" id="read-loc"></p>
-    <p class="read-text" id="read-text">Generating nocturnal portrait…</p>
-    <button class="btn btn-teal" onclick="goScr('scr-reframe')" style="margin-top:1rem;">Continue<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-  </div>
-</div>
-
-<!-- REFRAME -->
-<div class="scr" id="scr-reframe">
-  <p class="reframe-line">Every light installed after dark is <em>a decision about what lives here.</em></p>
-  <div class="reframe-acts">
-    <button class="btn btn-amber" onclick="switchTab('check')">Check your light</button>
-    <button class="btn btn-ghost" onclick="switchTab('night')">Read another place</button>
-  </div>
-  <button class="reframe-about" onclick="showAbout()">About Nightprint</button>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -488,7 +433,7 @@
 /* ── STATE ── */
 const LOC = { lat:null, lon:null, display_name:null, short_name:null };
 const CHECK = { fixture:null, fixtureLabel:null, photoData:null, photoMeta:null, manual:{ cct:null, shield:null, timer:null }, data:null };
-const NIGHT = { data:null, step:0, narrations:null, month:new Date().getMonth() };
+const NIGHT = { data:null, month:new Date().getMonth() };
 
 /* ── UTILS ── */
 const $ = id => document.getElementById(id);
@@ -497,24 +442,11 @@ const se = m => m>=2&&m<=4?'spring':m>=5&&m<=7?'summer':m>=8&&m<=10?'autumn':'wi
 
 /* ── NAVIGATION ── */
 function goScr(id) {
-  document.querySelectorAll('.scr').forEach(s => {
-    s.classList.remove('on');
-    s.style.display = '';
-  });
-  const el = $(id);
-  if(id === 'scr-exp') {
-    el.style.display = 'block';
-  } else {
-    el.classList.add('on');
-  }
+  document.querySelectorAll('.scr').forEach(s => { s.classList.remove('on'); s.style.display=''; });
+  $(id).classList.add('on');
   window.scrollTo(0,0);
 }
-
-function goLanding() {
-  $('hdr').classList.remove('show');
-  goScr('scr-land');
-}
-
+function goLanding() { $('hdr').classList.remove('show'); goScr('scr-land'); }
 function switchTab(tab) {
   $('tab-check').classList.toggle('active', tab==='check');
   $('tab-night').classList.toggle('active', tab==='night');
@@ -525,7 +457,6 @@ function switchTab(tab) {
 /* ── LANDING SEARCH ── */
 $('land-input').addEventListener('keydown', e => { if(e.key==='Enter') doLandSearch(); });
 $('land-btn').addEventListener('click', doLandSearch);
-
 async function doLandSearch() {
   const q = $('land-input').value.trim();
   if(!q) return;
@@ -536,8 +467,7 @@ async function doLandSearch() {
     const d = await r.json();
     if(!d.length) throw new Error('not found');
     const p = d[0];
-    LOC.lat = parseFloat(p.lat);
-    LOC.lon = parseFloat(p.lon);
+    LOC.lat = parseFloat(p.lat); LOC.lon = parseFloat(p.lon);
     LOC.display_name = p.display_name;
     LOC.short_name = p.display_name.split(',').slice(0,2).join(',').trim();
     $('hdr-loc-name').textContent = LOC.short_name.split(',')[0];
@@ -619,9 +549,7 @@ function setMF(field, btn) {
   updateGoBtn();
 }
 
-function updateGoBtn() {
-  $('check-go').classList.toggle('ready', !!CHECK.fixture);
-}
+function updateGoBtn() { $('check-go').classList.toggle('ready', !!CHECK.fixture); }
 
 async function runCheck() {
   if(!CHECK.fixture) return;
@@ -731,6 +659,37 @@ async function genExpertVoice(){
 }
 
 /* ── READ THE NIGHT ── */
+const NCOL={insects:'#f6b73c',bats:'#ef8f3c',owls:'#e2683c',birds:'#8a78e0'};
+let nightMap=null, nightPts={}, nightSel=new Date().getMonth(), nightHL=null;
+
+function nSeason(i){return (i===11||i<2)?'winter':i<5?'spring':i<8?'summer':'autumn';}
+
+function castData(){
+  const g=NIGHT.data?.gbif||{};
+  return [
+    {key:'insects',name:'Moths & night insects',count:g.mothSpp||0,
+     st:{winter:{on:false,tag:'Dormant',note:'Mostly waiting out the cold.'},
+         spring:{on:true,tag:'Stirring',note:'Waking with the first warm nights.'},
+         summer:{on:true,tag:'Active',note:'Out in force, pollinating in the dark.'},
+         autumn:{on:true,tag:'Active',note:'The last big weeks before frost.'}}},
+    {key:'bats',name:'Bats',count:g.batSpecies||0,
+     st:{winter:{on:false,tag:'Hibernating',note:'Tucked away until spring.'},
+         spring:{on:true,tag:'Active',note:'Hunting again over water and gardens.'},
+         summer:{on:true,tag:'Active',note:'Feeding over water and gardens all night.'},
+         autumn:{on:true,tag:'Active',note:'Fattening up before they hibernate.'}}},
+    {key:'owls',name:'Owls',count:g.owlSpp||0,
+     st:{winter:{on:true,tag:'Active',note:'Calling to claim breeding ground.'},
+         spring:{on:true,tag:'Active',note:'Hunting hard to feed their young.'},
+         summer:{on:true,tag:'Active',note:'Hunting in silence through short nights.'},
+         autumn:{on:true,tag:'Active',note:'Young owls finding their own range.'}}},
+    {key:'birds',name:'Migrating birds',count:g.birdSpp||0,
+     st:{winter:{on:false,tag:'Away',note:'Gone south. The flyway rests.'},
+         spring:{on:true,tag:'Passing over',note:'Crossing overhead, heading north.'},
+         summer:{on:false,tag:'Nesting',note:'Arrived and nesting. The sky is quiet.'},
+         autumn:{on:true,tag:'Passing over',note:'Streaming south on peak nights.'}}}
+  ];
+}
+
 async function startNight(){
   $('nload-place').textContent=LOC.short_name;
   goScr('scr-nload');
@@ -746,138 +705,84 @@ async function startNight(){
     bortle: bortle.status==='fulfilled'?bortle.value:null,
     green:  green.status==='fulfilled'?green.value:null
   };
-  buildNarrations();
-  buildNumScreen();
-  goScr('scr-exp');
-  initMap();
-  NIGHT.step=0;
-  buildProg();
-  showStep(0);
-  genReading();
+  nightSel=NIGHT.month;
+  $('night-place').textContent=LOC.short_name;
+  buildMonthStrip();
+  buildLegend();
+  goScr('scr-night');
+  initNightMap();
+  renderCast();
 }
 
-function buildNarrations(){
-  const g=NIGHT.data.gbif||{},b=NIGHT.data.bortle,w=NIGHT.data.osm?.nearestWater;
-  const gn=(NIGHT.data.green||[]).length,m=NIGHT.month,mo=mn(m),s=se(m);
-  const mig=getMig(m),loc=LOC.short_name;
-  NIGHT.narrations=[
-    {heading:w?`Water ${w.dist}m from here — the foundation of this nocturnal system`:'Water — the foundation of this nocturnal system',
-     body:w?`There is a waterbody ${w.dist}m from here. The edges of rivers and lakes are among the most ecologically active zones on earth after dark. Mayflies, caddisflies, and stoneflies emerge from the water in their millions — forming the base of the food chain for every bat, bird, and fish in this area. Below the surface, earthworms and soil organisms complete cycles of decomposition that happen almost entirely in darkness. This is where the nocturnal system begins.`:`Rivers, lakes, and wetlands are the foundation of nocturnal ecology. Aquatic insects emerge after dark in their millions, forming the base of the food chain for every bat, bird, and fish nearby. This is where the nocturnal system begins.`,
-     nudge:`→ Avoid lighting near water edges. Even a single unshielded fixture disrupts aquatic insect emergence and carries ecological cost far downstream.`,
-     source:'Source: Perkin et al. 2014 — Trends in Ecology & Evolution · DOI: 10.1016/j.tree.2014.06.002',layer:'water',species:null},
-    {heading:'The air at night — moths, beetles, and nocturnal pollinators',
-     body:`In ${mo}, the air above ${gn>0?'these parks and green spaces':'this area'} is alive with insects that most people never see. Moths are the primary nocturnal pollinators of this region — navigating by moonlight to flowering plants that have evolved specifically to be pollinated after dark. Beetles, lacewings, and midges fill ecological roles that are invisible by day. ${s==='summer'?'This is peak season for nocturnal insect activity.':s==='spring'?'Insects are emerging from winter dormancy. The first warm nights bring out species that have waited months.':s==='autumn'?'Insects are preparing to overwinter. These final weeks of activity are critical for next year\'s populations.':'Many insects are dormant, but soil fauna that support them remain active through the cold.'}`,
-     nudge:`→ A single bright unshielded light can attract and kill thousands of moths in one night. Warm amber sources below 2700K reduce this significantly.`,
-     source:'Source: van Langevelde et al. 2018 — Insect Conservation & Diversity · Gaston et al. 2015 — Phil. Trans. R. Soc. B',layer:'water',species:null},
-    {heading:m>=4&&m<=9?'Bats and owls are hunting here tonight':`Bats are ${m<6?'emerging':'entering hibernation'} — owls remain active`,
-     body:null,
-     nudge:m>=4&&m<=9?`→ Turn off outdoor lights between dusk and dawn during ${s} months. Even low-level white LED above 3000K reduces bat foraging activity by up to 50%.`:`→ Avoid disturbing roost and hibernation sites. Lighting near these locations disrupts energy cycles that bats and owls depend on through winter.`,
-     source:'Source: Aziz et al. 2015 — Proceedings of the Royal Society B · GBIF occurrence database',layer:'bats',species:g.batList||[]},
-    {heading:mig.intensity==='high'?`${mig.label} is happening above here right now`:mig.intensity==='medium'?`Migration is building above ${loc.split(',')[0]}`:`The migration corridor above ${loc.split(',')[0]}`,
-     body:mig.intensity==='high'?`It is ${mig.label.toLowerCase()} season. On peak nights this ${mo}, tens of thousands of birds cross this exact sky heading ${mig.dir} — navigating by starlight and the Earth's magnetic field, following corridors their ancestors have used for thousands of years.`:mig.intensity==='medium'?`Migration is building in ${mo}. The flyway above here will carry hundreds of thousands of birds heading ${mig.dir} over the coming weeks.`:`This corridor carries up to 80,000 birds on peak migration nights each spring and autumn. In ${mo} migration is quiet — but this sky is one of the most significant nocturnal corridors in this region.`,
-     nudge:`→ Turn off non-essential lighting during ${mig.intensity==='high'?'peak migration nights this month':'spring and autumn migration seasons'}. Skyglow disorients migrating birds into fatal building collisions.`,
-     source:'Source: Loss et al. 2014 — The Condor · Fatal Light Awareness Program (FLAP Canada) · eBird / Cornell Lab',layer:'flyway',species:null},
-    {heading:b?`The sky above here is Bortle ${b.class} — ${b.label}`:'This is what artificial light at night looks like',
-     body:b?`The amber wash you see now is artificial light at night, measured by NASA satellite. It lands on everything you have just seen — the water, the moths, the bats, the birds crossing overhead. ${b.class>=7?'At Bortle '+b.class+', the Milky Way is completely invisible and the sky never reaches true darkness. Every nocturnal species above has adapted over millions of years to a sky that no longer exists here.':b.class>=5?'At Bortle '+b.class+', the Milky Way is faint or invisible. Every species here is navigating a compromised version of the night they evolved in.':'Even at Bortle '+b.class+', the sky is measurably brighter than natural darkness. Light pollution is cumulative.'}`:`The amber wash is artificial light at night, measured by NASA VIIRS satellite. It lands on everything you have just seen — the water, the moths, the bats, the birds crossing overhead. This light did not exist 100 years ago.`,
-     nudge:`→ Shield fixtures downward, switch to warm sources below 3000K, reduce intensity after midnight. These benefit every layer of the nocturnal system you have just seen.`,
-     source:'Source: Falchi et al. 2016 — Science Advances · NASA VIIRS DNB',layer:'light',species:null}
-  ];
+function buildMonthStrip(){
+  const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  $('month-strip').innerHTML=M.map((m,i)=>`<button class="mo${i===nightSel?' sel':''}" onclick="selMonth(${i})">${m}</button>`).join('');
+}
+function selMonth(i){nightSel=i;document.querySelectorAll('.mo').forEach((el,j)=>el.classList.toggle('sel',j===i));renderCast();paintPts();}
+
+function activeMap(){const s=nSeason(nightSel),o={};castData().forEach(c=>o[c.key]=c.st[s].on);return o;}
+
+function renderCast(){
+  const s=nSeason(nightSel);
+  $('cast').innerHTML=castData().map(c=>{
+    const x=c.st[s],on=x.on,col=NCOL[c.key];
+    const cnt=c.count>0?`${c.count} species recorded nearby`:'recorded nearby';
+    return `<div class="cr" data-type="${c.key}" style="opacity:${on?1:.5}" onmouseenter="hlPts('${c.key}')" onmouseleave="hlPts(null)">
+      <span class="cr-dot" style="background:${on?col:'rgba(237,233,224,.22)'};${on?'box-shadow:0 0 6px '+col+'66':''}"></span>
+      <div class="cr-b">
+        <div class="cr-top"><span class="cr-nm">${c.name}</span><span class="cr-tag" style="color:${on?col:'rgba(237,233,224,.4)'}">${x.tag}</span></div>
+        <p class="cr-note">${x.note}</p>
+        <p class="cr-cnt">${cnt}</p>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function getMig(m){if(m===3||m===4)return{label:'Peak spring migration',intensity:'high',dir:'north'};if(m===2||m===5)return{label:'Spring migration',intensity:'medium',dir:'north'};if(m===9||m===10)return{label:'Peak autumn migration',intensity:'high',dir:'south'};if(m===8)return{label:'Autumn migration',intensity:'medium',dir:'south'};if(m===7)return{label:'Migration approaching',intensity:'low',dir:'south'};return{label:'Migration quiet',intensity:'low',dir:null};}
-
-function buildProg(){$('prog').innerHTML=NIGHT.narrations.map((_,i)=>`<div class="pb" id="pb${i}"><div class="pb-f"></div></div>`).join('');}
-
-const LMAP=['water','water','bats','flyway','light'];
-
-function showStep(s){
-  NIGHT.step=s;
-  NIGHT.narrations.forEach((_,i)=>{const pb=$(`pb${i}`);if(!pb)return;pb.className='pb'+(i<s?' done':i===s?' active':'');});
-  if(s>=NIGHT.narrations.length){$('exp-legend').classList.add('vis');setTimeout(()=>goScr('scr-num'),600);return;}
-  const n=NIGHT.narrations[s];
-  const lk=LMAP[s];
-  if(lk)setTimeout(()=>setOp(lk,1),300);
-  ['nh','nb','nn','ns','nsp'].forEach(id=>{const el=$(id);if(el)el.classList.remove('vis');});
-  setTimeout(async()=>{
-    $('nh').textContent=n.heading;$('nn').textContent=n.nudge;$('ns').textContent=n.source;
-    const bodyEl=$('nb'),spEl=$('nsp');
-    if(n.species!==null&&n.species.length>0){
-      bodyEl.textContent='Loading species detail…';
-      spEl.innerHTML=renderSpList(n.species);
-      genBatDetail(n.species).then(t=>{if(t)bodyEl.textContent=t;else bodyEl.textContent=`${n.species.length} bat species recorded within 25km.`;});
-    }else{bodyEl.textContent=n.body||'';spEl.innerHTML='';}
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      ['nh','nb','nn','ns'].forEach(id=>$(id)?.classList.add('vis'));
-      if(n.species&&n.species.length>0)spEl?.classList.add('vis');
-    }));
-  },150);
-  const back=$('nb-back'),cont=$('nb-cont');
-  back.classList.remove('vis');cont.classList.remove('vis');
-  const isLast=s===NIGHT.narrations.length-1;
-  cont.innerHTML=isLast?`See the bigger picture <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`:`Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
-  if(s>0)setTimeout(()=>back.classList.add('vis'),1800);
-  setTimeout(()=>cont.classList.add('vis'),1800);
-}
-
-function nextStep(){showStep(NIGHT.step+1);}
-function prevStep(){if(NIGHT.step>0)showStep(NIGHT.step-1);}
-
-function renderSpList(list){if(!list?.length)return'';return`<div style="margin-top:.5rem;">`+list.slice(0,6).map(bat=>`<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--bo);font-size:11px;"><div><span style="font-family:var(--fb);color:var(--t2);">${bat.common||bat.species}</span>${bat.common?`<br><em style="color:var(--t3);font-size:10px;">${bat.species}</em>`:''}</div><span style="font-family:var(--fm);font-size:9px;letter-spacing:.06em;white-space:nowrap;color:${bat.mig?'var(--ab)':bat.ls?'var(--teal)':'var(--t3)'};">${bat.mig?'MIGRATORY':bat.ls?'LIGHT-SENSITIVE':'RESIDENT'}</span></div>`).join('')+`</div>`;}
-
-function buildNumScreen(){
-  const m=NIGHT.month,b=NIGHT.data.bortle,mig=getMig(m);
-  if(mig.intensity==='high'){const cnt=(Math.floor(Math.random()*60)+40)*1000;$('num-lbl').textContent=`Birds crossing this sky on a peak night this ${mn(m)}`;$('num-val').textContent=cnt.toLocaleString();$('num-cap').innerHTML=`During <strong>${mig.label.toLowerCase()}</strong> in ${mn(m)}, an estimated ${cnt.toLocaleString()} birds fly over this location in a single night — navigating by stars instead of artificial light. This system is <strong>4 billion years old.</strong> The light layer is approximately <strong>100 years old.</strong>`;}
-  else{const mult=b?Math.round(Math.pow(2.5,b.class-1)):500;$('num-lbl').textContent='Times brighter than the natural night sky';$('num-val').textContent=`×${mult.toLocaleString()}`;$('num-cap').innerHTML=`The sky above ${LOC.short_name.split(',')[0]} is approximately <strong>${mult.toLocaleString()} times brighter</strong> than it was before electric light. The system you just saw — water, insects, bats, migrating birds — is <strong>4 billion years old.</strong> The light layer is approximately <strong>100 years old.</strong>`;}
-}
-
-function genReading(){
-  const{data,month}=NIGHT;const g=data.gbif||{},b=data.bortle,w=data.osm?.nearestWater;const mig=getMig(month);
-  $('read-kicker').textContent=`${mn(month)} · ${mig.label}`;
-  $('read-loc').textContent=LOC.short_name.toUpperCase();
-  const prompt=`Nocturnal portrait for Nightprint.\nLocation: ${LOC.short_name}\nMonth: ${mn(month)} (${se(month)})\nMigration: ${mig.label} — ${mig.intensity}${mig.dir?', heading '+mig.dir:''}\nBats: ${g.batSpecies||0} species${g.migBats?.length>0?', including '+g.migBats[0].species+' (long-distance migrant)':''}\nSky: ${b?'Bortle '+b.class+' — '+b.label:'unknown'}\nWaterbody: ${w?w.dist+'m':'none'}\n\nWrite 4–5 sentences. Specific, present tense for ${mn(month)}. Calm, revelatory. Do not mention Nightprint or artificial light directly. Do not start with "In" or "This".`;
-  fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:prompt}]})})
-  .then(r=>r.json()).then(res=>{const t=res.content?.[0]?.text;if(t)$('read-text').textContent=t;})
-  .catch(()=>{$('read-text').textContent=`The night at ${LOC.short_name} holds more than most people realise. ${g.batSpecies>0?g.batSpecies+' bat species have been recorded here, navigating corridors that predate any human structure. ':''}${b?'The sky registers Bortle '+b.class+' — '+b.label+'. ':''}The night here is not empty. It never was.`;});
-}
-
-async function genBatDetail(batList){
-  if(!batList?.length)return null;
-  const prompt=`Bat ecology for Nightprint.\nLocation: ${LOC.short_name}, Month: ${mn(NIGHT.month)}\nSpecies within 25km: ${batList.slice(0,6).map(bat=>`${bat.species}${bat.common?' ('+bat.common+')':''}${bat.mig?' [migrant]':' [resident]'}${bat.ls?' [light-sensitive]':''}`).join(', ')}\nTotal: ${batList.length}\n\nWrite 3 sentences of specific ecological detail. Name species. Mention migrants, hunting habits, what they need. Specific to ${LOC.short_name}. Do not start with "In" or "Bats are".`;
-  try{const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:250,messages:[{role:'user',content:prompt}]})});const res=await r.json();return res.content?.[0]?.text||null;}catch(e){return null;}
-}
-
-/* ── MAP ── */
-let leafMap=null;const origSt={};
-function initMap(){
-  if(leafMap){leafMap.remove();leafMap=null;}
-  Object.keys(origSt).forEach(k=>delete origSt[k]);
+function initNightMap(){
+  if(nightMap){nightMap.remove();nightMap=null;}
   const{lat,lon}=LOC;
-  leafMap=L.map('exp-map',{zoomControl:true,attributionControl:false}).setView([lat,lon],13);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(leafMap);
-  leafMap._lyr={light:mkLight(),water:mkWaterGreen(),bats:mkBats(),flyway:mkFlyway()};
-  L.circleMarker([lat,lon],{radius:8,color:'#f5a623',fillColor:'#f5a623',fillOpacity:1,weight:2}).addTo(leafMap).bindTooltip(LOC.short_name);
-  Object.keys(leafMap._lyr).forEach(k=>setOp(k,0));
-  setTimeout(()=>$('exp-map').classList.add('vis'),100);
-  mkLegend();
+  nightMap=L.map('night-map',{zoomControl:true,attributionControl:false}).setView([lat,lon],12);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(nightMap);
+  const bc=NIGHT.data?.bortle?.class||7;
+  [bc*9000,bc*5000,bc*2500].forEach((r,i)=>L.circle([lat,lon],{radius:r,color:'#e88a0d',fillColor:'#ef8f2a',fillOpacity:[.05,.08,.12][i],weight:0,opacity:.2}).addTo(nightMap));
+  nightPts={};
+  const g=NIGHT.data?.gbif||{};
+  const sets={insects:g.insectLocations||[],bats:g.batLocations||[],owls:g.owlLocations||[],birds:g.birdLocations||[]};
+  Object.keys(sets).forEach(k=>{
+    nightPts[k]=(sets[k]||[]).slice(0,14).map(p=>L.circleMarker([p[0],p[1]],{radius:5,color:NCOL[k],fillColor:NCOL[k],fillOpacity:.85,weight:0}).addTo(nightMap));
+  });
+  L.circleMarker([lat,lon],{radius:6,color:'#f6b73c',fillColor:'#f6b73c',fillOpacity:1,weight:2}).addTo(nightMap).bindTooltip(LOC.short_name);
+  setTimeout(()=>{try{nightMap.invalidateSize();}catch(e){}paintPts();},250);
 }
-function mkLight(){const g=L.layerGroup().addTo(leafMap);const{lat,lon}=LOC;const bc=NIGHT.data.bortle?.class||7;[bc*12000,bc*7000,bc*3500,bc*1200].forEach((r,i)=>L.circle([lat,lon],{radius:r,color:'#e88a0d',fillColor:'#f5a623',fillOpacity:[.08,.13,.18,.25][i],weight:i===0?.5:0,opacity:.15}).addTo(g));return g;}
-function mkWaterGreen(){const g=L.layerGroup().addTo(leafMap);(NIGHT.data.osm?.elements||[]).forEach(el=>{const pts=(el.geometry||[]).filter(p=>p?.lat);if(!pts.length)return;const coords=pts.map(p=>[p.lat,p.lon]);const isR=el.tags?.waterway==='river'||el.tags?.waterway==='stream'||el.tags?.waterway==='riverbank';if(isR&&coords.length>=2)L.polyline(coords,{color:'#4a9fd4',weight:3,opacity:.8}).addTo(g);else if(coords.length>2)L.polygon(coords,{color:'#4a9fd4',fillColor:'#4a9fd4',fillOpacity:.3,weight:1.5,opacity:.75}).addTo(g);});(NIGHT.data.green||[]).forEach(el=>{const rp=geom=>{const pts=(geom||[]).filter(p=>p?.lat);if(pts.length<3)return;L.polygon(pts.map(p=>[p.lat,p.lon]),{color:'#26c994',fillColor:'#26c994',fillOpacity:.18,weight:1.5,opacity:.65}).addTo(g);};if(el.type==='relation'&&el.members)el.members.filter(m=>m.role==='outer'&&m.geometry?.length>2).forEach(m=>rp(m.geometry));else if(el.geometry?.length>2)rp(el.geometry);});return g;}
-function mkBats(){const g=L.layerGroup().addTo(leafMap);(NIGHT.data.gbif?.batLocations||[]).forEach(([blat,blon])=>L.circleMarker([blat,blon],{radius:5,color:'#26c994',fillColor:'#26c994',fillOpacity:.9,weight:0}).addTo(g).bindTooltip('Bat observation'));return g;}
-function mkFlyway(){const g=L.layerGroup().addTo(leafMap);const{lat,lon}=LOC;const mig=getMig(NIGHT.month);const draw=(pts,op,lbl)=>{L.polyline(pts,{color:'#f5a623',weight:1.5,opacity:op,dashArray:'9 5'}).addTo(g);const mid=pts[Math.floor(pts.length/2)],prev=pts[Math.floor(pts.length/2)-1]||pts[0];const ang=Math.atan2(mid[1]-prev[1],mid[0]-prev[0])*180/Math.PI;L.marker(mid,{icon:L.divIcon({html:`<div style="transform:rotate(${ang}deg);color:#f5a623;opacity:${op};font-size:13px;line-height:1;">▲</div>`,iconAnchor:[6,6],className:''})}).addTo(g);L.marker(pts[2],{icon:L.divIcon({html:`<div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#f5a623;opacity:${op+.1};white-space:nowrap;letter-spacing:.05em;background:rgba(0,0,0,.55);padding:2px 5px;border-radius:3px;">${lbl}</div>`,iconAnchor:[-4,8],className:''})}).addTo(g);};
-const sp=[[lat-.65,lon-.05],[lat-.44,lon-.14],[lat-.22,lon-.08],[lat,lon+.06],[lat+.22,lon+.22],[lat+.45,lon+.30],[lat+.65,lon+.20]];const fa=[[lat+.65,lon+.35],[lat+.44,lon+.48],[lat+.22,lon+.38],[lat,lon+.18],[lat-.22,lon+.02],[lat-.44,lon-.18],[lat-.65,lon-.28]];draw(fa,mig.dir==='south'?.70:.35,'↓ Autumn migration');draw(sp,mig.dir==='north'?.70:.35,'↑ Spring migration');return g;}
-function setOp(key,target){const lg=leafMap?._lyr?.[key];if(!lg)return;if(!origSt[key]){origSt[key]=[];lg.eachLayer(l=>{if(l.options)origSt[key].push({opacity:l.options.opacity??1,fillOpacity:l.options.fillOpacity??0.3});});}let i=0;lg.eachLayer(l=>{const o=origSt[key][i]||{opacity:1,fillOpacity:.3};try{if(l.setStyle)l.setStyle({opacity:o.opacity*target,fillOpacity:o.fillOpacity*target});else if(l.setOpacity)l.setOpacity(target);}catch(e){}i++;});}
-function mkLegend(){const items=[{t:'sq',c:'rgba(38,201,148,.4)',l:'Green spaces'},{t:'line',c:'#4a9fd4',l:'Water bodies'},{t:'dot',c:'#26c994',l:'Bat observations'},{t:'line',c:'#f5a623',l:'Migration corridors'},{t:'sq',c:'rgba(232,138,13,.3)',l:'Light pollution'},{t:'dot',c:'#f5a623',l:'Your location'}];$('exp-legend').innerHTML=items.map(it=>it.t==='dot'?`<div class="leg-row"><div class="leg-dot" style="background:${it.c}"></div><span>${it.l}</span></div>`:it.t==='line'?`<div class="leg-row"><div class="leg-line" style="background:${it.c}"></div><span>${it.l}</span></div>`:`<div class="leg-row"><div class="leg-sq" style="background:${it.c}"></div><span>${it.l}</span></div>`).join('');}
+
+function paintPts(){
+  const act=activeMap();
+  Object.keys(nightPts).forEach(k=>{
+    (nightPts[k]||[]).forEach(m=>{
+      let op,r;
+      if(nightHL){ if(k===nightHL){op=1;r=6;} else {op=.06;r=4;} }
+      else { op=act[k]?.85:.12; r=5; }
+      try{ m.setStyle({fillOpacity:op,opacity:op}); m.setRadius(r); }catch(e){}
+    });
+  });
+}
+function hlPts(k){nightHL=k;paintPts();}
+
+function buildLegend(){
+  const names={insects:'Moths & insects',bats:'Bats',owls:'Owls',birds:'Migrating birds'};
+  $('night-legend').innerHTML=Object.keys(names).map(k=>`<div class="lg"><span class="lg-d" style="background:${NCOL[k]}"></span><span>${names[k]}</span></div>`).join('');
+}
+
+/* ── ACTIONS ── */
+function shareIt(){const text=CHECK.fixtureLabel?`Nightprint of ${LOC.short_name} — ${CHECK.fixtureLabel}`:`The night at ${LOC.short_name}`;if(navigator.share)navigator.share({title:'Nightprint',text,url:window.location.href});else{navigator.clipboard?.writeText(window.location.href);alert('Link copied.');}}
+function showAbout(){alert('Nightprint — two tools for the night.\n\nCheck your light: is your outdoor fixture dark sky compliant? Get a verdict and exactly what to change.\n\nRead the night: discover the nocturnal life of any location, and how it changes through the year.\n\nBuilt by Lightbahn · lightbahn.ca · nightprint.co');}
 
 /* ── DATA ── */
 async function fetchBortle(lat,lon){try{const r=await fetch(`/api/geo?type=bortle&lat=${lat}&lon=${lon}`);const d=await r.json();const m=d.mpsas||d.value;if(m)return mp2b(parseFloat(m));}catch(e){}return null;}
 function mp2b(m){if(m>=21.69)return{class:3,label:'Rural sky'};if(m>=20.49)return{class:4,label:'Rural/suburban'};if(m>=19.50)return{class:5,label:'Suburban sky'};if(m>=18.94)return{class:6,label:'Bright suburban'};if(m>=18.38)return{class:7,label:'Suburban/urban'};if(m>=17.50)return{class:8,label:'City sky'};return{class:9,label:'Inner city'};}
-async function fetchGBIF(lat,lon,radius){const deg=radius/111000;const r=await fetch(`https://api.gbif.org/v1/occurrence/search?decimalLatitude=${(lat-deg).toFixed(4)},${(lat+deg).toFixed(4)}&decimalLongitude=${(lon-deg).toFixed(4)},${(lon+deg).toFixed(4)}&limit=300&hasCoordinate=true`);const d=await r.json();const recs=d.results||[];const MIGS=['Lasiurus cinereus','Lasiurus borealis','Lasionycteris noctivagans','Tadarida brasiliensis'];const LS=['Vespertilionidae','Phyllostomidae','Rhinolophidae','Molossidae'];const bats=recs.filter(x=>x.order==='Chiroptera');const bm={};bats.forEach(x=>{if(!x.species)return;if(!bm[x.species])bm[x.species]={species:x.species,common:x.vernacularName||null,fam:x.family||null,mig:MIGS.includes(x.species),ls:LS.includes(x.family),n:0,locations:[]};bm[x.species].n++;if(x.decimalLatitude&&x.decimalLongitude)bm[x.species].locations.push([x.decimalLatitude,x.decimalLongitude]);});const batList=Object.values(bm).sort((a,b)=>b.n-a.n);const birds=recs.filter(x=>x.class==='Aves'),moths=recs.filter(x=>x.order==='Lepidoptera'),owls=recs.filter(x=>x.order==='Strigiformes');return{batList,batSpecies:batList.length,lsBats:batList.filter(b=>b.ls).length,migBats:batList.filter(b=>b.mig),birdSpp:[...new Set(birds.map(x=>x.species).filter(Boolean))].length,mothSpp:[...new Set(moths.map(x=>x.species).filter(Boolean))].length,owlSpp:[...new Set(owls.map(x=>x.species).filter(Boolean))].length,batLocations:batList.flatMap(b=>b.locations||[]).slice(0,15)};}
+async function fetchGBIF(lat,lon,radius){const deg=radius/111000;const r=await fetch(`https://api.gbif.org/v1/occurrence/search?decimalLatitude=${(lat-deg).toFixed(4)},${(lat+deg).toFixed(4)}&decimalLongitude=${(lon-deg).toFixed(4)},${(lon+deg).toFixed(4)}&limit=300&hasCoordinate=true`);const d=await r.json();const recs=d.results||[];const MIGS=['Lasiurus cinereus','Lasiurus borealis','Lasionycteris noctivagans','Tadarida brasiliensis'];const LS=['Vespertilionidae','Phyllostomidae','Rhinolophidae','Molossidae'];const bats=recs.filter(x=>x.order==='Chiroptera');const bm={};bats.forEach(x=>{if(!x.species)return;if(!bm[x.species])bm[x.species]={species:x.species,common:x.vernacularName||null,fam:x.family||null,mig:MIGS.includes(x.species),ls:LS.includes(x.family),n:0,locations:[]};bm[x.species].n++;if(x.decimalLatitude&&x.decimalLongitude)bm[x.species].locations.push([x.decimalLatitude,x.decimalLongitude]);});const batList=Object.values(bm).sort((a,b)=>b.n-a.n);const birds=recs.filter(x=>x.class==='Aves'),moths=recs.filter(x=>x.order==='Lepidoptera'),owls=recs.filter(x=>x.order==='Strigiformes');const loc=arr=>arr.map(x=>(x.decimalLatitude&&x.decimalLongitude)?[x.decimalLatitude,x.decimalLongitude]:null).filter(Boolean);return{batList,batSpecies:batList.length,lsBats:batList.filter(b=>b.ls).length,migBats:batList.filter(b=>b.mig),birdSpp:[...new Set(birds.filter(x=>x.order!=='Strigiformes').map(x=>x.species).filter(Boolean))].length,mothSpp:[...new Set(moths.map(x=>x.species).filter(Boolean))].length,owlSpp:[...new Set(owls.map(x=>x.species).filter(Boolean))].length,batLocations:batList.flatMap(b=>b.locations||[]).slice(0,15),insectLocations:loc(moths).slice(0,15),owlLocations:loc(owls).slice(0,15),birdLocations:loc(birds.filter(x=>x.order!=='Strigiformes')).slice(0,15)};}
 async function fetchWater(lat,lon,radius){const deg=radius/111000;const bb=`${(lat-deg).toFixed(4)},${(lon-deg).toFixed(4)},${(lat+deg).toFixed(4)},${(lon+deg).toFixed(4)}`;const q=`[out:json][timeout:20];(way["natural"="water"](${bb});way["waterway"="riverbank"](${bb});way["waterway"="river"](${bb});way["waterway"="stream"](${bb});relation["natural"="water"](${bb});relation["waterway"="river"](${bb}););out geom;`;const r=await fetch('/api/geo?type=overpass',{method:'POST',body:q});const d=await r.json();const raw=d.elements||[];const els=[];raw.forEach(el=>{if(el.type==='way'&&el.geometry?.length>1)els.push(el);else if(el.type==='relation'&&el.members)el.members.forEach(m=>{if(m.type==='way'&&m.geometry?.length>1)els.push({type:'way',geometry:m.geometry,tags:el.tags||{}});});});let near=null;els.forEach(el=>(el.geometry||[]).filter(p=>p?.lat).forEach(p=>{const dist=Math.hypot(p.lat-lat,p.lon-lon)*111000;if(!near||dist<near.dist)near={dist:Math.round(dist),lat:p.lat,lon:p.lon,tags:el.tags};}));return{nearestWater:near,elements:els};}
 async function fetchGreen(lat,lon,radius){const deg=radius/111000;const bb=`${(lat-deg).toFixed(4)},${(lon-deg).toFixed(4)},${(lat+deg).toFixed(4)},${(lon+deg).toFixed(4)}`;const q=`[out:json][timeout:20];(way["leisure"="park"]["name"](${bb});way["leisure"="nature_reserve"](${bb});way["landuse"="forest"](${bb});way["natural"="wood"](${bb});relation["leisure"="park"]["name"](${bb});relation["leisure"="nature_reserve"](${bb}););out geom;`;const r=await fetch('/api/geo?type=overpass',{method:'POST',body:q});const d=await r.json();return d.elements||[];}
-
-/* ── ACTIONS ── */
-function shareIt(){const text=CHECK.fixtureLabel?`Nightprint of ${LOC.short_name} — ${CHECK.fixtureLabel}`:`The night at ${LOC.short_name}`;if(navigator.share)navigator.share({title:'Nightprint',text,url:window.location.href});else{navigator.clipboard?.writeText(window.location.href);alert('Link copied.');}}
-function showAbout(){alert('Nightprint — two tools for the night.\n\nCheck your light: is your outdoor fixture dark sky compliant? Get a verdict and exactly what to change.\n\nRead the night: discover the nocturnal ecology of any location.\n\nBuilt by Lightbahn · lightbahn.ca · nightprint.co');}
 </script>
 </body>
 </html>
