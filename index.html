@@ -225,6 +225,14 @@
     .cr-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; margin-top:6px; }
     .cr-b { flex:1; min-width:0; }
     .cr-top { display:flex; align-items:baseline; justify-content:space-between; gap:8px; }
+    .cr-right { display:flex; align-items:center; gap:7px; flex-shrink:0; }
+    .cr-chev { font-size:9px; color:#9a948a; line-height:1; }
+    .cr.clk:hover .cr-chev { color:#5c5a52; }
+    .cr-sp { margin-top:9px; padding-top:9px; border-top:1px dashed rgba(0,0,0,.12); display:flex; flex-direction:column; gap:5px; }
+    .cr-sp-row { display:flex; align-items:baseline; gap:7px; flex-wrap:wrap; }
+    .cr-sp-nm { font-family:var(--fb); font-size:12px; font-weight:400; color:#3a3833; }
+    .cr-sp-sc { font-family:var(--fb); font-size:10px; font-style:italic; color:#8b857a; }
+    .cr-sp-more { font-family:var(--fm); font-size:9px; letter-spacing:.04em; color:#9a948a; margin-top:2px; }
     .cr-nm { font-family:var(--fh); font-size:17px; font-weight:500; color:#1c1b18; }
     .cr-tag { font-family:var(--fm); font-size:10px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; }
     .cr-note { font-family:var(--fb); font-size:13px; font-weight:300; color:#514f48; line-height:1.55; margin:3px 0 0; }
@@ -408,11 +416,11 @@
     <p class="night-month" id="night-month">June</p>
     <input type="range" class="month-slider" id="month-slider" min="0" max="11" step="1" value="5" oninput="selMonth(parseInt(this.value))">
     <div class="month-scale" id="month-scale"></div>
-    <p class="night-premise">Step back, and the night fills with life. Most of it carries on whether or not we are here.</p>
+    <p class="night-premise">After dark, this place is far from empty. Here is what is awake nearby, and how it changes through the year.</p>
     <div class="cast" id="cast"></div>
     <div class="night-close">
       <p class="night-close-head">Light is the biggest change we bring to the night.</p>
-      <p class="night-close-sub">It unsettles the insects first, then the bats, owls and birds that feed on them, and the whole web they hold together. That web reaches us too, in our sleep, our health, and the living world we depend on.</p>
+      <p class="night-close-sub">It disrupts the insects first, then the bats, owls and birds that feed on them, and the food chain that links them. It reaches us too, in our sleep and our health.</p>
       <div class="night-nudge">
         <span class="night-nudge-q">Curious what your own outdoor lights do here?</span>
         <button class="night-bridge" onclick="switchTab('check')">Check your light →</button>
@@ -672,22 +680,22 @@ function nSeason(i){return (i===11||i<2)?'winter':i<5?'spring':i<8?'summer':'aut
 function castData(){
   const g=NIGHT.data?.gbif||{};
   return [
-    {key:'insects',name:'Moths & night insects',count:g.mothSpp||0,
+    {key:'insects',name:'Moths & night insects',count:g.mothSpp||0,list:g.mothList||[],
      st:{winter:{on:false,tag:'Dormant',note:'Mostly waiting out the cold.'},
          spring:{on:true,tag:'Stirring',note:'Waking with the first warm nights.'},
          summer:{on:true,tag:'Active',note:'Out in force, pollinating in the dark.'},
          autumn:{on:true,tag:'Active',note:'The last big weeks before frost.'}}},
-    {key:'bats',name:'Bats',count:g.batSpecies||0,
+    {key:'bats',name:'Bats',count:g.batSpecies||0,list:g.batList||[],
      st:{winter:{on:false,tag:'Hibernating',note:'Tucked away until spring.'},
          spring:{on:true,tag:'Active',note:'Hunting again over water and gardens.'},
          summer:{on:true,tag:'Active',note:'Feeding over water and gardens all night.'},
          autumn:{on:true,tag:'Active',note:'Fattening up before they hibernate.'}}},
-    {key:'owls',name:'Owls',count:g.owlSpp||0,
+    {key:'owls',name:'Owls',count:g.owlSpp||0,list:g.owlList||[],
      st:{winter:{on:true,tag:'Active',note:'Calling to claim breeding ground.'},
          spring:{on:true,tag:'Active',note:'Hunting hard to feed their young.'},
          summer:{on:true,tag:'Active',note:'Hunting in silence through short nights.'},
          autumn:{on:true,tag:'Active',note:'Young owls finding their own range.'}}},
-    {key:'birds',name:'Migrating birds',count:g.birdSpp||0,
+    {key:'birds',name:'Migrating birds',count:g.birdSpp||0,list:g.birdList||[],
      st:{winter:{on:false,tag:'Away',note:'Gone south. The flyway rests.'},
          spring:{on:true,tag:'Passing over',note:'Crossing overhead, heading north.'},
          summer:{on:false,tag:'Nesting',note:'Arrived and nesting. The sky is quiet.'},
@@ -732,17 +740,24 @@ function selMonth(i){nightSel=i;$('month-slider').value=i;$('night-month').textC
 
 function activeMap(){const s=nSeason(nightSel),o={};castData().forEach(c=>o[c.key]=c.st[s].on);return o;}
 
+let nightOpen={};
+function toggleCreature(k){ nightOpen[k]=!nightOpen[k]; renderCast(); }
+
 function renderCast(){
   const s=nSeason(nightSel);
   $('cast').innerHTML=castData().map(c=>{
     const x=c.st[s],on=x.on,dotc=NCOL[c.key],tagc=NCOLD[c.key];
-    const cnt=c.count>0?`${c.count} species recorded nearby`:'recorded nearby';
-    return `<div class="cr" data-type="${c.key}" style="opacity:${on?1:.45}" onmouseenter="hlPts('${c.key}')" onmouseleave="hlPts(null)">
+    const hasList=(c.list||[]).length>0;
+    const open=!!nightOpen[c.key];
+    const cnt=c.count>0?`${c.count} ${c.count===1?'species':'species'} recorded nearby`:'none recorded in this area';
+    const sp=hasList?`<div class="cr-sp">${c.list.slice(0,6).map(s=>`<div class="cr-sp-row"><span class="cr-sp-nm">${s.common||s.species}</span>${s.common&&s.species?`<span class="cr-sp-sc">${s.species}</span>`:''}</div>`).join('')}${c.list.length>6?`<div class="cr-sp-more">+${c.list.length-6} more</div>`:''}</div>`:'';
+    return `<div class="cr${hasList?' clk':''}${open?' open':''}" data-type="${c.key}" style="opacity:${on?1:.45};cursor:${hasList?'pointer':'default'}" onmouseenter="hlPts('${c.key}')" onmouseleave="hlPts(null)" ${hasList?`onclick="toggleCreature('${c.key}')"`:''}>
       <span class="cr-dot" style="background:${on?dotc:'rgba(0,0,0,.18)'}"></span>
       <div class="cr-b">
-        <div class="cr-top"><span class="cr-nm">${c.name}</span><span class="cr-tag" style="color:${on?tagc:'#8a8478'}">${x.tag}</span></div>
+        <div class="cr-top"><span class="cr-nm">${c.name}</span><span class="cr-right"><span class="cr-tag" style="color:${on?tagc:'#8a8478'}">${x.tag}</span>${hasList?`<span class="cr-chev">${open?'▾':'▸'}</span>`:''}</span></div>
         <p class="cr-note">${x.note}</p>
         <p class="cr-cnt">${cnt}</p>
+        ${open?sp:''}
       </div>
     </div>`;
   }).join('');
@@ -790,7 +805,7 @@ function showAbout(){alert('Nightprint — two tools for the night.\n\nCheck you
 /* ── DATA ── */
 async function fetchBortle(lat,lon){try{const r=await fetch(`/api/geo?type=bortle&lat=${lat}&lon=${lon}`);const d=await r.json();const m=d.mpsas||d.value;if(m)return mp2b(parseFloat(m));}catch(e){}return null;}
 function mp2b(m){if(m>=21.69)return{class:3,label:'Rural sky'};if(m>=20.49)return{class:4,label:'Rural/suburban'};if(m>=19.50)return{class:5,label:'Suburban sky'};if(m>=18.94)return{class:6,label:'Bright suburban'};if(m>=18.38)return{class:7,label:'Suburban/urban'};if(m>=17.50)return{class:8,label:'City sky'};return{class:9,label:'Inner city'};}
-async function fetchGBIF(lat,lon,radius){const deg=radius/111000;const r=await fetch(`https://api.gbif.org/v1/occurrence/search?decimalLatitude=${(lat-deg).toFixed(4)},${(lat+deg).toFixed(4)}&decimalLongitude=${(lon-deg).toFixed(4)},${(lon+deg).toFixed(4)}&limit=300&hasCoordinate=true`);const d=await r.json();const recs=d.results||[];const MIGS=['Lasiurus cinereus','Lasiurus borealis','Lasionycteris noctivagans','Tadarida brasiliensis'];const LS=['Vespertilionidae','Phyllostomidae','Rhinolophidae','Molossidae'];const bats=recs.filter(x=>x.order==='Chiroptera');const bm={};bats.forEach(x=>{if(!x.species)return;if(!bm[x.species])bm[x.species]={species:x.species,common:x.vernacularName||null,fam:x.family||null,mig:MIGS.includes(x.species),ls:LS.includes(x.family),n:0,locations:[]};bm[x.species].n++;if(x.decimalLatitude&&x.decimalLongitude)bm[x.species].locations.push([x.decimalLatitude,x.decimalLongitude]);});const batList=Object.values(bm).sort((a,b)=>b.n-a.n);const birds=recs.filter(x=>x.class==='Aves'),moths=recs.filter(x=>x.order==='Lepidoptera'),owls=recs.filter(x=>x.order==='Strigiformes');const loc=arr=>arr.map(x=>(x.decimalLatitude&&x.decimalLongitude)?[x.decimalLatitude,x.decimalLongitude]:null).filter(Boolean);return{batList,batSpecies:batList.length,lsBats:batList.filter(b=>b.ls).length,migBats:batList.filter(b=>b.mig),birdSpp:[...new Set(birds.filter(x=>x.order!=='Strigiformes').map(x=>x.species).filter(Boolean))].length,mothSpp:[...new Set(moths.map(x=>x.species).filter(Boolean))].length,owlSpp:[...new Set(owls.map(x=>x.species).filter(Boolean))].length,batLocations:batList.flatMap(b=>b.locations||[]).slice(0,15),insectLocations:loc(moths).slice(0,15),owlLocations:loc(owls).slice(0,15),birdLocations:loc(birds.filter(x=>x.order!=='Strigiformes')).slice(0,15)};}
+async function fetchGBIF(lat,lon,radius){const deg=radius/111000;const r=await fetch(`https://api.gbif.org/v1/occurrence/search?decimalLatitude=${(lat-deg).toFixed(4)},${(lat+deg).toFixed(4)}&decimalLongitude=${(lon-deg).toFixed(4)},${(lon+deg).toFixed(4)}&limit=300&hasCoordinate=true`);const d=await r.json();const recs=d.results||[];const MIGS=['Lasiurus cinereus','Lasiurus borealis','Lasionycteris noctivagans','Tadarida brasiliensis'];const LS=['Vespertilionidae','Phyllostomidae','Rhinolophidae','Molossidae'];const bats=recs.filter(x=>x.order==='Chiroptera');const bm={};bats.forEach(x=>{if(!x.species)return;if(!bm[x.species])bm[x.species]={species:x.species,common:x.vernacularName||null,fam:x.family||null,mig:MIGS.includes(x.species),ls:LS.includes(x.family),n:0,locations:[]};bm[x.species].n++;if(x.decimalLatitude&&x.decimalLongitude)bm[x.species].locations.push([x.decimalLatitude,x.decimalLongitude]);});const batList=Object.values(bm).sort((a,b)=>b.n-a.n);const birds=recs.filter(x=>x.class==='Aves'),moths=recs.filter(x=>x.order==='Lepidoptera'),owls=recs.filter(x=>x.order==='Strigiformes');const loc=arr=>arr.map(x=>(x.decimalLatitude&&x.decimalLongitude)?[x.decimalLatitude,x.decimalLongitude]:null).filter(Boolean);const spList=arr=>{const o={};arr.forEach(x=>{if(!x.species)return;if(!o[x.species])o[x.species]={species:x.species,common:x.vernacularName||null,n:0};o[x.species].n++;if(x.vernacularName&&!o[x.species].common)o[x.species].common=x.vernacularName;});return Object.values(o).sort((a,b)=>b.n-a.n);};const nonOwlBirds=birds.filter(x=>x.order!=='Strigiformes');return{batList,batSpecies:batList.length,lsBats:batList.filter(b=>b.ls).length,migBats:batList.filter(b=>b.mig),mothList:spList(moths),owlList:spList(owls),birdList:spList(nonOwlBirds),birdSpp:[...new Set(nonOwlBirds.map(x=>x.species).filter(Boolean))].length,mothSpp:[...new Set(moths.map(x=>x.species).filter(Boolean))].length,owlSpp:[...new Set(owls.map(x=>x.species).filter(Boolean))].length,batLocations:batList.flatMap(b=>b.locations||[]).slice(0,15),insectLocations:loc(moths).slice(0,15),owlLocations:loc(owls).slice(0,15),birdLocations:loc(nonOwlBirds).slice(0,15)};}
 async function fetchWater(lat,lon,radius){const deg=radius/111000;const bb=`${(lat-deg).toFixed(4)},${(lon-deg).toFixed(4)},${(lat+deg).toFixed(4)},${(lon+deg).toFixed(4)}`;const q=`[out:json][timeout:20];(way["natural"="water"](${bb});way["waterway"="riverbank"](${bb});way["waterway"="river"](${bb});way["waterway"="stream"](${bb});relation["natural"="water"](${bb});relation["waterway"="river"](${bb}););out geom;`;const r=await fetch('/api/geo?type=overpass',{method:'POST',body:q});const d=await r.json();const raw=d.elements||[];const els=[];raw.forEach(el=>{if(el.type==='way'&&el.geometry?.length>1)els.push(el);else if(el.type==='relation'&&el.members)el.members.forEach(m=>{if(m.type==='way'&&m.geometry?.length>1)els.push({type:'way',geometry:m.geometry,tags:el.tags||{}});});});let near=null;els.forEach(el=>(el.geometry||[]).filter(p=>p?.lat).forEach(p=>{const dist=Math.hypot(p.lat-lat,p.lon-lon)*111000;if(!near||dist<near.dist)near={dist:Math.round(dist),lat:p.lat,lon:p.lon,tags:el.tags};}));return{nearestWater:near,elements:els};}
 async function fetchGreen(lat,lon,radius){const deg=radius/111000;const bb=`${(lat-deg).toFixed(4)},${(lon-deg).toFixed(4)},${(lat+deg).toFixed(4)},${(lon+deg).toFixed(4)}`;const q=`[out:json][timeout:20];(way["leisure"="park"]["name"](${bb});way["leisure"="nature_reserve"](${bb});way["landuse"="forest"](${bb});way["natural"="wood"](${bb});relation["leisure"="park"]["name"](${bb});relation["leisure"="nature_reserve"](${bb}););out geom;`;const r=await fetch('/api/geo?type=overpass',{method:'POST',body:q});const d=await r.json();return d.elements||[];}
 </script>
